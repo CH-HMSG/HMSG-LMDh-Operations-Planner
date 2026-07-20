@@ -196,19 +196,6 @@
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
           "departureStatus": "Not Started"
-        },
-        {
-          "person": "P2",
-          "department": "Powertrain",
-          "roleAtEvent": "PU Engineer",
-          "activity": "Remote",
-          "attendanceStatus": "Planned",
-          "travelToDate": "2026-07-28",
-          "travelFromDate": "2026-07-31",
-          "travelNotes": "",
-          "accommodationNotes": "",
-          "arrivalStatus": "Not Started",
-          "departureStatus": "Not Started"
         }
       ],
       "eventCode": "260729_AUS",
@@ -229,8 +216,8 @@
       "endDate": "2026-08-14",
       "leaveType": "Annual",
       "approvalStatus": "Approved",
-      "conflictFlag": true,
-      "conflictDetails": "Overlaps travel/attendance for 260729_AUS (2026-07-28 to 2026-07-31)"
+      "conflictFlag": false,
+      "conflictDetails": ""
     },
     {
       "id": "L_d1bfs4k",
