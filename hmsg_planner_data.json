@@ -1,0 +1,256 @@
+{
+  "referenceData": {
+    "eventTypes": [
+      "Race",
+      "Test",
+      "Dyno"
+    ],
+    "eventStatuses": [
+      "Draft",
+      "Confirmed",
+      "Completed"
+    ],
+    "attendanceStatuses": [
+      "Planned",
+      "Confirmed",
+      "Remote"
+    ],
+    "leaveTypes": [
+      "Annual",
+      "Sick",
+      "Compensation"
+    ],
+    "approvalStatuses": [
+      "Pending",
+      "Approved"
+    ],
+    "chassisStatuses": [
+      "In-Build",
+      "Race",
+      "Test",
+      "Retired"
+    ],
+    "departments": [
+      "Electronics",
+      "Powertrain"
+    ],
+    "roles": [
+      "Mechanic",
+      "Electrician",
+      "PU Engineer",
+      "PU Lead"
+    ],
+    "locations": [
+      "Fechenheim",
+      "Rüsselsheim",
+      "Le Castellet",
+      "Sao Paulo",
+      "Austin",
+      "Barcelona",
+      "Fuji",
+      "Paul Ricard"
+    ],
+    "transportMethods": []
+  },
+  "chassisMaster": [],
+  "engineMaster": [
+    {
+      "id": "01C",
+      "status": "Race",
+      "notes": ""
+    },
+    {
+      "id": "11A",
+      "status": "Test",
+      "notes": ""
+    },
+    {
+      "id": "12A",
+      "status": "Test",
+      "notes": ""
+    },
+    {
+      "id": "14A",
+      "status": "Racecar",
+      "notes": ""
+    },
+    {
+      "id": "15A",
+      "status": "Race",
+      "notes": ""
+    },
+    {
+      "id": "16A",
+      "status": "Race",
+      "notes": ""
+    }
+  ],
+  "people": [
+    {
+      "id": "P1",
+      "name": "Christos Hadjigeorgiou",
+      "department": "Powertrain",
+      "defaultRole": "PU Engineer",
+      "email": "",
+      "active": true
+    },
+    {
+      "id": "P2",
+      "name": "Karoly Istvanko",
+      "department": "Powertrain",
+      "defaultRole": "PU Engineer",
+      "email": "",
+      "active": true
+    },
+    {
+      "id": "P_5ugsw3v",
+      "name": "Julien Moncet",
+      "email": "",
+      "department": "Powertrain",
+      "defaultRole": "PU Lead",
+      "active": true
+    },
+    {
+      "id": "P_fsz4tif",
+      "name": "Joerg Hoffman",
+      "email": "",
+      "department": "Powertrain",
+      "defaultRole": "Mechanic",
+      "active": true
+    }
+  ],
+  "events": [
+    {
+      "id": "E_c6ozs9t",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "01C",
+          "notes": "1659.0km"
+        },
+        {
+          "engine": "15A",
+          "notes": "1663.3km"
+        }
+      ],
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Confirmed",
+          "travelToDate": "2026-07-06",
+          "travelFromDate": "2026-07-13",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_5ugsw3v",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-07-07",
+          "travelFromDate": "2026-07-12",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "260710_SAO",
+      "name": "Sao Paulo Race",
+      "eventType": "Race",
+      "status": "Completed",
+      "location": "Fechenheim",
+      "startDate": "2026-07-07",
+      "endDate": "2026-07-12",
+      "notes": ""
+    },
+    {
+      "id": "E_3jt5n5w",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "11A",
+          "notes": "Start: 5518.5km"
+        },
+        {
+          "engine": "12A",
+          "notes": "Start: 1308.1km"
+        }
+      ],
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "Trackside",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-07-27",
+          "travelFromDate": "2026-08-01",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "Remote",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-07-28",
+          "travelFromDate": "2026-07-31",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "260729_AUS",
+      "name": "Austin Test",
+      "eventType": "Test",
+      "status": "Confirmed",
+      "location": "Fechenheim",
+      "startDate": "2026-07-28",
+      "endDate": "2026-07-31",
+      "notes": ""
+    }
+  ],
+  "leave": [
+    {
+      "id": "L1",
+      "person": "P2",
+      "startDate": "2026-07-20",
+      "endDate": "2026-08-14",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved",
+      "conflictFlag": true,
+      "conflictDetails": "Overlaps travel/attendance for 260729_AUS (2026-07-28 to 2026-07-31)"
+    },
+    {
+      "id": "L_d1bfs4k",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P1",
+      "startDate": "2026-08-05",
+      "endDate": "2026-08-21",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_isgwkpv",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P_5ugsw3v",
+      "startDate": "2026-08-05",
+      "endDate": "2026-08-21",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    }
+  ]
+}
