@@ -1,5 +1,5 @@
 export default {
-  async fetch(request, env) {
-    return new Response("Worker running");
+  async fetch(request) {
+    return new Response("Worker OK");
   }
 };
