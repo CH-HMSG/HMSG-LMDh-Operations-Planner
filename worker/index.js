@@ -1,10 +1,5 @@
-{
-  "name": "hmsg-lmdh-operations-planner",
-  "main": "worker/index.js",
-  "compatibility_date": "2026-07-21",
-  "assets": {
-    "directory": ".",
-    "binding": "ASSETS",
-    "run_worker_first": true
+export default {
+  async fetch(request, env) {
+    return new Response("Worker running");
   }
-}
+};
