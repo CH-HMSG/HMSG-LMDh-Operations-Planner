@@ -48,7 +48,10 @@
       "Austin",
       "Barcelona",
       "Fuji",
-      "Paul Ricard"
+      "Paul Ricard",
+      "Monza",
+      "Stuttgart",
+      "AVL"
     ],
     "transportMethods": []
   },
@@ -57,6 +60,11 @@
     {
       "id": "01C",
       "status": "Race",
+      "notes": ""
+    },
+    {
+      "id": "10A",
+      "status": "Test",
       "notes": ""
     },
     {
@@ -71,7 +79,7 @@
     },
     {
       "id": "14A",
-      "status": "Racecar",
+      "status": "In-Build",
       "notes": ""
     },
     {
@@ -82,6 +90,16 @@
     {
       "id": "16A",
       "status": "Race",
+      "notes": ""
+    },
+    {
+      "id": "17A",
+      "status": "In-Build",
+      "notes": ""
+    },
+    {
+      "id": "18A",
+      "status": "In-Build",
       "notes": ""
     }
   ],
@@ -175,12 +193,12 @@
       "chassisAssignments": [],
       "engineAssignments": [
         {
-          "engine": "11A",
-          "notes": "Start: 5518.5kM"
+          "engine": "12A",
+          "notes": "W17 - Wed. 29th - Start: 1308.1km - "
         },
         {
-          "engine": "12A",
-          "notes": "Start: 1308.1km"
+          "engine": "11A",
+          "notes": "W19 - Fri. 31st - Start: 5518.5kM - "
         }
       ],
       "attendance": [
@@ -206,6 +224,289 @@
       "startDate": "2026-07-28",
       "endDate": "2026-07-31",
       "notes": ""
+    },
+    {
+      "id": "E_i9u48ho",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "01C",
+          "notes": " W19 - Start: 1659.0 km - Expected Finish: 1800 km"
+        },
+        {
+          "engine": "15A",
+          "notes": "W17 - Start: 1663.3 km - Expected Finish: 1800 km"
+        },
+        {
+          "engine": "16A",
+          "notes": "Spare"
+        },
+        {
+          "engine": "14A",
+          "notes": "Spare"
+        }
+      ],
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-09-01",
+          "travelFromDate": "2026-09-06",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-09-01",
+          "travelFromDate": "2026-09-06",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_5ugsw3v",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-09-01",
+          "travelFromDate": "2026-09-06",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "260904_AUS",
+      "name": "Austin Race",
+      "eventType": "Race",
+      "status": "Confirmed",
+      "location": "Austin",
+      "startDate": "2026-09-02",
+      "endDate": "2026-09-06",
+      "notes": ""
+    },
+    {
+      "id": "E_qln5cc6",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "10A",
+          "notes": "Prime  - "
+        },
+        {
+          "engine": "12A",
+          "notes": "Spare - "
+        }
+      ],
+      "attendance": [
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-08-26",
+          "travelFromDate": "2026-08-27",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "260827_BCN",
+      "name": "Barcelona Test",
+      "eventType": "Test",
+      "status": "Confirmed",
+      "location": "Barcelona",
+      "startDate": "2026-08-26",
+      "endDate": "2026-08-27",
+      "notes": ""
+    },
+    {
+      "id": "E_ij2gppd",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "01C",
+          "notes": "Expected Finish: 4900 km"
+        },
+        {
+          "engine": "15A",
+          "notes": "Expected Finish: 4900 km"
+        },
+        {
+          "engine": "14A",
+          "notes": "Spare"
+        },
+        {
+          "engine": "16A",
+          "notes": "Spare"
+        }
+      ],
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-09-21",
+          "travelFromDate": "2026-09-28",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-09-21",
+          "travelFromDate": "2026-09-28",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_5ugsw3v",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-09-21",
+          "travelFromDate": "2026-09-28",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "260925_FUJ",
+      "name": "Fuji Race",
+      "eventType": "Race",
+      "status": "Confirmed",
+      "location": "Fechenheim",
+      "startDate": "2026-09-23",
+      "endDate": "2026-09-27",
+      "notes": ""
+    },
+    {
+      "id": "E_6321onh",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "14A",
+          "notes": "Start: 0 km - Expected Finish: 1800 km"
+        },
+        {
+          "engine": "16A",
+          "notes": "Start: 0 km - Expected Finish: 1800 km"
+        },
+        {
+          "engine": "17A",
+          "notes": "Spare"
+        },
+        {
+          "engine": "18A",
+          "notes": "Spare"
+        }
+      ],
+      "attendance": [],
+      "eventCode": "BCN BLOCKER",
+      "name": "BLOCKER",
+      "eventType": "Race",
+      "status": "Draft",
+      "location": "Barcelona",
+      "startDate": "2026-10-14",
+      "endDate": "2026-10-18",
+      "notes": "DATE BLOCKER NEW EVENT - BARCELONA"
+    },
+    {
+      "id": "E_lu8qb6b",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "14A",
+          "notes": ""
+        },
+        {
+          "engine": "16A",
+          "notes": ""
+        },
+        {
+          "engine": "17A",
+          "notes": ""
+        },
+        {
+          "engine": "18A",
+          "notes": ""
+        }
+      ],
+      "attendance": [],
+      "eventCode": "MONZA BLOCKER",
+      "name": "BLOCKER",
+      "eventType": "Race",
+      "status": "Draft",
+      "location": "Monza",
+      "startDate": "2026-11-01",
+      "endDate": "2026-11-08",
+      "notes": "DATE BLOCKER NEW EVENT - MONZA"
+    },
+    {
+      "id": "E_t1hm3hf",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "Dyno - Stuttgart commissioning - #06A",
+      "name": "Stuttgart commissioning - #06A",
+      "eventType": "Dyno",
+      "status": "Confirmed",
+      "location": "Stuttgart",
+      "startDate": "2026-08-03",
+      "endDate": "2026-08-07",
+      "notes": "Stuttgart commissioning - #06A"
+    },
+    {
+      "id": "E_b0zf19g",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "Dyno - AVL - #14A",
+      "name": "Dyno - AVL - #14A",
+      "eventType": "Dyno",
+      "status": "Confirmed",
+      "location": "AVL",
+      "startDate": "2026-08-17",
+      "endDate": "2026-08-18",
+      "notes": "Dyno - AVL - #14A"
+    },
+    {
+      "id": "E_9tq84ya",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "Dyno - PT Dyno",
+      "name": "PT Dyno",
+      "eventType": "Dyno",
+      "status": "Confirmed",
+      "location": "Rüsselsheim",
+      "startDate": "2026-08-24",
+      "endDate": "2026-08-28",
+      "notes": "PT Dyno"
     }
   ],
   "leave": [
@@ -236,6 +537,26 @@
       "person": "P_5ugsw3v",
       "startDate": "2026-08-05",
       "endDate": "2026-08-21",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_q3gs4gb",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P1",
+      "startDate": "2026-09-10",
+      "endDate": "2026-09-18",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_xk2u63l",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P1",
+      "startDate": "2026-12-10",
+      "endDate": "2027-01-04",
       "leaveType": "Annual",
       "approvalStatus": "Approved"
     }
