@@ -509,7 +509,7 @@
       "notes": "PT Dyno"
     },
     {
-      "id": "E_acr7ze0",
+      "id": "E_ke0omd7",
       "chassisAssignments": [],
       "engineAssignments": [],
       "attendance": [],
@@ -518,9 +518,9 @@
       "eventType": "Race",
       "status": "Draft",
       "location": "Fechenheim",
-      "startDate": "2026-07-29",
-      "endDate": "2026-08-06",
-      "notes": "88\n"
+      "startDate": "2026-07-28",
+      "endDate": "2026-07-31",
+      "notes": "88"
     }
   ],
   "leave": [
