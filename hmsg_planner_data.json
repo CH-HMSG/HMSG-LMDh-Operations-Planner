@@ -63,6 +63,11 @@
       "notes": ""
     },
     {
+      "id": "03D",
+      "status": "In-Build",
+      "notes": ""
+    },
+    {
       "id": "10A",
       "status": "Test",
       "notes": ""
@@ -507,20 +512,6 @@
       "startDate": "2026-08-24",
       "endDate": "2026-08-28",
       "notes": "PT Dyno"
-    },
-    {
-      "id": "E_acr7ze0",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "88",
-      "name": "88",
-      "eventType": "Race",
-      "status": "Draft",
-      "location": "Fechenheim",
-      "startDate": "2026-07-29",
-      "endDate": "2026-08-06",
-      "notes": "88\n"
     }
   ],
   "leave": [

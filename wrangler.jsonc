@@ -1,14 +1,10 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hmsg-lmdh-operations-planner",
+  "main": "worker/index.js",
   "compatibility_date": "2026-07-21",
-  "observability": {
-    "enabled": true
-  },
   "assets": {
-    "directory": "."
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  }
 }
