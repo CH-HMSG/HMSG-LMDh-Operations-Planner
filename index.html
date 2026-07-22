@@ -8,6 +8,8 @@
 :root{
   --bg:#0f1115; --panel:#171a21; --panel2:#1e2229; --accent:#2563eb; --accent-dark:#1d4ed8;
   --text:#eef1f5; --muted:#9aa4b2; --ok:#2ecc71; --warn:#f39c12; --bad:#e74c3c; --border:#2a2f3a;
+  --race:#dc2626; --test:#16a34a; --dyno:#fef9c3; --shakedown:#facc15;
+  --holiday:#6b7280; --leave-other:#f39c12; --travel:#8b5cf6; --weekend-shade:#262c37;
 }
 *{box-sizing:border-box;}
 body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);}
@@ -25,6 +27,8 @@ main{padding:18px 24px;max-width:1400px;margin:0 auto;}
 .kpi .num{font-size:24px;font-weight:700;}
 .kpi .label{color:var(--muted);font-size:11px;text-transform:uppercase;}
 table{width:100%;border-collapse:collapse;font-size:12.5px;}
+table.fixed-cols{table-layout:fixed;}
+table.fixed-cols td{overflow:hidden;word-wrap:break-word;}
 th,td{padding:7px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top;}
 th{color:var(--muted);font-weight:600;font-size:10.5px;text-transform:uppercase;}
 tr:hover td{background:#1c2028;}
@@ -34,6 +38,11 @@ tr.clickable{cursor:pointer;}
 .b-draft{background:rgba(243,156,18,.15);color:var(--warn);}
 .b-cancelled{background:rgba(231,76,60,.15);color:var(--bad);}
 .b-completed{background:rgba(37,99,235,.15);color:#60a5fa;}
+.b-race{background:rgba(220,38,38,.15);color:#f87171;}
+.b-test{background:rgba(22,163,74,.18);color:#4ade80;}
+.b-dyno{background:rgba(254,249,195,.18);color:#eab308;}
+.b-shakedown{background:rgba(250,204,21,.18);color:#facc15;}
+.b-holiday{background:rgba(107,114,128,.2);color:#9ca3af;}
 .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
 .filters select,.filters input{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12.5px;}
 .section-title{font-size:13px;color:var(--muted);text-transform:uppercase;margin:0 0 10px;letter-spacing:.5px;}
@@ -75,10 +84,14 @@ textarea{resize:vertical;min-height:50px;}
 .cal-cell{background:var(--panel2);border:1px solid var(--border);border-radius:6px;min-height:80px;padding:6px;font-size:11px;}
 .cal-cell .daynum{color:var(--muted);font-size:10px;margin-bottom:4px;}
 .cal-event{border-radius:4px;padding:2px 5px;margin-bottom:3px;font-size:10px;color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.cal-event.type-race{background:#1d4ed8;}
-.cal-event.type-test{background:#3b82f6;}
-.cal-event.type-dyno{background:#60a5fa;color:#0f1115;}
-.cal-event.type-leave{background:#f39c12;color:#0f1115;}
+.cal-event.type-race{background:var(--race);color:#fff;}
+.cal-event.type-test{background:var(--test);color:#fff;}
+.cal-event.type-dyno{background:var(--dyno);color:#78350f;}
+.cal-event.type-shakedown{background:var(--shakedown);color:#3f2d00;}
+.cal-event.type-leave-holiday{background:var(--holiday);color:#fff;}
+.cal-event.type-leave-other{background:var(--leave-other);color:#0f1115;}
+.cal-event.type-travel{background:var(--travel);color:#fff;}
+.cal-cell.weekend-holiday{background:var(--weekend-shade);}
 .cal-year-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 .cal-month-box{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px;}
 .cal-month-box h4{margin:0 0 8px;font-size:12px;color:var(--muted);text-transform:uppercase;}
@@ -96,10 +109,14 @@ textarea{resize:vertical;min-height:50px;}
   .cal-cell{background:#fafafa !important;border:1px solid #ccc !important;border-radius:4px;min-height:90px;height:90px;padding:5px;font-size:10px;box-sizing:border-box;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .cal-cell .daynum{color:#666;font-size:9px;margin-bottom:3px;}
   .cal-event{border-radius:3px;padding:1px 4px;margin-bottom:2px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .cal-event.type-race{background:#1d4ed8 !important;color:#fff !important;}
-  .cal-event.type-test{background:#3b82f6 !important;color:#fff !important;}
-  .cal-event.type-dyno{background:#60a5fa !important;color:#0f1115 !important;}
-  .cal-event.type-leave{background:#f39c12 !important;color:#0f1115 !important;}
+  .cal-event.type-race{background:#dc2626 !important;color:#fff !important;}
+  .cal-event.type-test{background:#16a34a !important;color:#fff !important;}
+  .cal-event.type-dyno{background:#fef9c3 !important;color:#78350f !important;border:1px solid #ca8a04 !important;}
+  .cal-event.type-shakedown{background:#facc15 !important;color:#3f2d00 !important;border:1px solid #ca8a04 !important;}
+  .cal-event.type-leave-holiday{background:#6b7280 !important;color:#fff !important;}
+  .cal-event.type-leave-other{background:#f39c12 !important;color:#0f1115 !important;}
+  .cal-event.type-travel{background:#8b5cf6 !important;color:#fff !important;}
+  .cal-cell.weekend-holiday{background:#ececec !important;}
   .cal-year-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
   .cal-month-box{background:#fff !important;border:1px solid #ccc !important;border-radius:6px;padding:8px;}
   .cal-month-box h4{color:#555;}
@@ -163,7 +180,9 @@ body.locked-mode #addEngineBtn{display:none !important;}
     <div class="section-title">Upcoming Events</div>
     <button class="btn" onclick="window.print()">Export PDF</button>
   </div>
-  <table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Dates</th><th>Location</th><th>Status</th><th>People</th></tr></thead>
+  <table class="fixed-cols">
+  <colgroup><col style="width:11%"><col style="width:19%"><col style="width:9%"><col style="width:16%"><col style="width:11%"><col style="width:9%"><col style="width:12%"><col style="width:13%"></colgroup>
+  <thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Dates</th><th>Location</th><th>Status</th><th>Engines</th><th>People</th></tr></thead>
   <tbody id="upcomingEventsBody"></tbody></table>
 </div>
 
@@ -171,7 +190,9 @@ body.locked-mode #addEngineBtn{display:none !important;}
   <div class="flex-between">
     <div class="section-title">Past Events</div>
   </div>
-  <table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Dates</th><th>Location</th><th>Status</th><th>People</th></tr></thead>
+  <table class="fixed-cols">
+  <colgroup><col style="width:11%"><col style="width:19%"><col style="width:9%"><col style="width:16%"><col style="width:11%"><col style="width:9%"><col style="width:12%"><col style="width:13%"></colgroup>
+  <thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Dates</th><th>Location</th><th>Status</th><th>Engines</th><th>People</th></tr></thead>
   <tbody id="pastEventsBody"></tbody></table>
 </div>
 </section>
@@ -187,7 +208,7 @@ body.locked-mode #addEngineBtn{display:none !important;}
       </div>
     </div>
     <div class="card">
-      <table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Start</th><th>End</th><th>Location</th><th>Status</th><th>People</th></tr></thead>
+      <table><thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Start</th><th>End</th><th>Location</th><th>Status</th><th>Engines</th><th>People</th></tr></thead>
       <tbody id="eventsBody"></tbody></table>
     </div>
   </section>
@@ -213,8 +234,11 @@ body.locked-mode #addEngineBtn{display:none !important;}
         <span class="cal-event type-race" style="display:inline-block;padding:2px 8px;">Race</span>
         <span class="cal-event type-test" style="display:inline-block;padding:2px 8px;">Test</span>
         <span class="cal-event type-dyno" style="display:inline-block;padding:2px 8px;">Dyno</span>
-        <span class="cal-event type-leave" style="display:inline-block;padding:2px 8px;">Leave/Holiday</span>
-         
+        <span class="cal-event type-shakedown" style="display:inline-block;padding:2px 8px;">Shakedown</span>
+        <span class="cal-event type-travel" style="display:inline-block;padding:2px 8px;">Travelling</span>
+        <span class="cal-event type-leave-holiday" style="display:inline-block;padding:2px 8px;">Holiday</span>
+        <span class="cal-event type-leave-other" style="display:inline-block;padding:2px 8px;">Other Leave</span>
+        <span style="display:inline-block;padding:2px 8px;border-radius:4px;background:var(--weekend-shade);border:1px solid var(--border);">Weekend / Bank Holiday</span>
       </div>
       <div id="calContainer"></div>
     </div>
@@ -324,7 +348,8 @@ const SEED_DATA = {
     "eventTypes": [
       "Race",
       "Test",
-      "Dyno"
+      "Dyno",
+      "Shakedown"
     ],
     "eventStatuses": [
       "Draft",
@@ -703,6 +728,10 @@ function statusBadgeClass(s){
 function findPerson(id){ return DATA.people.find(p=>p.id===id); }
 function findEvent(id){ return DATA.events.find(e=>e.id===id); }
 function initials(name){ return (name||'').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function typeBadgeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'b-race'; if(t==='test')return 'b-test'; if(t==='dyno')return 'b-dyno'; if(t==='shakedown')return 'b-shakedown'; return 'b-test'; }
+function leaveTypeLabel(t){ return t==='Annual' ? 'Holiday' : t; }
+function leaveClass(l){ return (l&&l.leaveType==='Annual') ? 'type-leave-holiday' : 'type-leave-other'; }
+function eventEngines(e){ return (e.engineAssignments||[]).map(ea=>ea.engine).filter(Boolean); }
 
 function openModal(html){
   document.getElementById('modalContent').innerHTML = html;
@@ -732,17 +761,18 @@ function renderDashboard(){
   const todayStr = new Date().toISOString().slice(0,10);
   const rowHtml = e => `
     <tr class="clickable" onclick="showEventDetail('${e.id}')">
-      <td>${e.eventCode}</td><td>${e.name}</td><td>${e.eventType}</td>
+      <td>${e.eventCode}</td><td>${e.name}</td><td><span class="badge ${typeBadgeClass(e.eventType)}">${e.eventType}</span></td>
       <td>${e.startDate} &rarr; ${e.endDate}</td><td>${e.location}</td>
       <td><span class="badge ${statusBadgeClass(e.status)}">${e.status}</span></td>
+      <td>${eventEngines(e).join(', ') || '<span class="muted">&mdash;</span>'}</td>
       <td>${e.attendance.map(a=>{const p=findPerson(a.person);return `<span class="avatar" title="${p?p.name:a.person}">${p?initials(p.name):'?'}</span>`}).join('')}</td>
     </tr>`;
 
   const upcoming = events.filter(e=>e.endDate>=todayStr).slice().sort((a,b)=>a.startDate.localeCompare(b.startDate));
   const past = events.filter(e=>e.endDate<todayStr).slice().sort((a,b)=>b.startDate.localeCompare(a.startDate));
 
-  document.getElementById('upcomingEventsBody').innerHTML = upcoming.map(rowHtml).join('') || '<tr><td colspan="7" class="muted">No upcoming events.</td></tr>';
-  document.getElementById('pastEventsBody').innerHTML = past.map(rowHtml).join('') || '<tr><td colspan="7" class="muted">No past events.</td></tr>';
+  document.getElementById('upcomingEventsBody').innerHTML = upcoming.map(rowHtml).join('') || '<tr><td colspan="8" class="muted">No upcoming events.</td></tr>';
+  document.getElementById('pastEventsBody').innerHTML = past.map(rowHtml).join('') || '<tr><td colspan="8" class="muted">No past events.</td></tr>';
 }
 
 /* ---------- EVENTS LIST ---------- */
@@ -755,11 +785,12 @@ function renderEvents(){
   const filtered = DATA.events.filter(e=>(!typeVal||e.eventType===typeVal)&&(!statusVal||e.status===statusVal)).slice().sort((a,b)=>a.startDate.localeCompare(b.startDate));
   document.getElementById('eventsBody').innerHTML = filtered.map(e=>`
     <tr class="clickable" onclick="showEventDetail('${e.id}')">
-      <td>${e.eventCode}</td><td>${e.name}</td><td>${e.eventType}</td>
+      <td>${e.eventCode}</td><td>${e.name}</td><td><span class="badge ${typeBadgeClass(e.eventType)}">${e.eventType}</span></td>
       <td>${e.startDate}</td><td>${e.endDate}</td><td>${e.location}</td>
       <td><span class="badge ${statusBadgeClass(e.status)}">${e.status}</span></td>
+      <td>${eventEngines(e).join(', ') || '<span class="muted">&mdash;</span>'}</td>
       <td>${e.attendance.length}</td>
-    </tr>`).join('') || '<tr><td colspan="8" class="muted">No events match filters.</td></tr>';
+    </tr>`).join('') || '<tr><td colspan="9" class="muted">No events match filters.</td></tr>';
   typeSel.onchange = renderEvents; statusSel.onchange = renderEvents;
 }
 document.getElementById('newEventBtn').addEventListener('click', ()=>showEventForm(null));
@@ -792,8 +823,7 @@ function showEventDetail(id){
     return `<tr>
       <td>${p?p.name:a.person}</td>
       <td>${a.department}</td>
-      <td><input type="text" value="${a.roleAtEvent||''}" onchange="updateAttendance('${id}',${i},'roleAtEvent',this.value)"></td>
-      <td><input type="text" value="${a.activity||''}" onchange="updateAttendance('${id}',${i},'activity',this.value)"></td>
+      <td style="min-width:150px;"><input type="text" value="${a.roleAtEvent||''}" onchange="updateAttendance('${id}',${i},'roleAtEvent',this.value)"></td>
       <td><select onchange="updateAttendance('${id}',${i},'attendanceStatus',this.value)">${DATA.referenceData.attendanceStatuses.map(s=>`<option ${s===a.attendanceStatus?'selected':''}>${s}</option>`).join('')}</select></td>
       <td><input type="date" value="${a.travelToDate||''}" onchange="updateAttendance('${id}',${i},'travelToDate',this.value)"></td>
       <td><input type="date" value="${a.travelFromDate||''}" onchange="updateAttendance('${id}',${i},'travelFromDate',this.value)"></td>
@@ -833,8 +863,8 @@ function showEventDetail(id){
         <select id="addAttPersonSelect_${id}">${personOpts}</select>
         <button class="btn small" onclick="addAttendance('${id}')">+ Add Person</button>
       </div>
-      <table style="margin-top:8px;"><thead><tr><th>Person</th><th>Dept</th><th>Role</th><th>Activity</th><th>Status</th><th>Travel To</th><th>Travel From</th><th></th></tr></thead>
-      <tbody>${attRows || '<tr><td colspan="8" class="muted">No one assigned yet.</td></tr>'}</tbody></table>
+      <table style="margin-top:8px;"><thead><tr><th>Person</th><th>Dept</th><th>Role</th><th>Status</th><th>Travel To</th><th>Travel From</th><th></th></tr></thead>
+      <tbody>${attRows || '<tr><td colspan="7" class="muted">No one assigned yet.</td></tr>'}</tbody></table>
     </div>
   `;
   openModal(html);
@@ -1006,7 +1036,7 @@ function renderLeave(){
     const person = findPerson(l.person);
     return `<tr class="${l.conflictFlag?'conflict-row':''}">
       <td>${person?person.name:l.person}</td><td>${l.startDate}</td><td>${l.endDate}</td>
-      <td>${l.leaveType}</td>
+      <td>${leaveTypeLabel(l.leaveType)}</td>
       <td><span class="badge ${statusBadgeClass(l.approvalStatus)}">${l.approvalStatus}</span></td>
       <td>${l.conflictFlag?'<span class="badge b-cancelled">Conflict</span>':'<span class="badge b-completed">None</span>'}</td>
       <td class="muted">${l.conflictDetails||''}</td>
@@ -1024,7 +1054,7 @@ function showLeaveForm(id){
     <h2>${id?'Edit Leave':'New Leave'}</h2>
     <div class="form-row">
       <div><label>Person</label><select id="l_person">${DATA.people.map(p=>`<option value="${p.id}" ${p.id===l.person?'selected':''}>${p.name}</option>`).join('')}</select></div>
-      <div><label>Leave Type</label><select id="l_type">${DATA.referenceData.leaveTypes.map(t=>`<option ${t===l.leaveType?'selected':''}>${t}</option>`).join('')}</select></div>
+      <div><label>Leave Type</label><select id="l_type">${DATA.referenceData.leaveTypes.map(t=>`<option value="${t}" ${t===l.leaveType?'selected':''}>${leaveTypeLabel(t)}</option>`).join('')}</select></div>
     </div>
     <div class="form-row">
       <div><label>Start Date</label><input type="date" id="l_start" value="${l.startDate}"></div>
@@ -1053,17 +1083,60 @@ function deleteLeave(id){
 }
 
 /* ---------- CALENDAR ---------- */
-function typeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'type-race'; if(t==='test')return 'type-test'; if(t==='dyno')return 'type-dyno'; return 'type-test'; }
+function typeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'type-race'; if(t==='test')return 'type-test'; if(t==='dyno')return 'type-dyno'; if(t==='shakedown')return 'type-shakedown'; return 'type-test'; }
 function eventsOnDate(ds){ return DATA.events.filter(e=> ds>=e.startDate && ds<=e.endDate); }
 function leaveOnDate(ds){ return DATA.leave.filter(l=> ds>=l.startDate && ds<=l.endDate); }
 function fmtDate(d){ return d.toISOString().slice(0,10); }
 function startOfWeek(d){ const nd=new Date(d); const day=(nd.getDay()+6)%7; nd.setDate(nd.getDate()-day); nd.setHours(0,0,0,0); return nd; }
 
+/* ---- Frankfurt / Hesse public holidays (for calendar shading) ---- */
+function easterSunday(year){
+  const a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4,
+        f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,
+        i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+        month=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1;
+  return new Date(year,month-1,day);
+}
+function addDays(date,n){ const d=new Date(date); d.setDate(d.getDate()+n); return d; }
+function germanHesseHolidays(year){
+  const easter = easterSunday(year);
+  return [
+    new Date(year,0,1),      // New Year's Day
+    addDays(easter,-2),      // Good Friday
+    addDays(easter,1),       // Easter Monday
+    new Date(year,4,1),      // Labour Day
+    addDays(easter,39),      // Ascension Day
+    addDays(easter,50),      // Whit Monday
+    addDays(easter,60),      // Corpus Christi (observed in Hesse)
+    new Date(year,9,3),      // German Unity Day
+    new Date(year,11,25),    // Christmas Day
+    new Date(year,11,26)     // Boxing Day
+  ].map(fmtDate);
+}
+const _hesseHolidayCache = {};
+function isFrankfurtHoliday(ds){
+  const year = parseInt(ds.slice(0,4),10);
+  if(!_hesseHolidayCache[year]) _hesseHolidayCache[year] = germanHesseHolidays(year);
+  return _hesseHolidayCache[year].includes(ds);
+}
+function isShadedDay(d,ds){ const day=d.getDay(); return day===0 || day===6 || isFrankfurtHoliday(ds); }
+
 function dayCellContent(ds){
   const evs = eventsOnDate(ds);
   const lvs = leaveOnDate(ds);
-  let html = evs.map(e=>`<div class="cal-event ${typeClass(e.eventType)}" title="${e.name}" onclick="event.stopPropagation();showEventDetail('${e.id}')">${e.eventCode}</div>`).join('');
-  html += lvs.map(l=>{ const p=findPerson(l.person); return `<div class="cal-event type-leave" title="${l.leaveType}" onclick="event.stopPropagation();showLeaveForm('${l.id}')">${p?initials(p.name):'?'} ${l.leaveType}</div>`; }).join('');
+  let html = evs.map(e=>{
+    const engines = eventEngines(e).join('/');
+    const peopleInit = (e.attendance||[]).map(a=>{const p=findPerson(a.person); return p?initials(p.name):null;}).filter(Boolean).join(' ');
+    const label = [e.eventCode, engines, peopleInit].filter(Boolean).join(' &middot; ');
+    const travelPeople = (e.attendance||[]).filter(a=>a.travelToDate===ds || a.travelFromDate===ds)
+      .map(a=>{const p=findPerson(a.person); return p?initials(p.name):'?';});
+    let out = `<div class="cal-event ${typeClass(e.eventType)}" title="${e.name}${engines?' | Engines: '+engines:''}" onclick="event.stopPropagation();showEventDetail('${e.id}')">${label}</div>`;
+    if(travelPeople.length){
+      out += `<div class="cal-event type-travel" title="Travelling" onclick="event.stopPropagation();showEventDetail('${e.id}')">&#9992; ${travelPeople.join(' ')}</div>`;
+    }
+    return out;
+  }).join('');
+  html += lvs.map(l=>{ const p=findPerson(l.person); return `<div class="cal-event ${leaveClass(l)}" title="${leaveTypeLabel(l.leaveType)}" onclick="event.stopPropagation();showLeaveForm('${l.id}')">${p?initials(p.name):'?'} ${leaveTypeLabel(l.leaveType)}</div>`; }).join('');
   return html;
 }
 
@@ -1078,7 +1151,8 @@ function renderCalendar(){
     for(let i=0;i<7;i++){
       const d = new Date(start); d.setDate(start.getDate()+i);
       const ds = fmtDate(d);
-      html += `<div class="cal-cell"><div class="daynum">${d.getDate()}</div>${dayCellContent(ds)}</div>`;
+      const shade = isShadedDay(d,ds) ? ' weekend-holiday' : '';
+      html += `<div class="cal-cell${shade}"><div class="daynum">${d.getDate()}</div>${dayCellContent(ds)}</div>`;
     }
     html += '</div>'; container.innerHTML = html;
   } else if(calMode==='month'){
@@ -1089,8 +1163,9 @@ function renderCalendar(){
     for(let i=0;i<42;i++){
       const d = new Date(startGrid); d.setDate(startGrid.getDate()+i);
       const ds = fmtDate(d);
+      const shade = isShadedDay(d,ds) ? ' weekend-holiday' : '';
       const dim = d.getMonth()!==month ? 'opacity:0.35;' : '';
-      html += `<div class="cal-cell" style="${dim}"><div class="daynum">${d.getDate()}</div>${dayCellContent(ds)}</div>`;
+      html += `<div class="cal-cell${shade}" style="${dim}"><div class="daynum">${d.getDate()}</div>${dayCellContent(ds)}</div>`;
     }
     html += '</div>'; container.innerHTML = html;
   } else {
@@ -1104,8 +1179,8 @@ function renderCalendar(){
       const lvs = DATA.leave.filter(l=>l.startDate<=monthEnd && l.endDate>=monthStart);
       html += `<div class="cal-month-box"><h4>${monthName}</h4>` +
         (evs.length||lvs.length ?
-          evs.map(e=>`<div class="cal-event ${typeClass(e.eventType)}" onclick="showEventDetail('${e.id}')">${e.eventCode}</div>`).join('') +
-          lvs.map(l=>{const p=findPerson(l.person);return `<div class="cal-event type-leave" onclick="showLeaveForm('${l.id}')">${p?initials(p.name):'?'} ${l.leaveType}</div>`}).join('')
+          evs.map(e=>{const engines=eventEngines(e).join('/'); return `<div class="cal-event ${typeClass(e.eventType)}" onclick="showEventDetail('${e.id}')">${e.eventCode}${engines?' '+engines:''}</div>`;}).join('') +
+          lvs.map(l=>{const p=findPerson(l.person);return `<div class="cal-event ${leaveClass(l)}" onclick="showLeaveForm('${l.id}')">${p?initials(p.name):'?'} ${leaveTypeLabel(l.leaveType)}</div>`}).join('')
           : '<span class="muted" style="font-size:11px;">No events</span>') +
         `</div>`;
     }
@@ -1125,7 +1200,7 @@ function renderAdmin(){
   document.getElementById('refDataGrid').innerHTML = Object.keys(rd).map(key=>`
     <div class="kpi">
       <div class="label">${key}</div>
-      <div style="margin-top:8px;">${rd[key].map((v,i)=>`<span class="pill">${v}<span class="x" onclick="removeRefValue('${key}',${i})">&times;</span></span>`).join('')}</div>
+      <div style="margin-top:8px;">${rd[key].map((v,i)=>`<span class="pill">${key==='leaveTypes'?leaveTypeLabel(v):v}<span class="x" onclick="removeRefValue('${key}',${i})">&times;</span></span>`).join('')}</div>
     </div>`).join('');
   const listSel = document.getElementById('refListSelect');
   listSel.innerHTML = Object.keys(rd).map(k=>`<option value="${k}">${k}</option>`).join('');
