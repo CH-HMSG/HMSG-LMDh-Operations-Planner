@@ -63,6 +63,11 @@
       "notes": ""
     },
     {
+      "id": "06A",
+      "status": "In-Build",
+      "notes": ""
+    },
+    {
       "id": "10A",
       "status": "Test",
       "notes": ""
@@ -426,7 +431,7 @@
         }
       ],
       "attendance": [],
-      "eventCode": "BCN BLOCKER",
+      "eventCode": "BCN BLCKR",
       "name": "BLOCKER",
       "eventType": "Race",
       "status": "Draft",
@@ -457,7 +462,7 @@
         }
       ],
       "attendance": [],
-      "eventCode": "MONZA BLOCKER",
+      "eventCode": "MNZ BLCKR",
       "name": "BLOCKER",
       "eventType": "Race",
       "status": "Draft",
@@ -469,10 +474,15 @@
     {
       "id": "E_t1hm3hf",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "06A",
+          "notes": ""
+        }
+      ],
       "attendance": [],
       "eventCode": "Stuttgart commissioning",
-      "name": "commissioning",
+      "name": "Stuttgart Dyno Commissioning",
       "eventType": "Dyno",
       "status": "Confirmed",
       "location": "Stuttgart",
@@ -483,10 +493,15 @@
     {
       "id": "E_b0zf19g",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "14A",
+          "notes": ""
+        }
+      ],
       "attendance": [],
-      "eventCode": "Dyno - AVL - #14A",
-      "name": "Dyno - AVL - #14A",
+      "eventCode": "AVL",
+      "name": "Dyno - AVL",
       "eventType": "Dyno",
       "status": "Confirmed",
       "location": "AVL",
@@ -499,7 +514,7 @@
       "chassisAssignments": [],
       "engineAssignments": [],
       "attendance": [],
-      "eventCode": "Dyno - PT Dyno",
+      "eventCode": "PT Dyno",
       "name": "PT Dyno",
       "eventType": "Dyno",
       "status": "Confirmed",
