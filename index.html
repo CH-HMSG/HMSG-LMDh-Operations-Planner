@@ -92,9 +92,14 @@ textarea{resize:vertical;min-height:50px;}
 .cal-event.type-leave-other{background:var(--leave-other);color:#0f1115;}
 .cal-event.type-travel{background:var(--travel);color:#fff;}
 .cal-cell.weekend-holiday{background:var(--weekend-shade);}
-.cal-year-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-.cal-month-box{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px;}
-.cal-month-box h4{margin:0 0 8px;font-size:12px;color:var(--muted);text-transform:uppercase;}
+.tl-year{display:flex;flex-direction:column;gap:10px;}
+.tl-month{display:flex;align-items:stretch;gap:10px;}
+.tl-label{width:70px;flex:0 0 70px;color:var(--muted);font-size:12px;text-transform:uppercase;padding-top:2px;}
+.tl-grid{position:relative;flex:1;display:grid;grid-template-columns:repeat(31,1fr);gap:1px;}
+.tl-daynum{text-align:center;font-size:9px;color:var(--muted);position:relative;z-index:1;}
+.tl-bg-shade{background:var(--weekend-shade);border-radius:2px;}
+.tl-bg-out{background:transparent;}
+.tl-bar{border-radius:3px;font-size:9.5px;color:#fff;display:flex;align-items:center;padding:0 4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;position:relative;z-index:1;margin:1px 0;}
 
 @media print{
   nav,.filters,.btn,header .actions,.cal-modes,.overlay{display:none !important;}
@@ -106,9 +111,9 @@ textarea{resize:vertical;min-height:50px;}
   .cal-week-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px;}
   .cal-week-header div{color:#555;font-size:10px;}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-  .cal-cell{background:#fafafa !important;border:1px solid #ccc !important;border-radius:4px;min-height:90px;height:90px;padding:5px;font-size:10px;box-sizing:border-box;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cal-cell{background:#fafafa !important;border:1px solid #ccc !important;border-radius:4px;min-height:135px;padding:5px;font-size:9px;box-sizing:border-box;overflow:visible;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .cal-cell .daynum{color:#666;font-size:9px;margin-bottom:3px;}
-  .cal-event{border-radius:3px;padding:1px 4px;margin-bottom:2px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cal-event{border-radius:3px;padding:2px 4px;margin-bottom:2px;font-size:8.5px;line-height:1.25;white-space:normal;word-break:break-word;overflow:visible;text-overflow:clip;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .cal-event.type-race{background:#dc2626 !important;color:#fff !important;}
   .cal-event.type-test{background:#16a34a !important;color:#fff !important;}
   .cal-event.type-dyno{background:#fef9c3 !important;color:#78350f !important;border:1px solid #ca8a04 !important;}
@@ -117,9 +122,15 @@ textarea{resize:vertical;min-height:50px;}
   .cal-event.type-leave-other{background:#f39c12 !important;color:#0f1115 !important;}
   .cal-event.type-travel{background:#8b5cf6 !important;color:#fff !important;}
   .cal-cell.weekend-holiday{background:#ececec !important;}
-  .cal-year-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-  .cal-month-box{background:#fff !important;border:1px solid #ccc !important;border-radius:6px;padding:8px;}
-  .cal-month-box h4{color:#555;}
+
+  /* Year timeline export */
+  .tl-year{display:flex;flex-direction:column;gap:6px;}
+  .tl-month{display:flex;align-items:stretch;gap:6px;}
+  .tl-label{color:#333 !important;}
+  .tl-daynum{color:#555 !important;}
+  .tl-bg-shade{background:#e6e6e6 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .tl-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .tl-bar.type-dyno,.tl-bar.type-shakedown{border:1px solid #ca8a04 !important;}
 }
 
 body.locked-mode #tabs button[data-tab="events"],
@@ -218,8 +229,7 @@ body.locked-mode #addEngineBtn{display:none !important;}
       <div class="section-title">Calendar</div>
       <div class="filters">
         <div class="cal-modes">
-          <button data-mode="week" class="active">Week</button>
-          <button data-mode="month">Month</button>
+          <button data-mode="month" class="active">Month</button>
           <button data-mode="year">Year</button>
         </div>
         <button class="btn secondary" id="calPrev">&larr;</button>
@@ -300,7 +310,7 @@ body.locked-mode #addEngineBtn{display:none !important;}
 
 <script>
 let DATA = null;
-let calMode = 'week';
+let calMode = 'month';
 let calAnchor = new Date();
 const STORAGE_KEY = 'hmsg_planner_data_v1';
 
@@ -824,7 +834,7 @@ function showEventDetail(id){
       <td>${p?p.name:a.person}</td>
       <td>${a.department}</td>
       <td style="min-width:150px;"><input type="text" value="${a.roleAtEvent||''}" onchange="updateAttendance('${id}',${i},'roleAtEvent',this.value)"></td>
-      <td><select onchange="updateAttendance('${id}',${i},'attendanceStatus',this.value)">${DATA.referenceData.attendanceStatuses.map(s=>`<option ${s===a.attendanceStatus?'selected':''}>${s}</option>`).join('')}</select></td>
+      <td style="min-width:110px;"><select onchange="updateAttendance('${id}',${i},'attendanceStatus',this.value)">${DATA.referenceData.attendanceStatuses.map(s=>`<option ${s===a.attendanceStatus?'selected':''}>${s}</option>`).join('')}</select></td>
       <td><input type="date" value="${a.travelToDate||''}" onchange="updateAttendance('${id}',${i},'travelToDate',this.value)"></td>
       <td><input type="date" value="${a.travelFromDate||''}" onchange="updateAttendance('${id}',${i},'travelFromDate',this.value)"></td>
       <td><button class="btn danger small" onclick="removeAttendance('${id}',${i})">Remove</button></td>
@@ -1140,22 +1150,71 @@ function dayCellContent(ds){
   return html;
 }
 
+function daysInMonth(year, month){ return new Date(year, month+1, 0).getDate(); }
+
+function timelineItemsForMonth(year, month){
+  const dim = daysInMonth(year, month);
+  const monthStart = fmtDate(new Date(year,month,1));
+  const monthEnd = fmtDate(new Date(year,month,dim));
+  const items = [];
+  DATA.events.forEach(e=>{
+    if(e.startDate<=monthEnd && e.endDate>=monthStart){
+      const startDay = e.startDate<monthStart ? 1 : parseInt(e.startDate.slice(8,10),10);
+      const endDay = e.endDate>monthEnd ? dim : parseInt(e.endDate.slice(8,10),10);
+      const engines = eventEngines(e).join('/');
+      const label = [e.eventCode, engines].filter(Boolean).join(' \u00b7 ');
+      items.push({startDay, endDay, cls:typeClass(e.eventType), label, title:e.name+(engines?' | Engines: '+engines:''), onclick:`showEventDetail('${e.id}')`});
+    }
+  });
+  DATA.leave.forEach(l=>{
+    if(l.startDate<=monthEnd && l.endDate>=monthStart){
+      const startDay = l.startDate<monthStart ? 1 : parseInt(l.startDate.slice(8,10),10);
+      const endDay = l.endDate>monthEnd ? dim : parseInt(l.endDate.slice(8,10),10);
+      const p = findPerson(l.person);
+      const label = (p?initials(p.name):'?') + ' ' + leaveTypeLabel(l.leaveType);
+      items.push({startDay, endDay, cls:leaveClass(l), label, title:label, onclick:`showLeaveForm('${l.id}')`});
+    }
+  });
+  items.sort((a,b)=>a.startDay-b.startDay || a.endDay-b.endDay);
+  const laneEnds = [];
+  items.forEach(it=>{
+    let lane = laneEnds.findIndex(end=>end < it.startDay);
+    if(lane===-1){ lane = laneEnds.length; laneEnds.push(it.endDay); }
+    else{ laneEnds[lane] = it.endDay; }
+    it.lane = lane;
+  });
+  return { items, laneCount: Math.max(laneEnds.length,1), dim };
+}
+
+function monthTimelineHTML(year, month){
+  const monthName = new Date(year,month,1).toLocaleString('default',{month:'long'});
+  const { items, laneCount, dim } = timelineItemsForMonth(year, month);
+  let cols = '';
+  for(let d=1; d<=31; d++){
+    const shaded = d<=dim && isShadedDay(new Date(year,month,d), fmtDate(new Date(year,month,d)));
+    cols += `<div class="tl-daynum${shaded?' tl-shade':''}" style="grid-column:${d};grid-row:1;">${d<=dim?d:''}</div>`;
+  }
+  let bg = '';
+  for(let d=1; d<=dim; d++){
+    if(isShadedDay(new Date(year,month,d), fmtDate(new Date(year,month,d)))){
+      bg += `<div class="tl-bg-shade" style="grid-column:${d};grid-row:1 / ${laneCount+2};"></div>`;
+    }
+  }
+  for(let d=dim+1; d<=31; d++){
+    bg += `<div class="tl-bg-out" style="grid-column:${d};grid-row:1 / ${laneCount+2};"></div>`;
+  }
+  const bars = items.map(it=>`<div class="tl-bar ${it.cls}" style="grid-column:${it.startDay} / ${it.endDay+1};grid-row:${it.lane+2};" title="${it.title}" onclick="${it.onclick}">${it.label}</div>`).join('');
+  return `<div class="tl-month">
+    <div class="tl-label">${monthName}</div>
+    <div class="tl-grid" style="grid-template-rows:18px repeat(${laneCount},20px);">${bg}${cols}${bars}</div>
+  </div>`;
+}
+
 function renderCalendar(){
   const label = document.getElementById('calLabel');
   const container = document.getElementById('calContainer');
   const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  if(calMode==='week'){
-    const start = startOfWeek(calAnchor);
-    label.textContent = 'Week of ' + fmtDate(start);
-    let html = '<div class="cal-week-header">' + dayNames.map(d=>`<div>${d}</div>`).join('') + '</div><div class="cal-grid">';
-    for(let i=0;i<7;i++){
-      const d = new Date(start); d.setDate(start.getDate()+i);
-      const ds = fmtDate(d);
-      const shade = isShadedDay(d,ds) ? ' weekend-holiday' : '';
-      html += `<div class="cal-cell${shade}"><div class="daynum">${d.getDate()}</div>${dayCellContent(ds)}</div>`;
-    }
-    html += '</div>'; container.innerHTML = html;
-  } else if(calMode==='month'){
+  if(calMode==='month'){
     const year=calAnchor.getFullYear(), month=calAnchor.getMonth();
     label.textContent = calAnchor.toLocaleString('default',{month:'long',year:'numeric'});
     const startGrid = startOfWeek(new Date(year,month,1));
@@ -1171,28 +1230,18 @@ function renderCalendar(){
   } else {
     const year = calAnchor.getFullYear();
     label.textContent = String(year);
-    let html = '<div class="cal-year-grid">';
-    for(let m=0;m<12;m++){
-      const monthName = new Date(year,m,1).toLocaleString('default',{month:'long'});
-      const monthStart = fmtDate(new Date(year,m,1)), monthEnd = fmtDate(new Date(year,m+1,0));
-      const evs = DATA.events.filter(e=>e.startDate<=monthEnd && e.endDate>=monthStart);
-      const lvs = DATA.leave.filter(l=>l.startDate<=monthEnd && l.endDate>=monthStart);
-      html += `<div class="cal-month-box"><h4>${monthName}</h4>` +
-        (evs.length||lvs.length ?
-          evs.map(e=>{const engines=eventEngines(e).join('/'); return `<div class="cal-event ${typeClass(e.eventType)}" onclick="showEventDetail('${e.id}')">${e.eventCode}${engines?' '+engines:''}</div>`;}).join('') +
-          lvs.map(l=>{const p=findPerson(l.person);return `<div class="cal-event ${leaveClass(l)}" onclick="showLeaveForm('${l.id}')">${p?initials(p.name):'?'} ${leaveTypeLabel(l.leaveType)}</div>`}).join('')
-          : '<span class="muted" style="font-size:11px;">No events</span>') +
-        `</div>`;
-    }
+    let html = '<div class="tl-year">';
+    for(let m=0;m<12;m++){ html += monthTimelineHTML(year, m); }
     html += '</div>'; container.innerHTML = html;
   }
 }
 document.querySelectorAll('.cal-modes button').forEach(btn=>{
   btn.addEventListener('click', ()=>{ document.querySelectorAll('.cal-modes button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); calMode=btn.dataset.mode; renderCalendar(); });
 });
-document.getElementById('calPrev').addEventListener('click', ()=>{ if(calMode==='week')calAnchor.setDate(calAnchor.getDate()-7); else if(calMode==='month')calAnchor.setMonth(calAnchor.getMonth()-1); else calAnchor.setFullYear(calAnchor.getFullYear()-1); renderCalendar(); });
-document.getElementById('calNext').addEventListener('click', ()=>{ if(calMode==='week')calAnchor.setDate(calAnchor.getDate()+7); else if(calMode==='month')calAnchor.setMonth(calAnchor.getMonth()+1); else calAnchor.setFullYear(calAnchor.getFullYear()+1); renderCalendar(); });
+document.getElementById('calPrev').addEventListener('click', ()=>{ if(calMode==='month')calAnchor.setMonth(calAnchor.getMonth()-1); else calAnchor.setFullYear(calAnchor.getFullYear()-1); renderCalendar(); });
+document.getElementById('calNext').addEventListener('click', ()=>{ if(calMode==='month')calAnchor.setMonth(calAnchor.getMonth()+1); else calAnchor.setFullYear(calAnchor.getFullYear()+1); renderCalendar(); });
 document.getElementById('calToday').addEventListener('click', ()=>{ calAnchor=new Date(); renderCalendar(); });
+
 
 /* ---------- ADMIN / REFERENCE DATA ---------- */
 function renderAdmin(){
