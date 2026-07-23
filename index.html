@@ -110,7 +110,7 @@ textarea{resize:vertical;min-height:50px;}
 
 @page{ size: A4 landscape; margin:9mm; }
 @media print{
-  nav,.filters,.btn,header .actions,.cal-modes,.overlay{display:none !important;}
+  nav,.filters,.btn,header,.cal-modes,.overlay,#calSectionHeading,footer{display:none !important;}
   html,body{background:#fff;color:#000;height:auto;}
   main{padding:0;max-width:100%;margin:0;}
   .card{border:1px solid #ccc;background:#fff;}
@@ -184,7 +184,6 @@ body.locked-mode input,
 body.locked-mode select,
 body.locked-mode textarea{pointer-events:none;opacity:.65;}
 body.locked-mode tr.clickable,
-body.locked-mode .cal-event,
 body.locked-mode .pill .x{cursor:default;pointer-events:none;}
 body.locked-mode .btn:not(#unlockBtn):not(.secondary){display:none !important;}
 body.locked-mode #newEventBtn,
@@ -265,11 +264,11 @@ body.locked-mode #addEngineBtn{display:none !important;}
 
   <section id="tab-calendar" style="display:none;">
     <div class="flex-between">
-      <div class="section-title">Calendar</div>
+      <div class="section-title" id="calSectionHeading">Calendar</div>
       <div class="filters">
         <div class="cal-modes">
-          <button data-mode="month" class="active">Month</button>
-          <button data-mode="year">Year</button>
+          <button data-mode="month">Month</button>
+          <button data-mode="year" class="active">Year</button>
         </div>
         <button class="btn secondary" id="calPrev">&larr;</button>
         <button class="btn secondary" id="calToday">Today</button>
@@ -349,7 +348,7 @@ body.locked-mode #addEngineBtn{display:none !important;}
 
 <script>
 let DATA = null;
-let calMode = 'month';
+let calMode = 'year';
 let calAnchor = new Date();
 const STORAGE_KEY = 'hmsg_planner_data_v1';
 
@@ -366,9 +365,9 @@ function applyLockState(){
     document.querySelectorAll('main > section').forEach(s=>s.style.display='none');
     document.getElementById('tab-dashboard').style.display='block';
 
-    calMode = 'month';
+    calMode = 'year';
     document.querySelectorAll('.cal-modes button').forEach(b=>{
-      b.classList.toggle('active', b.dataset.mode==='month');
+      b.classList.toggle('active', b.dataset.mode==='year');
     });
     if(typeof renderCalendar === 'function') renderCalendar();
   }
@@ -1004,7 +1003,7 @@ function addAttendance(eventId){
   ev.attendance.push({person:personId, department:p.department, roleAtEvent:p.defaultRole, activity:'', attendanceStatus:'Planned', travelToDate:ev.startDate, travelFromDate:ev.endDate, travelNotes:'', accommodationNotes:'', arrivalStatus:'Not Started', departureStatus:'Not Started'});
   saveData(); render(); showEventDetail(eventId);
 }
-function updateAttendance(eventId,i,field,value){ findEvent(eventId).attendance[i][field]=value; saveData(); renderDashboard(); }
+function updateAttendance(eventId,i,field,value){ findEvent(eventId).attendance[i][field]=value; saveData(); renderDashboard(); renderCalendar(); }
 function removeAttendance(eventId,i){ findEvent(eventId).attendance.splice(i,1); saveData(); render(); showEventDetail(eventId); }
 
 /* ---------- PEOPLE ---------- */
@@ -1170,6 +1169,69 @@ function isFrankfurtHoliday(ds){
 }
 function isShadedDay(d,ds){ const day=d.getDay(); return day===0 || day===6 || isFrankfurtHoliday(ds); }
 
+/* ---- Travel window calculation (shared by month + year calendar views) ----
+   Convention: travelling-to runs from a person's "travel to" date until the
+   event start date; travelling-from runs from the event end date until the
+   person's "travel from" date. Each returned segment is a contiguous run of
+   days that share the exact same set of travelling people (so if different
+   people travel on different days, they render as separate labelled boxes). */
+function addDaysStr(ds, n){
+  const [y,m,d] = ds.split('-').map(Number);
+  const dt = new Date(y, m-1, d+n);
+  const yy = dt.getFullYear();
+  const mm = String(dt.getMonth()+1).padStart(2,'0');
+  const dd = String(dt.getDate()).padStart(2,'0');
+  return `${yy}-${mm}-${dd}`;
+}
+function eventTravelSegments(e){
+  const attendees = e.attendance || [];
+  const segments = [];
+
+  // OUT: travelling TO the event, before the event's start date
+  let earliestOut = null;
+  attendees.forEach(a=>{
+    const ts = a.travelToDate || e.startDate;
+    if(ts < e.startDate && (earliestOut===null || ts<earliestOut)) earliestOut = ts;
+  });
+  if(earliestOut){
+    let ds = earliestOut, curKey=null, curStart=null, curPeople=null;
+    while(ds < e.startDate){
+      const peopleSet = attendees.filter(a=>(a.travelToDate||e.startDate) <= ds)
+        .map(a=>{const p=findPerson(a.person); return p?initials(p.name):'?';}).sort();
+      const key = peopleSet.join(',');
+      if(key!==curKey){
+        if(curKey){ segments.push({start:curStart,end:addDaysStr(ds,-1),people:curPeople,direction:'out'}); }
+        curKey=key; curStart=ds; curPeople=peopleSet;
+      }
+      ds = addDaysStr(ds,1);
+    }
+    if(curKey){ segments.push({start:curStart,end:addDaysStr(ds,-1),people:curPeople,direction:'out'}); }
+  }
+
+  // BACK: travelling FROM the event, after the event's end date
+  let latestBack = null;
+  attendees.forEach(a=>{
+    const te = a.travelFromDate || e.endDate;
+    if(te > e.endDate && (latestBack===null || te>latestBack)) latestBack = te;
+  });
+  if(latestBack){
+    let ds = addDaysStr(e.endDate,1), curKey=null, curStart=null, curPeople=null;
+    while(ds <= latestBack){
+      const peopleSet = attendees.filter(a=>ds <= (a.travelFromDate||e.endDate))
+        .map(a=>{const p=findPerson(a.person); return p?initials(p.name):'?';}).sort();
+      const key = peopleSet.join(',');
+      if(key!==curKey){
+        if(curKey){ segments.push({start:curStart,end:addDaysStr(ds,-1),people:curPeople,direction:'back'}); }
+        curKey=key; curStart=ds; curPeople=peopleSet;
+      }
+      ds = addDaysStr(ds,1);
+    }
+    if(curKey){ segments.push({start:curStart,end:addDaysStr(ds,-1),people:curPeople,direction:'back'}); }
+  }
+
+  return segments.filter(s=>s.people.length>0);
+}
+
 function dayCellContent(ds){
   const evs = eventsOnDate(ds);
   const lvs = leaveOnDate(ds);
@@ -1177,14 +1239,18 @@ function dayCellContent(ds){
     const engines = eventEngines(e).join('/');
     const peopleInit = (e.attendance||[]).map(a=>{const p=findPerson(a.person); return p?initials(p.name):null;}).filter(Boolean).join(' ');
     const label = [e.eventCode, engines, peopleInit].filter(Boolean).join(' &middot; ');
-    const travelPeople = (e.attendance||[]).filter(a=>a.travelToDate===ds || a.travelFromDate===ds)
-      .map(a=>{const p=findPerson(a.person); return p?initials(p.name):'?';});
-    let out = `<div class="cal-event ${typeClass(e.eventType)}" title="${e.name}${engines?' | Engines: '+engines:''}" onclick="event.stopPropagation();showEventDetail('${e.id}')">${label}</div>`;
-    if(travelPeople.length){
-      out += `<div class="cal-event type-travel" title="Travelling" onclick="event.stopPropagation();showEventDetail('${e.id}')">&#9992; ${travelPeople.join(' ')}</div>`;
-    }
-    return out;
+    return `<div class="cal-event ${typeClass(e.eventType)}" title="${e.name}${engines?' | Engines: '+engines:''}" onclick="event.stopPropagation();showEventDetail('${e.id}')">${label}</div>`;
   }).join('');
+
+  DATA.events.forEach(e=>{
+    eventTravelSegments(e).forEach(s=>{
+      if(ds>=s.start && ds<=s.end){
+        const dirLabel = s.direction==='out' ? 'Travelling to' : 'Travelling from';
+        html += `<div class="cal-event type-travel" title="${dirLabel} ${e.name}" onclick="event.stopPropagation();showEventDetail('${e.id}')">&#9992; ${s.people.join(' ')}</div>`;
+      }
+    });
+  });
+
   html += lvs.map(l=>{ const p=findPerson(l.person); return `<div class="cal-event ${leaveClass(l)}" title="${leaveTypeLabel(l.leaveType)}" onclick="event.stopPropagation();showLeaveForm('${l.id}')">${p?initials(p.name):'?'} ${leaveTypeLabel(l.leaveType)}</div>`; }).join('');
   return html;
 }
@@ -1195,33 +1261,61 @@ function timelineItemsForMonth(year, month){
   const dim = daysInMonth(year, month);
   const monthStart = fmtDate(new Date(year,month,1));
   const monthEnd = fmtDate(new Date(year,month,dim));
-  const items = [];
+
+  function clip(startDs, endDs){
+    if(endDs<monthStart || startDs>monthEnd) return null;
+    const startDay = startDs<monthStart ? 1 : parseInt(startDs.slice(8,10),10);
+    const endDay = endDs>monthEnd ? dim : parseInt(endDs.slice(8,10),10);
+    return {startDay, endDay};
+  }
+
+  // Groups: each event (with its travel segments) or each leave record is one
+  // group. All bars within a group share one lane so the travel-colour
+  // segments continue in the same row as the main event bar.
+  const groups = [];
+
   DATA.events.forEach(e=>{
-    if(e.startDate<=monthEnd && e.endDate>=monthStart){
-      const startDay = e.startDate<monthStart ? 1 : parseInt(e.startDate.slice(8,10),10);
-      const endDay = e.endDate>monthEnd ? dim : parseInt(e.endDate.slice(8,10),10);
-      const engines = eventEngines(e).join('/');
-      const label = [e.eventCode, engines].filter(Boolean).join(' \u00b7 ');
-      items.push({startDay, endDay, cls:typeClass(e.eventType), label, title:e.name+(engines?' | Engines: '+engines:''), onclick:`showEventDetail('${e.id}')`});
+    const segs = eventTravelSegments(e);
+    const engines = eventEngines(e).join('/');
+    const mainLabel = [e.eventCode, engines].filter(Boolean).join(' \u00b7 ');
+    const bars = [];
+
+    segs.filter(s=>s.direction==='out').forEach(s=>{
+      const c = clip(s.start, s.end);
+      if(c) bars.push({startDay:c.startDay, endDay:c.endDay, cls:'type-travel', label:'&#9992; '+s.people.join(' '), title:'Travelling to '+e.name, onclick:`showEventDetail('${e.id}')`});
+    });
+
+    const mainClip = clip(e.startDate, e.endDate);
+    if(mainClip) bars.push({startDay:mainClip.startDay, endDay:mainClip.endDay, cls:typeClass(e.eventType), label:mainLabel, title:e.name+(engines?' | Engines: '+engines:''), onclick:`showEventDetail('${e.id}')`});
+
+    segs.filter(s=>s.direction==='back').forEach(s=>{
+      const c = clip(s.start, s.end);
+      if(c) bars.push({startDay:c.startDay, endDay:c.endDay, cls:'type-travel', label:'&#9992; '+s.people.join(' '), title:'Travelling from '+e.name, onclick:`showEventDetail('${e.id}')`});
+    });
+
+    if(bars.length){
+      groups.push({ overallStart: Math.min(...bars.map(b=>b.startDay)), overallEnd: Math.max(...bars.map(b=>b.endDay)), bars });
     }
   });
+
   DATA.leave.forEach(l=>{
-    if(l.startDate<=monthEnd && l.endDate>=monthStart){
-      const startDay = l.startDate<monthStart ? 1 : parseInt(l.startDate.slice(8,10),10);
-      const endDay = l.endDate>monthEnd ? dim : parseInt(l.endDate.slice(8,10),10);
-      const p = findPerson(l.person);
-      const label = (p?initials(p.name):'?') + ' ' + leaveTypeLabel(l.leaveType);
-      items.push({startDay, endDay, cls:leaveClass(l), label, title:label, onclick:`showLeaveForm('${l.id}')`});
-    }
+    const c = clip(l.startDate, l.endDate);
+    if(!c) return;
+    const p = findPerson(l.person);
+    const label = (p?initials(p.name):'?') + ' ' + leaveTypeLabel(l.leaveType);
+    groups.push({ overallStart:c.startDay, overallEnd:c.endDay, bars:[{startDay:c.startDay, endDay:c.endDay, cls:leaveClass(l), label, title:label, onclick:`showLeaveForm('${l.id}')`}] });
   });
-  items.sort((a,b)=>a.startDay-b.startDay || a.endDay-b.endDay);
+
+  groups.sort((a,b)=>a.overallStart-b.overallStart || a.overallEnd-b.overallEnd);
   const laneEnds = [];
-  items.forEach(it=>{
-    let lane = laneEnds.findIndex(end=>end < it.startDay);
-    if(lane===-1){ lane = laneEnds.length; laneEnds.push(it.endDay); }
-    else{ laneEnds[lane] = it.endDay; }
-    it.lane = lane;
+  groups.forEach(g=>{
+    let lane = laneEnds.findIndex(end=>end < g.overallStart);
+    if(lane===-1){ lane = laneEnds.length; laneEnds.push(g.overallEnd); }
+    else{ laneEnds[lane] = g.overallEnd; }
+    g.bars.forEach(b=>b.lane = lane);
   });
+
+  const items = groups.flatMap(g=>g.bars);
   return { items, laneCount: Math.max(laneEnds.length,1), dim };
 }
 
@@ -1253,9 +1347,13 @@ function renderCalendar(){
   const label = document.getElementById('calLabel');
   const container = document.getElementById('calContainer');
   const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const generatedNow = new Date();
+  const generatedDateStr = generatedNow.toLocaleDateString('en-GB');
+  const generatedTimeStr = generatedNow.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   if(calMode==='month'){
     const year=calAnchor.getFullYear(), month=calAnchor.getMonth();
-    label.textContent = calAnchor.toLocaleString('default',{month:'long',year:'numeric'});
+    const monthName = calAnchor.toLocaleString('default',{month:'long'}).toUpperCase();
+    label.textContent = `Plan ${monthName} ${year} - ${generatedDateStr} - ${generatedTimeStr}`;
     const startGrid = startOfWeek(new Date(year,month,1));
     let html = '<div class="cal-week-header">' + dayNames.map(d=>`<div>${d}</div>`).join('') + '</div><div class="cal-grid">';
     for(let i=0;i<42;i++){
@@ -1268,7 +1366,7 @@ function renderCalendar(){
     html += '</div>'; container.innerHTML = html;
   } else {
     const year = calAnchor.getFullYear();
-    label.textContent = String(year);
+    label.textContent = `Plan ${year} - ${generatedDateStr} - ${generatedTimeStr}`;
     let html = '<div class="tl-year">';
     for(let m=0;m<12;m++){ html += monthTimelineHTML(year, m); }
     html += '</div>'; container.innerHTML = html;
