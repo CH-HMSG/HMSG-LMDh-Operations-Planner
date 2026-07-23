@@ -557,20 +557,6 @@
       "startDate": "2026-08-24",
       "endDate": "2026-08-28",
       "notes": "PT Dyno"
-    },
-    {
-      "id": "E_olqskgo",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "11",
-      "name": "11",
-      "eventType": "Race",
-      "status": "Draft",
-      "location": "Fechenheim",
-      "startDate": "2026-07-13",
-      "endDate": "2026-07-23",
-      "notes": ""
     }
   ],
   "leave": [
