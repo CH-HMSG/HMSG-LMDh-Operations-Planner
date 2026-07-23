@@ -28,7 +28,8 @@
       "In-Build",
       "Race",
       "Test",
-      "Retired"
+      "Retired",
+      "Dyno"
     ],
     "departments": [
       "Electronics",
@@ -63,8 +64,13 @@
       "notes": ""
     },
     {
+      "id": "03D",
+      "status": "Dyno",
+      "notes": ""
+    },
+    {
       "id": "06A",
-      "status": "In-Build",
+      "status": "Dyno",
       "notes": ""
     },
     {
@@ -136,6 +142,30 @@
     {
       "id": "P_fsz4tif",
       "name": "Joerg Hoffman",
+      "email": "",
+      "department": "Powertrain",
+      "defaultRole": "Mechanic",
+      "active": true
+    },
+    {
+      "id": "P_u7zibq8",
+      "name": "Juchs Lionel",
+      "email": "",
+      "department": "Powertrain",
+      "defaultRole": "PU Lead",
+      "active": true
+    },
+    {
+      "id": "P_2ezznwd",
+      "name": "Yousouf Isaq",
+      "email": "",
+      "department": "Powertrain",
+      "defaultRole": "PU Engineer",
+      "active": true
+    },
+    {
+      "id": "P_5jfyv93",
+      "name": "Steven Fey",
       "email": "",
       "department": "Powertrain",
       "defaultRole": "Mechanic",
