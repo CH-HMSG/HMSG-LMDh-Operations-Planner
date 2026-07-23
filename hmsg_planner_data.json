@@ -542,7 +542,12 @@
     {
       "id": "E_9tq84ya",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "03D",
+          "notes": ""
+        }
+      ],
       "attendance": [],
       "eventCode": "PT Dyno",
       "name": "PT Dyno",
