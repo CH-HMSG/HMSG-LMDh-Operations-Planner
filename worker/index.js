@@ -5,14 +5,15 @@ export default {
     if (url.pathname === "/api/push" && request.method === "POST") {
       const { owner, repo, branch, path, token } = env;
       const body = await request.json();
-      const content = body.content;
+      const content = btoa(body.content);
       const message = body.message || "Update from planner";
 
       const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       const headers = {
         Authorization: `Bearer ${token}`,
         Accept: "application/vnd.github+json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2026-03-10"
       };
 
       const getRes = await fetch(`${apiBase}?ref=${encodeURIComponent(branch)}`, {
@@ -45,6 +46,6 @@ export default {
       });
     }
 
-    return env.ASSETS.fetch(request);
+    return new Response("Not found", { status: 404 });
   }
 };
