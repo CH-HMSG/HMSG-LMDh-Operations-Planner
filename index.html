@@ -1134,7 +1134,7 @@ function deleteLeave(id){
 function typeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'type-race'; if(t==='test')return 'type-test'; if(t==='dyno')return 'type-dyno'; if(t==='shakedown')return 'type-shakedown'; return 'type-test'; }
 function eventsOnDate(ds){ return DATA.events.filter(e=> ds>=e.startDate && ds<=e.endDate); }
 function leaveOnDate(ds){ return DATA.leave.filter(l=> ds>=l.startDate && ds<=l.endDate); }
-function fmtDate(d){ return d.toISOString().slice(0,10); }
+function fmtDate(d){ const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
 function startOfWeek(d){ const nd=new Date(d); const day=(nd.getDay()+6)%7; nd.setDate(nd.getDate()-day); nd.setHours(0,0,0,0); return nd; }
 
 /* ---- Frankfurt / Hesse public holidays (for calendar shading) ---- */
