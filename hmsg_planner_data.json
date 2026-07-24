@@ -557,34 +557,6 @@
       "startDate": "2026-08-24",
       "endDate": "2026-08-28",
       "notes": "PT Dyno"
-    },
-    {
-      "id": "E_5sf3fjz",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "4",
-      "name": "4",
-      "eventType": "Race",
-      "status": "Draft",
-      "location": "Fechenheim",
-      "startDate": "2026-07-23",
-      "endDate": "2026-07-25",
-      "notes": "4"
-    },
-    {
-      "id": "E_rpke4yt",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "5",
-      "name": "5",
-      "eventType": "Race",
-      "status": "Draft",
-      "location": "Fechenheim",
-      "startDate": "2026-07-27",
-      "endDate": "2026-07-30",
-      "notes": ""
     }
   ],
   "leave": [
