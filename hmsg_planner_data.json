@@ -557,6 +557,20 @@
       "startDate": "2026-08-24",
       "endDate": "2026-08-28",
       "notes": "PT Dyno"
+    },
+    {
+      "id": "E_9evb40i",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "1",
+      "name": "2",
+      "eventType": "Race",
+      "status": "Draft",
+      "location": "Fechenheim",
+      "startDate": "2026-07-20",
+      "endDate": "2026-07-25",
+      "notes": "3"
     }
   ],
   "leave": [
