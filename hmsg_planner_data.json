@@ -52,7 +52,8 @@
       "Paul Ricard",
       "Monza",
       "Stuttgart",
-      "AVL"
+      "AVL",
+      "Portimao"
     ],
     "transportMethods": []
   },
@@ -557,6 +558,76 @@
       "startDate": "2026-08-24",
       "endDate": "2026-08-28",
       "notes": "PT Dyno"
+    },
+    {
+      "id": "E_s7h4p2w",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "261215_POR",
+      "name": "Portimao",
+      "eventType": "Test",
+      "status": "Draft",
+      "location": "Portimao",
+      "startDate": "2026-12-15",
+      "endDate": "2026-12-16",
+      "notes": ""
+    },
+    {
+      "id": "E_cau1r9f",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "261006_PRC",
+      "name": "Paul Ricard",
+      "eventType": "Test",
+      "status": "Draft",
+      "location": "Paul Ricard",
+      "startDate": "2026-10-06",
+      "endDate": "2026-10-07",
+      "notes": ""
+    },
+    {
+      "id": "E_ra4lhvw",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "261028_MON",
+      "name": "Monza Test",
+      "eventType": "Test",
+      "status": "Draft",
+      "location": "Monza",
+      "startDate": "2026-10-28",
+      "endDate": "2026-10-28",
+      "notes": ""
+    },
+    {
+      "id": "E_nebbipu",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "PT Dyno",
+      "name": "PT Dyno",
+      "eventType": "Dyno",
+      "status": "Confirmed",
+      "location": "Rüsselsheim",
+      "startDate": "2026-09-14",
+      "endDate": "2026-09-18",
+      "notes": ""
+    },
+    {
+      "id": "E_cwf18yb",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "PT Dyno",
+      "name": "PT Dyno",
+      "eventType": "Dyno",
+      "status": "Confirmed",
+      "location": "Fechenheim",
+      "startDate": "2026-10-26",
+      "endDate": "2026-10-30",
+      "notes": ""
     }
   ],
   "leave": [
@@ -597,6 +668,26 @@
       "person": "P1",
       "startDate": "2026-09-10",
       "endDate": "2026-09-18",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_a4po8o3",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P_5ugsw3v",
+      "startDate": "2026-09-29",
+      "endDate": "2026-10-09",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_vniv520",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P1",
+      "startDate": "2026-09-29",
+      "endDate": "2026-10-09",
       "leaveType": "Annual",
       "approvalStatus": "Approved"
     },
