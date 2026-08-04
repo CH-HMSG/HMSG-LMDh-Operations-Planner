@@ -352,8 +352,8 @@
           "roleAtEvent": "PU Engineer",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-08-26",
-          "travelFromDate": "2026-08-27",
+          "travelToDate": "2026-08-25",
+          "travelFromDate": "2026-08-28",
           "travelNotes": "",
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
@@ -461,15 +461,55 @@
           "notes": "Spare"
         }
       ],
-      "attendance": [],
-      "eventCode": "BCN BLCKR",
-      "name": "BLOCKER",
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-10-13",
+          "travelFromDate": "2026-10-19",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-10-13",
+          "travelFromDate": "2026-10-19",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_5ugsw3v",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-10-13",
+          "travelFromDate": "2026-10-19",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "Barcelona Race",
+      "name": "Barcelona Race",
       "eventType": "Race",
-      "status": "Draft",
+      "status": "Confirmed",
       "location": "Barcelona",
       "startDate": "2026-10-14",
       "endDate": "2026-10-18",
-      "notes": "DATE BLOCKER NEW EVENT - BARCELONA"
+      "notes": "Barcelona Race - Code not available yet"
     },
     {
       "id": "E_lu8qb6b",
@@ -492,15 +532,55 @@
           "notes": ""
         }
       ],
-      "attendance": [],
-      "eventCode": "MNZ BLCKR",
-      "name": "BLOCKER",
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-11-03",
+          "travelFromDate": "2026-11-09",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-11-03",
+          "travelFromDate": "2026-11-09",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_5ugsw3v",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-11-03",
+          "travelFromDate": "2026-11-09",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "Monza Race",
+      "name": "Monza Race",
       "eventType": "Race",
       "status": "Draft",
       "location": "Monza",
-      "startDate": "2026-11-01",
+      "startDate": "2026-11-04",
       "endDate": "2026-11-08",
-      "notes": "DATE BLOCKER NEW EVENT - MONZA"
+      "notes": "Monza Race - Code not available yet"
     },
     {
       "id": "E_t1hm3hf",
