@@ -81,13 +81,14 @@ textarea{resize:vertical;min-height:50px;}
 .cal-week-header{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px;}
 .cal-week-header div{text-align:center;color:var(--muted);font-size:11px;text-transform:uppercase;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
-.cal-cell{background:var(--panel2);border:1px solid var(--border);border-radius:6px;min-height:80px;padding:6px;font-size:11px;}
+.cal-cell{background:var(--panel2);border:1px solid var(--border);border-radius:6px;min-height:80px;height:auto;padding:6px;font-size:11px;overflow:visible;}
 .cal-cell .daynum{color:var(--muted);font-size:10px;margin-bottom:4px;}
-.cal-event{border-radius:4px;padding:2px 5px;margin-bottom:3px;font-size:10px;color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-event{border-radius:4px;padding:2px 5px;margin-bottom:3px;font-size:10px;color:#fff;cursor:pointer;white-space:normal;overflow-wrap:break-word;word-break:break-word;line-height:1.25;}
 .cal-event.type-race{background:var(--race);color:#fff;}
 .cal-event.type-test{background:var(--test);color:#fff;}
 .cal-event.type-dyno{background:var(--dyno);color:#78350f;}
 .cal-event.type-shakedown{background:var(--shakedown);color:#3f2d00;}
+.cal-event.type-custom{background:#555;color:#fff;}
 .cal-event.type-leave-holiday{background:var(--holiday);color:#fff;}
 .cal-event.type-leave-other{background:var(--leave-other);color:#0f1115;}
 .cal-event.type-travel{background:var(--travel);color:#fff;}
@@ -99,11 +100,12 @@ textarea{resize:vertical;min-height:50px;}
 .tl-daynum{text-align:center;font-size:9px;color:var(--muted);position:relative;z-index:1;border-right:1px solid var(--border);}
 .tl-bg-shade{background:var(--weekend-shade);border-radius:0;border-right:1px solid var(--border);}
 .tl-bg-out{background:transparent;border-right:1px solid var(--border);}
-.tl-bar{border-radius:3px;font-size:9.5px;color:#fff;display:flex;align-items:center;padding:0 4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;position:relative;z-index:1;margin:1px 0;}
+.tl-bar{border-radius:3px;font-size:9.5px;color:#fff;display:flex;align-items:center;padding:1px 4px;overflow:visible;white-space:normal;overflow-wrap:break-word;word-break:break-word;line-height:1.15;cursor:pointer;position:relative;z-index:1;margin:1px 0;height:auto;min-height:18px;}
 .tl-bar.type-race{background:var(--race);color:#fff;}
 .tl-bar.type-test{background:var(--test);color:#fff;}
 .tl-bar.type-dyno{background:var(--dyno);color:#78350f;}
 .tl-bar.type-shakedown{background:var(--shakedown);color:#3f2d00;}
+.tl-bar.type-custom{background:#555;color:#fff;}
 .tl-bar.type-leave-holiday{background:var(--holiday);color:#fff;}
 .tl-bar.type-leave-other{background:var(--leave-other);color:#0f1115;}
 .tl-bar.type-travel{background:var(--travel);color:#fff;}
@@ -143,7 +145,7 @@ textarea{resize:vertical;min-height:50px;}
   .cal-cell .daynum{color:#666;font-size:7.5px;margin-bottom:1px;}
   .cal-event{
     border-radius:2px;padding:1px 3px;margin-bottom:1px;font-size:6.5px;line-height:1.15;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    white-space:normal;overflow:hidden;overflow-wrap:break-word;word-break:break-word;max-height:2.4em;
     -webkit-print-color-adjust:exact;print-color-adjust:exact;
   }
   .cal-event.type-race{background:#dc2626 !important;color:#fff !important;}
@@ -278,16 +280,7 @@ body.locked-mode #addEngineBtn{display:none !important;}
     </div>
     <div class="card">
       <div id="calLabel" class="section-title" style="margin-bottom:12px;"></div>
-      <div class="muted" style="font-size:11px;margin-bottom:10px;">
-        <span class="cal-event type-race" style="display:inline-block;padding:2px 8px;">Race</span>
-        <span class="cal-event type-test" style="display:inline-block;padding:2px 8px;">Test</span>
-        <span class="cal-event type-dyno" style="display:inline-block;padding:2px 8px;">Dyno</span>
-        <span class="cal-event type-shakedown" style="display:inline-block;padding:2px 8px;">Shakedown</span>
-        <span class="cal-event type-travel" style="display:inline-block;padding:2px 8px;">Travelling</span>
-        <span class="cal-event type-leave-holiday" style="display:inline-block;padding:2px 8px;">Holiday</span>
-        <span class="cal-event type-leave-other" style="display:inline-block;padding:2px 8px;">Other Leave</span>
-        <span style="display:inline-block;padding:2px 8px;border-radius:4px;background:var(--weekend-shade);border:1px solid var(--border);">Weekend / Bank Holiday</span>
-      </div>
+      <div class="muted" style="font-size:11px;margin-bottom:10px;" id="calLegend"></div>
       <div id="calContainer"></div>
     </div>
   </section>
@@ -776,7 +769,20 @@ function statusBadgeClass(s){
 function findPerson(id){ return DATA.people.find(p=>p.id===id); }
 function findEvent(id){ return DATA.events.find(e=>e.id===id); }
 function initials(name){ return (name||'').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
-function typeBadgeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'b-race'; if(t==='test')return 'b-test'; if(t==='dyno')return 'b-dyno'; if(t==='shakedown')return 'b-shakedown'; return 'b-test'; }
+function typeBadgeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'b-race'; if(t==='test')return 'b-test'; if(t==='dyno')return 'b-dyno'; if(t==='shakedown')return 'b-shakedown'; return ''; }
+
+/* ---- Colours for custom/user-added event types ----
+   The 4 built-in types (Race/Test/Dyno/Shakedown) keep their fixed CSS
+   colours. Any other event type gets a distinct colour picked
+   deterministically from a palette (based on its name), instead of
+   silently defaulting to the "Test" green. */
+const CUSTOM_TYPE_PALETTE = ['#2563eb','#0d9488','#db2777','#06b6d4','#4f46e5','#65a30d','#e11d48','#f97316','#14b8a6','#a855f7','#0ea5e9','#84cc16'];
+function hashStr(str){ let h=0; for(let i=0;i<str.length;i++){ h=((h<<5)-h)+str.charCodeAt(i); h|=0; } return Math.abs(h); }
+function isKnownEventType(t){ t=(t||'').toLowerCase(); return t==='race'||t==='test'||t==='dyno'||t==='shakedown'; }
+function customTypeColor(t){ return CUSTOM_TYPE_PALETTE[hashStr((t||'').toLowerCase()) % CUSTOM_TYPE_PALETTE.length]; }
+function hexToRgba(hex, alpha){ const h=hex.replace('#',''); const n=parseInt(h,16); const r=(n>>16)&255,g=(n>>8)&255,b=n&255; return `rgba(${r},${g},${b},${alpha})`; }
+function typeInlineStyle(t){ if(isKnownEventType(t)) return ''; return `background:${customTypeColor(t)};color:#fff;`; }
+function typeBadgeStyle(t){ if(isKnownEventType(t)) return ''; const c=customTypeColor(t); return `background:${hexToRgba(c,0.18)};color:${c};`; }
 function leaveTypeLabel(t){ return t==='Annual' ? 'Holiday' : t; }
 function leaveClass(l){ return (l&&l.leaveType==='Annual') ? 'type-leave-holiday' : 'type-leave-other'; }
 function eventEngines(e){ return (e.engineAssignments||[]).map(ea=>ea.engine).filter(Boolean); }
@@ -809,7 +815,7 @@ function renderDashboard(){
   const todayStr = new Date().toISOString().slice(0,10);
   const rowHtml = e => `
     <tr class="clickable" onclick="showEventDetail('${e.id}')">
-      <td>${e.eventCode}</td><td>${e.name}</td><td><span class="badge ${typeBadgeClass(e.eventType)}">${e.eventType}</span></td>
+      <td>${e.eventCode}</td><td>${e.name}</td><td><span class="badge ${typeBadgeClass(e.eventType)}" style="${typeBadgeStyle(e.eventType)}">${e.eventType}</span></td>
       <td>${e.startDate} &rarr; ${e.endDate}</td><td>${e.location}</td>
       <td><span class="badge ${statusBadgeClass(e.status)}">${e.status}</span></td>
       <td>${eventEngines(e).join(', ') || '<span class="muted">&mdash;</span>'}</td>
@@ -833,7 +839,7 @@ function renderEvents(){
   const filtered = DATA.events.filter(e=>(!typeVal||e.eventType===typeVal)&&(!statusVal||e.status===statusVal)).slice().sort((a,b)=>a.startDate.localeCompare(b.startDate));
   document.getElementById('eventsBody').innerHTML = filtered.map(e=>`
     <tr class="clickable" onclick="showEventDetail('${e.id}')">
-      <td>${e.eventCode}</td><td>${e.name}</td><td><span class="badge ${typeBadgeClass(e.eventType)}">${e.eventType}</span></td>
+      <td>${e.eventCode}</td><td>${e.name}</td><td><span class="badge ${typeBadgeClass(e.eventType)}" style="${typeBadgeStyle(e.eventType)}">${e.eventType}</span></td>
       <td>${e.startDate}</td><td>${e.endDate}</td><td>${e.location}</td>
       <td><span class="badge ${statusBadgeClass(e.status)}">${e.status}</span></td>
       <td>${eventEngines(e).join(', ') || '<span class="muted">&mdash;</span>'}</td>
@@ -1131,7 +1137,7 @@ function deleteLeave(id){
 }
 
 /* ---------- CALENDAR ---------- */
-function typeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'type-race'; if(t==='test')return 'type-test'; if(t==='dyno')return 'type-dyno'; if(t==='shakedown')return 'type-shakedown'; return 'type-test'; }
+function typeClass(t){ t=(t||'').toLowerCase(); if(t==='race')return 'type-race'; if(t==='test')return 'type-test'; if(t==='dyno')return 'type-dyno'; if(t==='shakedown')return 'type-shakedown'; return 'type-custom'; }
 function eventsOnDate(ds){ return DATA.events.filter(e=> ds>=e.startDate && ds<=e.endDate); }
 function leaveOnDate(ds){ return DATA.leave.filter(l=> ds>=l.startDate && ds<=l.endDate); }
 function fmtDate(d){ const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
@@ -1239,14 +1245,14 @@ function dayCellContent(ds){
     const engines = eventEngines(e).join('/');
     const peopleInit = (e.attendance||[]).map(a=>{const p=findPerson(a.person); return p?initials(p.name):null;}).filter(Boolean).join(' ');
     const label = [e.eventCode, engines, peopleInit].filter(Boolean).join(' &middot; ');
-    return `<div class="cal-event ${typeClass(e.eventType)}" title="${e.name}${engines?' | Engines: '+engines:''}" onclick="event.stopPropagation();showEventDetail('${e.id}')">${label}</div>`;
+    return `<div class="cal-event ${typeClass(e.eventType)}" style="${typeInlineStyle(e.eventType)}" title="${e.name}${engines?' | Engines: '+engines:''}" onclick="event.stopPropagation();showEventDetail('${e.id}')">${label}</div>`;
   }).join('');
 
   DATA.events.forEach(e=>{
     eventTravelSegments(e).forEach(s=>{
       if(ds>=s.start && ds<=s.end){
         const dirLabel = s.direction==='out' ? 'Travelling to' : 'Travelling from';
-        html += `<div class="cal-event type-travel" title="${dirLabel} ${e.name}" onclick="event.stopPropagation();showEventDetail('${e.id}')">&#9992; ${s.people.join(' ')}</div>`;
+        html += `<div class="cal-event type-travel" title="${dirLabel} ${e.name} (${s.people.join(' ')})" onclick="event.stopPropagation();showEventDetail('${e.id}')">&#9992;</div>`;
       }
     });
   });
@@ -1277,20 +1283,21 @@ function timelineItemsForMonth(year, month){
   DATA.events.forEach(e=>{
     const segs = eventTravelSegments(e);
     const engines = eventEngines(e).join('/');
-    const mainLabel = [e.eventCode, engines].filter(Boolean).join(' \u00b7 ');
+    const peopleInit = (e.attendance||[]).map(a=>{const p=findPerson(a.person); return p?initials(p.name):null;}).filter(Boolean).join(' ');
+    const mainLabel = [e.eventCode, engines, peopleInit].filter(Boolean).join(' \u00b7 ');
     const bars = [];
 
     segs.filter(s=>s.direction==='out').forEach(s=>{
       const c = clip(s.start, s.end);
-      if(c) bars.push({startDay:c.startDay, endDay:c.endDay, cls:'type-travel', label:'&#9992; '+s.people.join(' '), title:'Travelling to '+e.name, onclick:`showEventDetail('${e.id}')`});
+      if(c) bars.push({startDay:c.startDay, endDay:c.endDay, cls:'type-travel', style:'', label:'&#9992;', title:'Travelling to '+e.name+' ('+s.people.join(' ')+')', onclick:`showEventDetail('${e.id}')`});
     });
 
     const mainClip = clip(e.startDate, e.endDate);
-    if(mainClip) bars.push({startDay:mainClip.startDay, endDay:mainClip.endDay, cls:typeClass(e.eventType), label:mainLabel, title:e.name+(engines?' | Engines: '+engines:''), onclick:`showEventDetail('${e.id}')`});
+    if(mainClip) bars.push({startDay:mainClip.startDay, endDay:mainClip.endDay, cls:typeClass(e.eventType), style:typeInlineStyle(e.eventType), label:mainLabel, title:e.name+(engines?' | Engines: '+engines:''), onclick:`showEventDetail('${e.id}')`});
 
     segs.filter(s=>s.direction==='back').forEach(s=>{
       const c = clip(s.start, s.end);
-      if(c) bars.push({startDay:c.startDay, endDay:c.endDay, cls:'type-travel', label:'&#9992; '+s.people.join(' '), title:'Travelling from '+e.name, onclick:`showEventDetail('${e.id}')`});
+      if(c) bars.push({startDay:c.startDay, endDay:c.endDay, cls:'type-travel', style:'', label:'&#9992;', title:'Travelling from '+e.name+' ('+s.people.join(' ')+')', onclick:`showEventDetail('${e.id}')`});
     });
 
     if(bars.length){
@@ -1303,7 +1310,7 @@ function timelineItemsForMonth(year, month){
     if(!c) return;
     const p = findPerson(l.person);
     const label = (p?initials(p.name):'?') + ' ' + leaveTypeLabel(l.leaveType);
-    groups.push({ overallStart:c.startDay, overallEnd:c.endDay, bars:[{startDay:c.startDay, endDay:c.endDay, cls:leaveClass(l), label, title:label, onclick:`showLeaveForm('${l.id}')`}] });
+    groups.push({ overallStart:c.startDay, overallEnd:c.endDay, bars:[{startDay:c.startDay, endDay:c.endDay, cls:leaveClass(l), style:'', label, title:label, onclick:`showLeaveForm('${l.id}')`}] });
   });
 
   groups.sort((a,b)=>a.overallStart-b.overallStart || a.overallEnd-b.overallEnd);
@@ -1336,14 +1343,27 @@ function monthTimelineHTML(year, month){
   for(let d=dim+1; d<=31; d++){
     bg += `<div class="tl-bg-out" style="grid-column:${d};grid-row:1 / ${laneCount+2};"></div>`;
   }
-  const bars = items.map(it=>`<div class="tl-bar ${it.cls}" style="grid-column:${it.startDay} / ${it.endDay+1};grid-row:${it.lane+2};" title="${it.title}" onclick="${it.onclick}">${it.label}</div>`).join('');
+  const bars = items.map(it=>`<div class="tl-bar ${it.cls}" style="grid-column:${it.startDay} / ${it.endDay+1};grid-row:${it.lane+2};${it.style||''}" title="${it.title}" onclick="${it.onclick}">${it.label}</div>`).join('');
   return `<div class="tl-month">
     <div class="tl-label">${monthName}</div>
-    <div class="tl-grid" style="grid-template-rows:18px repeat(${laneCount},20px);">${bg}${cols}${bars}</div>
+    <div class="tl-grid" style="grid-template-rows:18px repeat(${laneCount},minmax(20px,auto));">${bg}${cols}${bars}</div>
   </div>`;
 }
 
+function renderCalendarLegend(){
+  const el = document.getElementById('calLegend');
+  if(!el) return;
+  const typeChips = (DATA.referenceData.eventTypes||[]).map(t=>
+    `<span class="cal-event ${typeClass(t)}" style="display:inline-block;padding:2px 8px;${typeInlineStyle(t)}">${t}</span>`
+  ).join('');
+  el.innerHTML = typeChips +
+    `<span class="cal-event type-travel" style="display:inline-block;padding:2px 8px;">Travelling</span>
+     <span class="cal-event type-leave-holiday" style="display:inline-block;padding:2px 8px;">Holiday</span>
+     <span class="cal-event type-leave-other" style="display:inline-block;padding:2px 8px;">Other Leave</span>
+     <span style="display:inline-block;padding:2px 8px;border-radius:4px;background:var(--weekend-shade);border:1px solid var(--border);">Weekend / Bank Holiday</span>`;
+}
 function renderCalendar(){
+  renderCalendarLegend();
   const label = document.getElementById('calLabel');
   const container = document.getElementById('calContainer');
   const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
