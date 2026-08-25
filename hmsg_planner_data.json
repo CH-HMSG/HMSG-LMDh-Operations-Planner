@@ -59,7 +59,8 @@
       "Qatar",
       "Bahrain",
       "LeMans",
-      "Sebring"
+      "Sebring",
+      "Imola"
     ],
     "transportMethods": []
   },
@@ -738,7 +739,7 @@
       "name": "Imola Race",
       "eventType": "Race",
       "status": "Confirmed",
-      "location": "Fechenheim",
+      "location": "Imola",
       "startDate": "2027-04-07",
       "endDate": "2027-04-11",
       "notes": ""
@@ -892,7 +893,7 @@
       "name": "PRC Test - BLCKR",
       "eventType": "Test",
       "status": "Draft",
-      "location": "Paul Ricard",
+      "location": "Fechenheim",
       "startDate": "2027-05-21",
       "endDate": "2027-05-22",
       "notes": ""
