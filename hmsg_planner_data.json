@@ -708,6 +708,62 @@
       "startDate": "2026-10-26",
       "endDate": "2026-10-30",
       "notes": ""
+    },
+    {
+      "id": "E_7eomn4r",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270321_QAT",
+      "name": "Pro Qatar + Qatar",
+      "eventType": "Race",
+      "status": "Confirmed",
+      "location": "Fechenheim",
+      "startDate": "2027-03-19",
+      "endDate": "2027-03-27",
+      "notes": ""
+    },
+    {
+      "id": "E_8ypddof",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270409_IMO",
+      "name": "Imola Race",
+      "eventType": "Race",
+      "status": "Confirmed",
+      "location": "Fechenheim",
+      "startDate": "2027-04-07",
+      "endDate": "2027-04-11",
+      "notes": ""
+    },
+    {
+      "id": "E_fivwldx",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270423_SIL",
+      "name": "Silverstone",
+      "eventType": "Race",
+      "status": "Confirmed",
+      "location": "Fechenheim",
+      "startDate": "2027-04-21",
+      "endDate": "2027-04-25",
+      "notes": ""
+    },
+    {
+      "id": "E_kstun7d",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270513_SPA",
+      "name": "Spa Race",
+      "eventType": "Race",
+      "status": "Confirmed",
+      "location": "Austin",
+      "startDate": "2027-05-11",
+      "endDate": "2027-05-15",
+      "notes": ""
     }
   ],
   "leave": [
