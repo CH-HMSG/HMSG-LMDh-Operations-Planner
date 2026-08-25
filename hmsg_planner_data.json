@@ -58,7 +58,8 @@
       "Silverstone",
       "Qatar",
       "Bahrain",
-      "LeMans"
+      "LeMans",
+      "Sebring"
     ],
     "transportMethods": []
   },
@@ -849,7 +850,7 @@
       "name": "Sebring",
       "eventType": "Test",
       "status": "Draft",
-      "location": "Fechenheim",
+      "location": "Sebring",
       "startDate": "2027-02-06",
       "endDate": "2027-02-08",
       "notes": "2 cars"
@@ -891,7 +892,7 @@
       "name": "PRC Test - BLCKR",
       "eventType": "Test",
       "status": "Draft",
-      "location": "Fechenheim",
+      "location": "Paul Ricard",
       "startDate": "2027-05-21",
       "endDate": "2027-05-22",
       "notes": ""
