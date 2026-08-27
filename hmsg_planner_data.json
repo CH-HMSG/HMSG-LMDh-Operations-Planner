@@ -3,7 +3,8 @@
     "eventTypes": [
       "Race",
       "Test",
-      "Dyno"
+      "Dyno",
+      "SKD"
     ],
     "eventStatuses": [
       "Draft",
