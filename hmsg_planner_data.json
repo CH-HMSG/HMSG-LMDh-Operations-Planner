@@ -275,7 +275,11 @@
       "engineAssignments": [
         {
           "engine": "01C",
-          "notes": " W19 - Start: 1659.0 km - Expected Finish: 1800 km"
+          "notes": " W19 - Start: 1659.0 km - Expected Finish: 3500 km"
+        },
+        {
+          "engine": "14A",
+          "notes": "Spare"
         },
         {
           "engine": "15A",
@@ -283,10 +287,6 @@
         },
         {
           "engine": "16A",
-          "notes": "Spare"
-        },
-        {
-          "engine": "14A",
           "notes": "Spare"
         }
       ],
@@ -651,7 +651,21 @@
       "id": "E_s7h4p2w",
       "chassisAssignments": [],
       "engineAssignments": [],
-      "attendance": [],
+      "attendance": [
+        {
+          "person": "P_5ugsw3v",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-12-15",
+          "travelFromDate": "2026-12-16",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
       "eventCode": "261215_POR",
       "name": "Portimao",
       "eventType": "Test",
@@ -898,6 +912,20 @@
       "startDate": "2027-05-21",
       "endDate": "2027-05-22",
       "notes": ""
+    },
+    {
+      "id": "E_69lksql",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "PRT Test",
+      "name": "PRT Test",
+      "eventType": "Test",
+      "status": "Draft",
+      "location": "Portimao",
+      "startDate": "2026-11-24",
+      "endDate": "2026-11-25",
+      "notes": "tbc"
     }
   ],
   "leave": [
