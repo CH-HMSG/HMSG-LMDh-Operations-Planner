@@ -97,7 +97,8 @@ textarea{resize:vertical;min-height:50px;}
 .tl-month{display:flex;align-items:stretch;gap:10px;border-bottom:1px solid var(--border);padding-bottom:6px;}
 .tl-label{width:70px;flex:0 0 70px;color:var(--muted);font-size:12px;text-transform:uppercase;padding-top:2px;}
 .tl-grid{position:relative;flex:1;display:grid;grid-template-columns:repeat(31,1fr);gap:1px;border-top:1px solid var(--border);border-left:1px solid var(--border);}
-.tl-daynum{text-align:center;font-size:9px;color:var(--muted);position:relative;z-index:1;border-right:1px solid var(--border);}
+.tl-daynum{text-align:center;font-size:9px;color:var(--muted);position:relative;z-index:1;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;}
+.tl-cw{font-size:10px;color:var(--muted);opacity:0.85;}
 .tl-bg-shade{background:var(--weekend-shade);border-radius:0;border-right:1px solid var(--border);}
 .tl-bg-out{background:transparent;border-right:1px solid var(--border);}
 .tl-bar{border-radius:3px;font-size:9.5px;color:#fff;display:flex;align-items:center;padding:1px 4px;overflow:visible;white-space:normal;overflow-wrap:break-word;word-break:break-word;line-height:1.15;cursor:pointer;position:relative;z-index:1;margin:1px 0;height:auto;min-height:18px;}
@@ -162,6 +163,7 @@ textarea{resize:vertical;min-height:50px;}
   .tl-month{display:flex;align-items:stretch;gap:6px;border-bottom:1px solid #ccc !important;padding-bottom:3px;}
   .tl-label{color:#333 !important;}
   .tl-daynum{color:#555 !important;border-right:1px solid #ccc !important;}
+  .tl-cw{color:#777 !important;}
   .tl-grid{border-top:1px solid #999 !important;border-left:1px solid #999 !important;}
   .tl-bg-shade{background:#e6e6e6 !important;border-right:1px solid #ccc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   .tl-bg-out{border-right:1px solid #ccc !important;}
@@ -1142,6 +1144,15 @@ function eventsOnDate(ds){ return DATA.events.filter(e=> ds>=e.startDate && ds<=
 function leaveOnDate(ds){ return DATA.leave.filter(l=> ds>=l.startDate && ds<=l.endDate); }
 function fmtDate(d){ const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
 function startOfWeek(d){ const nd=new Date(d); const day=(nd.getDay()+6)%7; nd.setDate(nd.getDate()-day); nd.setHours(0,0,0,0); return nd; }
+function isoWeekNumber(d){
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = (date.getUTCDay() + 6) % 7;
+  date.setUTCDate(date.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+  const firstThursdayDayNum = (firstThursday.getUTCDay() + 6) % 7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - firstThursdayDayNum + 3);
+  return 1 + Math.round((date - firstThursday) / (7 * 24 * 3600 * 1000));
+}
 
 /* ---- Frankfurt / Hesse public holidays (for calendar shading) ---- */
 function easterSunday(year){
@@ -1331,8 +1342,12 @@ function monthTimelineHTML(year, month){
   const { items, laneCount, dim } = timelineItemsForMonth(year, month);
   let cols = '';
   for(let d=1; d<=31; d++){
-    const shaded = d<=dim && isShadedDay(new Date(year,month,d), fmtDate(new Date(year,month,d)));
-    cols += `<div class="tl-daynum${shaded?' tl-shade':''}" style="grid-column:${d};grid-row:1;">${d<=dim?d:''}</div>`;
+    const inMonth = d<=dim;
+    const dateObj = inMonth ? new Date(year,month,d) : null;
+    const shaded = inMonth && isShadedDay(dateObj, fmtDate(dateObj));
+    const isMon = inMonth && dateObj.getDay()===1;
+    const cwLabel = isMon ? `<span class="tl-cw">CW${isoWeekNumber(dateObj)}</span>` : '';
+    cols += `<div class="tl-daynum${shaded?' tl-shade':''}" style="grid-column:${d};grid-row:1;">${inMonth?d:''}${cwLabel}</div>`;
   }
   let bg = '';
   for(let d=1; d<=dim; d++){
@@ -1346,7 +1361,7 @@ function monthTimelineHTML(year, month){
   const bars = items.map(it=>`<div class="tl-bar ${it.cls}" style="grid-column:${it.startDay} / ${it.endDay+1};grid-row:${it.lane+2};${it.style||''}" title="${it.title}" onclick="${it.onclick}">${it.label}</div>`).join('');
   return `<div class="tl-month">
     <div class="tl-label">${monthName}</div>
-    <div class="tl-grid" style="grid-template-rows:18px repeat(${laneCount},minmax(20px,auto));">${bg}${cols}${bars}</div>
+    <div class="tl-grid" style="grid-template-rows:34px repeat(${laneCount},minmax(20px,auto));">${bg}${cols}${bars}</div>
   </div>`;
 }
 
@@ -1381,7 +1396,8 @@ function renderCalendar(){
       const ds = fmtDate(d);
       const shade = isShadedDay(d,ds) ? ' weekend-holiday' : '';
       const dim = d.getMonth()!==month ? 'opacity:0.35;' : '';
-      html += `<div class="cal-cell${shade}" style="${dim}"><div class="daynum">${d.getDate()}</div>${dayCellContent(ds)}</div>`;
+      const dayLabel = d.getDay()===1 ? `${d.getDate()}-CW${isoWeekNumber(d)}` : d.getDate();
+      html += `<div class="cal-cell${shade}" style="${dim}"><div class="daynum">${dayLabel}</div>${dayCellContent(ds)}</div>`;
     }
     html += '</div>'; container.innerHTML = html;
   } else {
