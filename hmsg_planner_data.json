@@ -4,7 +4,8 @@
       "Race",
       "Test",
       "Dyno",
-      "SKD"
+      "SKD",
+      "FU"
     ],
     "eventStatuses": [
       "Draft",
@@ -99,7 +100,7 @@
     },
     {
       "id": "14A",
-      "status": "In-Build",
+      "status": "Race",
       "notes": ""
     },
     {
@@ -983,7 +984,7 @@
       "conflictFlag": false,
       "conflictDetails": "",
       "person": "P1",
-      "startDate": "2026-09-10",
+      "startDate": "2026-09-13",
       "endDate": "2026-09-18",
       "leaveType": "Annual",
       "approvalStatus": "Approved"
