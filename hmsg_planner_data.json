@@ -922,7 +922,16 @@
     {
       "id": "E_puvnoyp",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "14A",
+          "notes": ""
+        },
+        {
+          "engine": "16A",
+          "notes": ""
+        }
+      ],
       "attendance": [
         {
           "person": "P2",
@@ -950,7 +959,16 @@
     {
       "id": "E_zlym08m",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "14A",
+          "notes": ""
+        },
+        {
+          "engine": "16A",
+          "notes": ""
+        }
+      ],
       "attendance": [],
       "eventCode": "261026_PRC",
       "name": "MNZ SKD",
