@@ -934,18 +934,60 @@
       "notes": ""
     },
     {
-      "id": "E_69lksql",
+      "id": "E_puvnoyp",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-10-08",
+          "travelFromDate": "2026-10-08",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "261008_PRC",
+      "name": "BCN SKD",
+      "eventType": "SKD",
+      "status": "Confirmed",
+      "location": "Le Castellet",
+      "startDate": "2026-10-08",
+      "endDate": "2026-10-08",
+      "notes": ""
+    },
+    {
+      "id": "E_zlym08m",
       "chassisAssignments": [],
       "engineAssignments": [],
       "attendance": [],
-      "eventCode": "PRT Test",
-      "name": "PRT Test",
+      "eventCode": "261026_PRC",
+      "name": "MNZ SKD",
+      "eventType": "SKD",
+      "status": "Draft",
+      "location": "Le Castellet",
+      "startDate": "2026-10-26",
+      "endDate": "2026-10-26",
+      "notes": ""
+    },
+    {
+      "id": "E_9kxzgrc",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "261124_POR",
+      "name": "Portimao Test",
       "eventType": "Test",
       "status": "Draft",
       "location": "Portimao",
       "startDate": "2026-11-24",
       "endDate": "2026-11-25",
-      "notes": "tbc"
+      "notes": ""
     }
   ],
   "leave": [
