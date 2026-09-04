@@ -710,20 +710,6 @@
       "notes": ""
     },
     {
-      "id": "E_ra4lhvw",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "261028_MON",
-      "name": "Monza Test",
-      "eventType": "Test",
-      "status": "Draft",
-      "location": "Monza",
-      "startDate": "2026-10-28",
-      "endDate": "2026-10-28",
-      "notes": ""
-    },
-    {
       "id": "E_nebbipu",
       "chassisAssignments": [],
       "engineAssignments": [],
