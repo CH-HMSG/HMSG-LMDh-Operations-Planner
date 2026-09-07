@@ -276,7 +276,7 @@
       "engineAssignments": [
         {
           "engine": "01C",
-          "notes": " W19 - Start: 1659.0 km - Expected Finish: 3500 km"
+          "notes": " W19 - Start: 1659.0 km - Finished : 2282 km"
         },
         {
           "engine": "14A",
@@ -284,7 +284,7 @@
         },
         {
           "engine": "15A",
-          "notes": "W17 - Start: 1663.3 km - Expected Finish: 1800 km"
+          "notes": "W17 - Start: 1663.3 km - Finished : 2313 km"
         },
         {
           "engine": "16A",
@@ -335,7 +335,7 @@
       "eventCode": "260904_AUS",
       "name": "Austin Race",
       "eventType": "Race",
-      "status": "Confirmed",
+      "status": "Completed",
       "location": "Austin",
       "startDate": "2026-09-02",
       "endDate": "2026-09-09",
@@ -511,14 +511,14 @@
           "departureStatus": "Not Started"
         }
       ],
-      "eventCode": "Barcelona Race",
+      "eventCode": "261014_BCN",
       "name": "Barcelona Race",
       "eventType": "Race",
       "status": "Confirmed",
       "location": "Barcelona",
       "startDate": "2026-10-14",
       "endDate": "2026-10-18",
-      "notes": "Barcelona Race - Code not available yet"
+      "notes": ""
     },
     {
       "id": "E_lu8qb6b",
@@ -582,14 +582,14 @@
           "departureStatus": "Not Started"
         }
       ],
-      "eventCode": "Monza Race",
+      "eventCode": "261104_MZN",
       "name": "Monza Race",
       "eventType": "Race",
       "status": "Draft",
       "location": "Monza",
       "startDate": "2026-11-04",
       "endDate": "2026-11-08",
-      "notes": "Monza Race - Code not available yet"
+      "notes": ""
     },
     {
       "id": "E_t1hm3hf",
