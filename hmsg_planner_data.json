@@ -228,7 +228,7 @@
       "name": "Sao Paulo Race",
       "eventType": "Race",
       "status": "Completed",
-      "location": "Fechenheim",
+      "location": "Sao Paulo",
       "startDate": "2026-07-07",
       "endDate": "2026-07-12",
       "notes": ""
@@ -264,8 +264,8 @@
       "eventCode": "260729_AUS",
       "name": "Austin Test",
       "eventType": "Test",
-      "status": "Confirmed",
-      "location": "Fechenheim",
+      "status": "Completed",
+      "location": "Austin",
       "startDate": "2026-07-28",
       "endDate": "2026-07-31",
       "notes": ""
@@ -384,15 +384,15 @@
       "engineAssignments": [
         {
           "engine": "01C",
-          "notes": "Expected Finish: 4900 km"
+          "notes": "Expected Finish: 5200 km"
+        },
+        {
+          "engine": "14A",
+          "notes": "Expected Finish: 5200 km"
         },
         {
           "engine": "15A",
           "notes": "Expected Finish: 4900 km"
-        },
-        {
-          "engine": "14A",
-          "notes": "Spare"
         },
         {
           "engine": "16A",
@@ -604,7 +604,7 @@
       "eventCode": "Stuttgart commissioning",
       "name": "Stuttgart Dyno Commissioning",
       "eventType": "Dyno",
-      "status": "Confirmed",
+      "status": "Completed",
       "location": "Stuttgart",
       "startDate": "2026-08-03",
       "endDate": "2026-08-07",
@@ -623,7 +623,7 @@
       "eventCode": "AVL",
       "name": "Dyno - AVL",
       "eventType": "Dyno",
-      "status": "Confirmed",
+      "status": "Completed",
       "location": "AVL",
       "startDate": "2026-08-17",
       "endDate": "2026-08-18",
@@ -642,7 +642,7 @@
       "eventCode": "PT Dyno",
       "name": "PT Dyno",
       "eventType": "Dyno",
-      "status": "Confirmed",
+      "status": "Completed",
       "location": "Rüsselsheim",
       "startDate": "2026-08-24",
       "endDate": "2026-08-28",
