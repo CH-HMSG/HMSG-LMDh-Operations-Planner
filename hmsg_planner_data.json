@@ -769,7 +769,12 @@
     {
       "id": "E_nebbipu",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "09A",
+          "notes": ""
+        }
+      ],
       "attendance": [
         {
           "person": "P_u7zibq8",
@@ -1107,7 +1112,12 @@
     {
       "id": "E_vi8ev5i",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "09A",
+          "notes": ""
+        }
+      ],
       "attendance": [
         {
           "person": "P_u7zibq8",
@@ -1135,7 +1145,12 @@
     {
       "id": "E_j0g8rqt",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "09A",
+          "notes": ""
+        }
+      ],
       "attendance": [
         {
           "person": "P_u7zibq8",
@@ -1163,7 +1178,12 @@
     {
       "id": "E_0wam4xx",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "09A",
+          "notes": ""
+        }
+      ],
       "attendance": [
         {
           "person": "P_u7zibq8",
