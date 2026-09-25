@@ -659,8 +659,34 @@
           "roleAtEvent": "PU Lead",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-12-15",
-          "travelFromDate": "2026-12-16",
+          "travelToDate": "2026-12-16",
+          "travelFromDate": "2026-12-19",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P2",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-12-16",
+          "travelFromDate": "2026-12-19",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-12-16",
+          "travelFromDate": "2026-12-19",
           "travelNotes": "",
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
@@ -672,8 +698,8 @@
       "eventType": "Test",
       "status": "Draft",
       "location": "Portimao",
-      "startDate": "2026-12-15",
-      "endDate": "2026-12-16",
+      "startDate": "2026-12-17",
+      "endDate": "2026-12-18",
       "notes": ""
     },
     {
@@ -969,7 +995,21 @@
           "notes": ""
         }
       ],
-      "attendance": [],
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-10-26",
+          "travelFromDate": "2026-10-26",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
       "eventCode": "261026_PRC",
       "name": "MNZ SKD",
       "eventType": "SKD",
@@ -983,13 +1023,40 @@
       "id": "E_9kxzgrc",
       "chassisAssignments": [],
       "engineAssignments": [],
-      "attendance": [],
+      "attendance": [
+        {
+          "person": "P1",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Engineer",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-11-24",
+          "travelFromDate": "2026-11-26",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_5ugsw3v",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-11-24",
+          "travelFromDate": "2026-11-26",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
       "eventCode": "261124_POR",
       "name": "Portimao Test",
       "eventType": "Test",
       "status": "Draft",
       "location": "Portimao",
-      "startDate": "2026-11-24",
+      "startDate": "2026-11-25",
       "endDate": "2026-11-25",
       "notes": ""
     }
@@ -1057,8 +1124,8 @@
     },
     {
       "id": "L_xk2u63l",
-      "conflictFlag": false,
-      "conflictDetails": "",
+      "conflictFlag": true,
+      "conflictDetails": "Overlaps travel/attendance for 261215_POR (2026-12-16 to 2026-12-19)",
       "person": "P1",
       "startDate": "2026-12-10",
       "endDate": "2027-01-04",
