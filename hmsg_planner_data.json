@@ -536,19 +536,19 @@
       "engineAssignments": [
         {
           "engine": "14A",
-          "notes": ""
+          "notes": "Start: 1800 km - Expected Finish: 3600 km"
         },
         {
           "engine": "16A",
-          "notes": ""
+          "notes": "Start: 1800 km - Expected Finish: 3600 km"
         },
         {
           "engine": "17A",
-          "notes": ""
+          "notes": "0 km"
         },
         {
           "engine": "18A",
-          "notes": ""
+          "notes": "0 km"
         }
       ],
       "attendance": [
@@ -661,7 +661,20 @@
     {
       "id": "E_s7h4p2w",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "12A",
+          "notes": "Start: 4000 km - Expected Finish: 5000 km"
+        },
+        {
+          "engine": "14A",
+          "notes": "Start: 3600 km - Expected Finish: 8600 km"
+        },
+        {
+          "engine": "16A",
+          "notes": "Spare - Start: 3600 km - Expected Finish: 3600 km"
+        }
+      ],
       "attendance": [
         {
           "person": "P_5ugsw3v",
@@ -717,8 +730,16 @@
       "chassisAssignments": [],
       "engineAssignments": [
         {
+          "engine": "10A",
+          "notes": "Spare"
+        },
+        {
+          "engine": "11A",
+          "notes": "Spare"
+        },
+        {
           "engine": "12A",
-          "notes": ""
+          "notes": "Start: 2273 km - Expected Finish: 3000 km"
         }
       ],
       "attendance": [
@@ -1032,7 +1053,20 @@
     {
       "id": "E_9kxzgrc",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "12A",
+          "notes": "Start: 3000 km - Expected Finish: 4000 km"
+        },
+        {
+          "engine": "14A",
+          "notes": "Spare - Start: 3600 km - Expected Finish: 3600 km"
+        },
+        {
+          "engine": "16A",
+          "notes": "Spare - Start: 3600 km - Expected Finish: 3600 km"
+        }
+      ],
       "attendance": [
         {
           "person": "P1",
