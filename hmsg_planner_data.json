@@ -75,11 +75,16 @@
     },
     {
       "id": "03D",
-      "status": "Dyno",
+      "status": "Retired",
       "notes": ""
     },
     {
       "id": "06A",
+      "status": "Dyno",
+      "notes": ""
+    },
+    {
+      "id": "09A",
       "status": "Dyno",
       "notes": ""
     },
@@ -115,11 +120,16 @@
     },
     {
       "id": "17A",
-      "status": "In-Build",
+      "status": "Race",
       "notes": ""
     },
     {
       "id": "18A",
+      "status": "In-Build",
+      "notes": ""
+    },
+    {
+      "id": "19A",
       "status": "In-Build",
       "notes": ""
     }
@@ -739,28 +749,28 @@
       "id": "E_nebbipu",
       "chassisAssignments": [],
       "engineAssignments": [],
-      "attendance": [],
+      "attendance": [
+        {
+          "person": "P_u7zibq8",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-09-21",
+          "travelFromDate": "2026-09-22",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
       "eventCode": "PT Dyno",
       "name": "PT Dyno",
       "eventType": "Dyno",
       "status": "Confirmed",
       "location": "Rüsselsheim",
-      "startDate": "2026-09-17",
-      "endDate": "2026-09-23",
-      "notes": ""
-    },
-    {
-      "id": "E_cwf18yb",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "PT Dyno",
-      "name": "PT Dyno",
-      "eventType": "Dyno",
-      "status": "Confirmed",
-      "location": "Fechenheim",
-      "startDate": "2026-10-26",
-      "endDate": "2026-10-30",
+      "startDate": "2026-09-21",
+      "endDate": "2026-09-22",
       "notes": ""
     },
     {
@@ -1058,6 +1068,90 @@
       "location": "Portimao",
       "startDate": "2026-11-25",
       "endDate": "2026-11-25",
+      "notes": ""
+    },
+    {
+      "id": "E_vi8ev5i",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [
+        {
+          "person": "P_u7zibq8",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-10-05",
+          "travelFromDate": "2026-10-09",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "PT Dyno",
+      "name": "PT Dyno Pre BCN",
+      "eventType": "Dyno",
+      "status": "Draft",
+      "location": "Rüsselsheim",
+      "startDate": "2026-10-05",
+      "endDate": "2026-10-09",
+      "notes": ""
+    },
+    {
+      "id": "E_j0g8rqt",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [
+        {
+          "person": "P_u7zibq8",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-10-19",
+          "travelFromDate": "2026-10-23",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "PT Dyno",
+      "name": "Monza SW Validation",
+      "eventType": "Dyno",
+      "status": "Draft",
+      "location": "Fechenheim",
+      "startDate": "2026-10-19",
+      "endDate": "2026-10-23",
+      "notes": ""
+    },
+    {
+      "id": "E_0wam4xx",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [
+        {
+          "person": "P_u7zibq8",
+          "department": "Powertrain",
+          "roleAtEvent": "PU Lead",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-12-14",
+          "travelFromDate": "2026-12-18",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        }
+      ],
+      "eventCode": "PT Dyno",
+      "name": "PTM Sw Validation",
+      "eventType": "Dyno",
+      "status": "Draft",
+      "location": "Rüsselsheim",
+      "startDate": "2026-12-14",
+      "endDate": "2026-12-18",
       "notes": ""
     }
   ],
