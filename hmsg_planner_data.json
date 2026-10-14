@@ -32,7 +32,8 @@
       "Race",
       "Test",
       "Retired",
-      "Dyno"
+      "Dyno",
+      "Failed"
     ],
     "departments": [
       "Electronics",
@@ -71,38 +72,38 @@
   "engineMaster": [
     {
       "id": "01C",
-      "status": "Race",
-      "notes": ""
+      "status": "Retired",
+      "notes": "Available for further usage or rebuild - HMSG"
     },
     {
       "id": "03D",
-      "status": "Retired",
-      "notes": ""
+      "status": "Failed",
+      "notes": "Failed on dyno - idler gear bearing failed"
     },
     {
       "id": "06A",
       "status": "Dyno",
-      "notes": ""
+      "notes": "AVL Stuttgart"
     },
     {
       "id": "09A",
       "status": "Dyno",
-      "notes": ""
+      "notes": "Oil in water - HMETC"
     },
     {
       "id": "10A",
-      "status": "Test",
-      "notes": ""
+      "status": "Retired",
+      "notes": "Available for further usage or rebuild - HMSG"
     },
     {
       "id": "11A",
-      "status": "Test",
-      "notes": ""
+      "status": "Retired",
+      "notes": "Available for further usage or rebuild - HMSG"
     },
     {
       "id": "12A",
       "status": "Test",
-      "notes": ""
+      "notes": "GMR"
     },
     {
       "id": "14A",
@@ -111,8 +112,8 @@
     },
     {
       "id": "15A",
-      "status": "Race",
-      "notes": ""
+      "status": "Retired",
+      "notes": "Available for further usage or rebuild - HMSG"
     },
     {
       "id": "16A",
@@ -131,7 +132,7 @@
     },
     {
       "id": "19A",
-      "status": "In-Build",
+      "status": "Race",
       "notes": ""
     }
   ],
@@ -474,11 +475,11 @@
         },
         {
           "engine": "17A",
-          "notes": "Spare"
+          "notes": "Spare - 0km"
         },
         {
-          "engine": "18A",
-          "notes": "Spare"
+          "engine": "19A",
+          "notes": "Spare - 0km"
         }
       ],
       "attendance": [
@@ -545,11 +546,11 @@
         },
         {
           "engine": "17A",
-          "notes": "0 km"
+          "notes": "Spare - 0 km"
         },
         {
-          "engine": "18A",
-          "notes": "0 km"
+          "engine": "19A",
+          "notes": "Spare - 0 km"
         }
       ],
       "attendance": [
