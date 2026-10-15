@@ -396,15 +396,15 @@
       "engineAssignments": [
         {
           "engine": "01C",
-          "notes": "Expected Finish: 5200 km"
+          "notes": "W19 - Finished: 5276 km"
         },
         {
           "engine": "14A",
-          "notes": "Expected Finish: 5200 km"
+          "notes": "Spare"
         },
         {
           "engine": "15A",
-          "notes": "Expected Finish: 4900 km"
+          "notes": "W19 - Finished: 5300 km"
         },
         {
           "engine": "16A",
