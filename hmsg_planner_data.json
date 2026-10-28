@@ -1421,11 +1421,21 @@
     },
     {
       "id": "L_xk2u63l",
-      "conflictFlag": true,
-      "conflictDetails": "Overlaps travel/attendance for 261215_POR (2026-12-15 to 2026-12-19)",
+      "conflictFlag": false,
+      "conflictDetails": "",
       "person": "P1",
       "startDate": "2026-12-10",
-      "endDate": "2027-01-04",
+      "endDate": "2026-12-14",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_ynv0o9v",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P1",
+      "startDate": "2026-12-21",
+      "endDate": "2027-01-11",
       "leaveType": "Annual",
       "approvalStatus": "Approved"
     },
