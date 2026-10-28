@@ -192,6 +192,22 @@
       "department": "Powertrain",
       "defaultRole": "Mechanic",
       "active": true
+    },
+    {
+      "id": "P_pc063kf",
+      "name": "Marius Adamek",
+      "email": "",
+      "department": "Powertrain",
+      "defaultRole": "Mechanic",
+      "active": true
+    },
+    {
+      "id": "P_g1yoy8z",
+      "name": "Jean Todaro",
+      "email": "",
+      "department": "Powertrain",
+      "defaultRole": "Mechanic",
+      "active": true
     }
   ],
   "events": [
@@ -716,6 +732,19 @@
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
           "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_g1yoy8z",
+          "department": "Powertrain",
+          "roleAtEvent": "Mechanic",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-12-15",
+          "travelFromDate": "2026-12-19",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
         }
       ],
       "eventCode": "261215_POR",
@@ -1100,6 +1129,19 @@
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
           "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_g1yoy8z",
+          "department": "Powertrain",
+          "roleAtEvent": "Mechanic",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-11-24",
+          "travelFromDate": "2026-11-26",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
         }
       ],
       "eventCode": "261124_POR",
@@ -1221,8 +1263,8 @@
           "roleAtEvent": "PU Engineer",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-12-07",
-          "travelFromDate": "2026-12-07",
+          "travelToDate": "2026-12-06",
+          "travelFromDate": "2026-12-08",
           "travelNotes": "",
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
@@ -1234,8 +1276,21 @@
           "roleAtEvent": "PU Engineer",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-12-07",
-          "travelFromDate": "2026-12-07",
+          "travelToDate": "2026-12-06",
+          "travelFromDate": "2026-12-08",
+          "travelNotes": "",
+          "accommodationNotes": "",
+          "arrivalStatus": "Not Started",
+          "departureStatus": "Not Started"
+        },
+        {
+          "person": "P_g1yoy8z",
+          "department": "Powertrain",
+          "roleAtEvent": "Mechanic",
+          "activity": "",
+          "attendanceStatus": "Planned",
+          "travelToDate": "2026-12-06",
+          "travelFromDate": "2026-12-08",
           "travelNotes": "",
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
@@ -1352,6 +1407,16 @@
       "startDate": "2026-10-23",
       "endDate": "2026-10-23",
       "leaveType": "Compensation",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_qwdkndc",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P_fsz4tif",
+      "startDate": "2026-11-23",
+      "endDate": "2027-01-17",
+      "leaveType": "Annual",
       "approvalStatus": "Approved"
     },
     {
