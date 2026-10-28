@@ -1345,6 +1345,16 @@
       "approvalStatus": "Approved"
     },
     {
+      "id": "L_rpxwdtq",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P1",
+      "startDate": "2026-10-23",
+      "endDate": "2026-10-23",
+      "leaveType": "Compensation",
+      "approvalStatus": "Approved"
+    },
+    {
       "id": "L_xk2u63l",
       "conflictFlag": true,
       "conflictDetails": "Overlaps travel/attendance for 261215_POR (2026-12-15 to 2026-12-19)",
