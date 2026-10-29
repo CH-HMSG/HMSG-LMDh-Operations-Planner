@@ -1406,7 +1406,17 @@
       "person": "P1",
       "startDate": "2026-10-23",
       "endDate": "2026-10-23",
-      "leaveType": "Compensation",
+      "leaveType": "Annual",
+      "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_e8yobwl",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P1",
+      "startDate": "2026-11-12",
+      "endDate": "2026-11-18",
+      "leaveType": "Annual",
       "approvalStatus": "Approved"
     },
     {
