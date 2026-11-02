@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMSG Fuel Matrix Pro v1.0</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0e0f0d;--surf:#161715;--surf2:#1c1d1a;--surf3:#242521;
+  --border:#2e2f2a;--div:#1f201c;--text:#dcdad5;--muted:#8a8883;--faint:#4a4842;
+  --pri:#4f98a3;--pri-h:#3a8290;--pri-bg:rgba(79,152,163,.14);
+  --orange:#fdab43;--green:#39ff8a;--warn:#ff2f6d;
+  --r:8px;--mono:'JetBrains Mono',monospace;
+  --cell-w:64px;--cell-h:30px;--axis-w:72px;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;font-size:13px;background:var(--bg);color:var(--text);}
+body{min-height:100vh;padding-bottom:40px;}
+input,textarea,select{user-select:text;font-family:inherit;}
+button{cursor:pointer;font:inherit;border:1px solid var(--border);border-radius:var(--r);padding:0 14px;height:34px;
+  background:var(--surf2);color:var(--text);white-space:nowrap;transition:background 120ms,border-color 120ms,transform 80ms;font-weight:600;}
+button:hover{background:var(--surf3);border-color:var(--muted);}
+button:active{transform:scale(.97);}
+button.pri{background:var(--pri);border-color:var(--pri);color:#fff;}
+button.pri:hover{background:var(--pri-h);}
+button.big{height:46px;font-size:14px;padding:0 26px;letter-spacing:.3px;}
+button.danger{background:transparent;border-color:#a13544;color:#ef8b95;}
+button.danger:hover{background:rgba(161,53,68,.12);}
+button.ghost{background:transparent;}
+button:disabled{opacity:.4;cursor:not-allowed;}
+select,input[type=number],input[type=text]{font:inherit;background:var(--surf2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);padding:0 10px;height:32px;}
+select{min-width:170px;}
+input[type=number]{width:70px;}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--pri);cursor:pointer;}
+input[type=range]{accent-color:var(--pri);cursor:pointer;}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--pri);outline-offset:1px;}
+textarea{width:100%;resize:vertical;background:var(--surf2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);padding:10px;font-family:var(--mono);font-size:12px;line-height:1.5;min-height:150px;}
+textarea::placeholder{color:var(--faint);}
+#app{max-width:1560px;margin:0 auto;padding:0 22px;}
+#topbar{display:flex;align-items:center;gap:12px;padding:16px 4px 18px;border-bottom:1px solid var(--div);margin-bottom:20px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#4f98a3,#245057);display:grid;place-items:center;flex-shrink:0;}
+.logo svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.brandtext .appname{font-weight:800;font-size:16px;letter-spacing:.2px;}
+.brandtext .tag{color:var(--muted);font-size:11px;}
+#topbar .spacer{flex:1;}
+#statusMini{color:var(--muted);font-size:11.5px;display:flex;align-items:center;gap:6px;}
+#statusMini .dot{width:7px;height:7px;border-radius:50%;background:var(--faint);}
+#statusMini.ok .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
+#statusMini.err .dot{background:var(--warn);box-shadow:0 0 6px var(--warn);}
+.panel{background:var(--surf);border:1px solid var(--div);border-radius:12px;padding:18px 20px;margin-bottom:18px;}
+.panel h2{font-size:12.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.panel h2 .n{width:20px;height:20px;border-radius:6px;background:var(--pri-bg);color:var(--pri);display:grid;place-items:center;font-size:11px;font-weight:800;}
+.inputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media (max-width:920px){.inputs-grid{grid-template-columns:1fr;}}
+.input-col label.title{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.input-col label.title span.t{font-weight:700;font-size:12.5px;}
+.input-col label.title span.hint{color:var(--faint);font-size:10.5px;font-weight:400;}
+.rowbtns{display:flex;gap:8px;margin-top:8px;}
+.meta-line{margin-top:6px;font-size:11px;color:var(--muted);min-height:14px;}
+.meta-line.ok{color:var(--green);}
+.meta-line.err{color:var(--warn);}
+.controls-flow{display:flex;flex-wrap:wrap;gap:22px 30px;align-items:flex-end;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field .lbl{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.field-row{display:flex;align-items:center;gap:9px;}
+.switchopt{display:flex;flex-wrap:wrap;gap:10px;}
+.optcard{flex:1;min-width:220px;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color 120ms,background 120ms;background:var(--surf2);}
+.optcard:hover{border-color:var(--muted);}
+.optcard.sel{border-color:var(--pri);background:var(--pri-bg);}
+.optcard .ot{font-weight:700;font-size:12.5px;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.optcard .ot .radio{width:14px;height:14px;border-radius:50%;border:2px solid var(--faint);flex-shrink:0;position:relative;}
+.optcard.sel .ot .radio{border-color:var(--pri);}
+.optcard.sel .ot .radio::after{content:'';position:absolute;inset:2px;border-radius:50%;background:var(--pri);}
+.optcard .od{color:var(--muted);font-size:11px;line-height:1.4;}
+.slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;}
+.slider-wrap input[type=range]{flex:1;}
+.slider-wrap .sv{font-family:var(--mono);font-weight:700;color:var(--pri);width:44px;text-align:right;}
+.toggle-line{display:flex;align-items:center;gap:9px;}
+.toggle-line .lbl2{font-size:12.5px;font-weight:600;}
+.toggle-line .sub{color:var(--faint);font-size:10.5px;}
+.calc-bar{display:flex;align-items:center;gap:14px;justify-content:center;padding:6px 0 2px;}
+#calcMsg{font-size:12px;color:var(--muted);}
+#outputPanel{display:none;}
+.viewtabs{display:flex;gap:8px;margin-bottom:14px;}
+.viewtabs button{flex:none;}
+.viewtabs button.active{background:var(--pri);border-color:var(--pri);color:#fff;}
+.legend{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--muted);flex-wrap:wrap;}
+.legend .grad{width:140px;height:10px;border-radius:5px;background:linear-gradient(90deg,rgb(26,37,53),rgb(26,82,120),rgb(30,130,80),rgb(200,140,30),rgb(180,40,20));}
+.legend .swatch{width:11px;height:11px;border-radius:3px;flex-shrink:0;}
+.legend .warnbox{border:2px solid var(--warn);box-shadow:0 0 5px var(--warn);}
+.legend .nodatabox{background:var(--surf3);border:1.5px dashed rgba(255,255,255,.35);}
+.legend .modbox{background:rgba(40,200,100,.55);border:1.5px solid rgba(255,255,255,.3);}
+#tableWrap{overflow:auto;border:1px solid var(--div);border-radius:10px;margin-top:14px;max-height:660px;}
+table.fuelgrid{border-collapse:separate;border-spacing:0;font-family:'Inter',sans-serif;font-size:12px;table-layout:fixed;}
+table.fuelgrid th,table.fuelgrid td{padding:0;text-align:center;white-space:nowrap;overflow:hidden;}
+table.fuelgrid th{background:var(--surf2);color:var(--muted);font-weight:600;font-family:'Inter',sans-serif;font-size:11px;position:sticky;z-index:2;padding:7px 6px;border-bottom:1px solid var(--border);border-right:1px solid var(--div);width:var(--cell-w);min-width:var(--cell-w);max-width:var(--cell-w);}
+table.fuelgrid thead th{top:0;}
+table.fuelgrid th.corner{left:0;top:0;z-index:3;background:var(--surf3);width:var(--axis-w);min-width:var(--axis-w);max-width:var(--axis-w);}
+table.fuelgrid th.yaxis{left:0;z-index:2;text-align:right;width:var(--axis-w);min-width:var(--axis-w);max-width:var(--axis-w);}
+table.fuelgrid td{padding:0;height:var(--cell-h);width:var(--cell-w);min-width:var(--cell-w);max-width:var(--cell-w);border-bottom:1px solid rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.04);color:var(--text);font-weight:500;font-family:'Inter',sans-serif;font-size:12px;position:relative;text-align:center;}
+table.fuelgrid td .cellval{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
+table.fuelgrid td.capped{outline:2px solid var(--warn);outline-offset:-2px;box-shadow:0 0 8px var(--warn),inset 0 0 10px rgba(255,47,109,.35);z-index:1;}
+table.fuelgrid td.nodata{outline:1.5px dashed rgba(255,255,255,.22);outline-offset:-1.5px;}
+table.fuelgrid td.modified{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25);}
+.deltacell-top{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);}
+.deltacell-sub{color:rgba(255,255,255,.85);text-shadow:0 1px 2px rgba(0,0,0,.6);}
+table.fuelgrid td:hover::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  background:#000;color:#fff;padding:5px 8px;border-radius:6px;font-size:10.5px;white-space:pre;z-index:10;pointer-events:none;margin-bottom:4px;box-shadow:0 4px 12px rgba(0,0,0,.5);}
+.deltacell-top{font-weight:700;font-size:12px;}
+.deltacell-sub{font-size:9.5px;opacity:.85;font-weight:500;}
+.copybar{display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:12px;}
+#copiedFlag{color:var(--green);font-size:11.5px;font-weight:600;opacity:0;transition:opacity 200ms;}
+#copiedFlag.show{opacity:1;}
+.emptystate{color:var(--faint);text-align:center;padding:40px 10px;font-size:12.5px;}
+.cellsize-ctrl{display:flex;align-items:center;gap:6px;}
+.cellsize-ctrl button{padding:0 10px;height:28px;font-size:14px;}
+footer{text-align:center;color:var(--faint);font-size:10.5px;margin-top:30px;}
+
+.viewpanel-wrap{display:flex;gap:0;align-items:stretch;}
+#tableColumn{flex:1;min-width:200px;overflow:auto;}
+#plot3dColumn{width:520px;min-width:220px;max-width:80%;flex-shrink:0;border:1px solid var(--div);border-radius:10px;background:var(--surf);display:flex;flex-direction:column;overflow:hidden;}
+#plot3dColumn.off{display:none;}
+.plot3d-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--div);flex-wrap:wrap;}
+.plot3d-head .lbl3{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.plot3d-head .spacer3{flex:1;}
+.plot3d-head button{height:26px;font-size:11px;padding:0 10px;}
+.plot3d-body{flex:1;min-height:420px;}
+#plot3d{width:100%;height:100%;min-height:420px;}
+.radio-inline{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);cursor:pointer;}
+.radio-inline input{accent-color:var(--pri);cursor:pointer;}
+@media (max-width:1200px){ .viewpanel-wrap{flex-direction:column;} #plot3dColumn{width:100%;} }
+
+
+#viewResizeHandle{width:6px;flex-shrink:0;cursor:col-resize;background:transparent;position:relative;border-radius:3px;transition:background 120ms;}
+#viewResizeHandle:hover, #viewResizeHandle.dragging{background:var(--pri);}
+#viewResizeHandle::after{content:'';position:absolute;left:2px;top:20%;width:2px;height:60%;background:var(--border);border-radius:1px;}
+#viewResizeHandle:hover::after, #viewResizeHandle.dragging::after{background:transparent;}
+
+
+.filter-card{border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--surf2);margin-bottom:12px;}
+.filter-card.active{border-color:var(--pri);background:var(--pri-bg);}
+.filter-card .fc-head{display:flex;align-items:center;gap:10px;margin-bottom:4px;cursor:pointer;}
+.filter-card .fc-head input[type=checkbox]{width:18px;height:18px;}
+.filter-card .fc-head .fc-title{font-weight:700;font-size:13px;flex:1;}
+.filter-card .fc-desc{color:var(--muted);font-size:11.5px;line-height:1.5;margin:4px 0 10px 28px;}
+.filter-card .fc-body{margin-left:28px;display:flex;flex-wrap:wrap;gap:16px 24px;align-items:flex-end;opacity:.4;pointer-events:none;transition:opacity 120ms;}
+.filter-card.active .fc-body{opacity:1;pointer-events:auto;}
+.filter-card .fc-body .field{min-width:150px;}
+.filter-card .fc-body .field .lbl{font-size:10.5px;}
+.confdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;flex-shrink:0;}
+.confdot.c-green{background:var(--green);box-shadow:0 0 4px var(--green);}
+.confdot.c-yellow{background:var(--orange);box-shadow:0 0 4px var(--orange);}
+.confdot.c-red{background:var(--warn);box-shadow:0 0 4px var(--warn);}
+.cellval-wrap{display:flex;align-items:center;justify-content:center;gap:3px;width:100%;height:100%;}
+
+
+#advPanel.collapsed #advPanelBody{display:none;}
+#btnAdvToggle{min-width:84px;}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24"><path d="M4 17 10 7l4 7 6-10"/><path d="M4 20h16"/></svg></div>
+      <div class="brandtext"><div class="appname">HMSG Fuel Matrix Pro v1.0</div><div class="tag">2D/3D Fuel Map Matrix Calibrator</div></div>
+    </div>
+    <div class="spacer"></div>
+    <div id="statusMini"><span class="dot"></span><span id="statusMiniText">Awaiting base map & log data</span></div>
+    <button class="danger" id="btnResetAll">Reset</button>
+  </header>
+
+  <!-- INPUTS -->
+  <section class="panel">
+    <h2><span class="n">1</span>Data Input</h2>
+    <div class="inputs-grid">
+      <div class="input-col">
+        <label class="title"><span class="t">Base Fuel Map</span><span class="hint">X header row + Y header column, tab/comma-delimited from Excel</span></label>
+        <textarea id="baseMapInput" placeholder="Paste your base fuel map here (top-left cell blank, first row = RPM breakpoints, first column = Load/MAP breakpoints)..."></textarea>
+        <div class="rowbtns"><button id="btnPasteBase">📋 Paste Base Map</button><button class="ghost" id="btnClearBase">Clear</button></div>
+        <div class="meta-line" id="baseMeta">No base map loaded yet.</div>
+      </div>
+      <div class="input-col">
+        <label class="title"><span class="t">Log Data / Correction Data</span><span class="hint">Raw TXT / CSV export from Atlas</span></label>
+        <textarea id="logInput" placeholder="Paste your raw CSV/TXT log data here (TimeOfDay, channel headers, units row, then samples)..."></textarea>
+        <div class="rowbtns"><button id="btnPasteLog">📋 Paste Log Data</button><button class="ghost" id="btnClearLog">Clear</button></div>
+        <div class="meta-line" id="logMeta">No log data loaded yet.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHANNEL CALIBRATION -->
+  <section class="panel">
+    <h2><span class="n">2</span>Channel Calibration & Settings</h2>
+    <div class="switchopt" style="margin-bottom:18px">
+      <div class="optcard sel" id="cardModeDirect" data-corrmode="direct">
+        <div class="ot"><span class="radio"></span>Correction Factor Channel</div>
+        <div class="od">Use one correction channel. v11 now converts filtered data correctly whether the channel is a multiplier like 1.03, a percent like 103, or a trim like +3 or -2.</div>
+      </div>
+      <div class="optcard" id="cardModeLambda" data-corrmode="lambda">
+        <div class="ot"><span class="radio"></span>Lambda Reading vs Setpoint</div>
+        <div class="od">Derive the correction factor from two channels — actual measured Lambda and the target Lambda setpoint — computed as Reading ÷ Setpoint.</div>
+      </div>
+    </div>
+    <div class="controls-flow">
+      <div class="field"><span class="lbl">Base Map X-Axis Channel</span><select id="selX"><option value="">— load log data first —</option></select></div>
+      <div class="field"><span class="lbl">Base Map Y-Axis Channel</span><select id="selY"><option value="">— load log data first —</option></select></div>
+      <div class="field" id="fieldCorrDirect"><span class="lbl">Correction Factor Channel</span><select id="selCorr"><option value="">— load log data first —</option></select></div>
+      <div class="field" id="fieldLambdaReading" style="display:none"><span class="lbl">Lambda Reading Channel</span><select id="selLambdaReading"><option value="">— load log data first —</option></select></div>
+      <div class="field" id="fieldLambdaTarget" style="display:none"><span class="lbl">Lambda Setpoint Channel</span><select id="selLambdaTarget"><option value="">— load log data first —</option></select></div>
+      <div class="field"><span class="lbl">Output Decimals</span><div class="field-row"><input type="number" id="decimals" min="0" max="6" value="2"></div></div>
+    </div>
+    <div class="controls-flow" style="margin-top:18px">
+      <div class="field">
+        <span class="lbl">&nbsp;</span>
+        <div class="toggle-line"><input type="checkbox" id="safetyCap" checked><div><div class="lbl2">Enable Safety Cap</div><div class="sub" id="safetyCapSub">Clamps correction factors to 0.80 – 1.20</div></div></div>
+      </div>
+      <div class="field" id="fieldSafetyPct">
+        <span class="lbl">Safety Cap ±%</span>
+        <div class="slider-wrap" style="margin-top:0"><input type="range" id="safetyPct" min="1" max="20" value="20" style="width:160px"><span class="sv" id="safetyPctVal">20%</span></div>
+      </div>
+      <div class="field" id="fieldStepApplyInline">
+        <span class="lbl">Apply Only Part of the Correction</span>
+	<div class="sub" style="margin-top:4px;color:var(--faint);font-size:10.5px">Use less than 100% if you want to move toward the correction gradually.</div>
+        <div class="slider-wrap" style="margin-top:0"><input type="range" id="stepApplyPct" min="5" max="100" value="100" style="width:180px"><span class="sv" id="stepApplyPctVal">100%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVANCED DATA PROCESSING -->
+  <section class="panel" id="advPanel">
+    <h2 style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" id="advToggleHead"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="n">3</span><span>Advanced Data Processing <span style="color:var(--faint);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(all optional — enable only what you need)</span></span></span><button type="button" class="ghost" id="btnAdvToggle" style="height:28px;padding:0 10px">Collapse</button></h2>
+    <div id="advPanelBody">
+
+    <div class="filter-card" id="cardDeltaFilter">
+      <label class="fc-head"><input type="checkbox" id="ckDeltaFilter"><span class="fc-title">Δ Airflow Delta Filter</span></label>
+      <div class="fc-desc">Ignores log samples where airflow (or your chosen X-axis channel) is changing faster than a set rate — throttle blips and transients get excluded from the average.</div>
+      <div class="fc-body">
+        <div class="field"><span class="lbl">Max Δ per ms</span><div class="field-row"><input type="number" id="deltaThresh" min="0.01" step="0.01" value="2.0"></div></div>
+      </div>
+    </div>
+
+    <div class="filter-card" id="cardShiftFilter">
+      <label class="fc-head"><input type="checkbox" id="ckShiftFilter"><span class="fc-title">Clutch &amp; Gear Shift Detection</span></label>
+      <div class="fc-desc">Automatically pauses data collection for a short window after a sudden RPM drop, avoiding lean spikes caused by clutch/gear shift events.</div>
+      <div class="fc-body">
+        <div class="field"><span class="lbl">RPM Drop Threshold</span><div class="field-row"><input type="number" id="shiftRpmDrop" min="50" step="50" value="400"></div></div>
+        <div class="field"><span class="lbl">Pause Duration (ms)</span><div class="field-row"><input type="number" id="shiftPauseMs" min="200" step="100" value="1500"></div></div>
+      </div>
+    </div>
+
+    <div class="filter-card" id="cardLagFilter">
+      <label class="fc-head"><input type="checkbox" id="ckLagFilter"><span class="fc-title">Transport Delay Compensation (Lambda Lag)</span></label>
+      <div class="fc-desc">Maps the current O2/Lambda reading back to the RPM/Load cell the engine was actually in 100–300ms ago, compensating for exhaust gas travel time. Lag can scale dynamically with RPM (faster gas flow at high RPM = shorter lag).</div>
+      <div class="fc-body">
+        <div class="field"><span class="lbl">Lag at 4000 RPM (ms)</span><div class="field-row"><input type="number" id="lag4000Ms" min="0" step="10" value="220"></div></div>
+        <div class="field"><span class="lbl">Lag at 7500 RPM (ms)</span><div class="field-row"><input type="number" id="lag7500Ms" min="0" step="10" value="120"></div></div>
+        <div class="field"><span class="lbl">&nbsp;</span><div class="toggle-line"><input type="checkbox" id="ckLagRpmScale" checked><span class="lbl2" style="font-size:11.5px">Blend lag between 4000 and 7500 RPM</span></div></div>
+      </div>
+    </div>
+
+    <div class="filter-card" id="cardStatFilter">
+      <label class="fc-head"><input type="checkbox" id="ckStatFilter"><span class="fc-title">Statistical Weighting &amp; Cell Readiness</span></label>
+      <div class="fc-desc">Tracks how many valid hits each cell received. Once a cell reaches 20+ hits, the highest/lowest 10% outliers are discarded before averaging. Cells are marked green/yellow/red based on statistical confidence.</div>
+      <div class="fc-body">
+        <div class="field"><span class="lbl">Min Hits for Confidence</span><div class="field-row"><input type="number" id="statMinHits" min="1" step="1" value="8"></div></div>
+        <div class="field"><span class="lbl">Outlier Trim Trigger (hits)</span><div class="field-row"><input type="number" id="statTrimHits" min="2" step="1" value="20"></div></div>
+        <div class="field"><span class="lbl">Trim % each side</span><div class="field-row"><input type="number" id="statTrimPct" min="0" max="40" step="1" value="10"></div></div>
+      </div>
+    </div>
+
+    <div class="filter-card" id="cardHardnessFilter">
+      <label class="fc-head"><input type="checkbox" id="ckHardnessFilter"><span class="fc-title">Smart Target Adaption (Cell Hardness Zones)</span></label>
+      <div class="fc-desc">Define "hard" zones (e.g. high RPM / high load) that require far more data hits before a correction is applied — protecting against lean changes from a single glitchy reading.</div>
+      <div class="fc-body">
+        <div class="field"><span class="lbl">Hard Zone RPM ≥</span><div class="field-row"><input type="number" id="hardRpmMin" step="100" value="6000"></div></div>
+        <div class="field"><span class="lbl">Hard Zone Y-Axis ≥</span><div class="field-row"><input type="number" id="hardYMin" step="1" value="80"></div></div>
+        <div class="field"><span class="lbl">Hardness Multiplier</span><div class="field-row"><input type="number" id="hardMult" min="1" step="0.5" value="5"></div></div>
+      </div>
+    </div>
+
+    </div>
+  </section>
+
+  
+
+<!-- SMOOTHING -->
+  <section class="panel">
+    <h2><span class="n">4</span>Advanced Smoothing</h2>
+    <div class="switchopt">
+      <div class="optcard sel" id="cardGauss" data-mode="gauss">
+        <div class="ot"><span class="radio"></span>Gaussian 3×3 Matrix Smoothing</div>
+        <div class="od">Weighted mathematical blur — smooths sharp peaks into surrounding cells based on distance while preserving overall curve shape.</div>
+      </div>
+      <div class="optcard" id="cardLinear" data-mode="linear">
+        <div class="ot"><span class="radio"></span>Linear Neighborhood Averaging</div>
+        <div class="od">Flatter, more aggressive pass — averages each cell with its four touching neighbors to iron out isolated spikes entirely.</div>
+      </div>
+    </div>
+    <div class="slider-wrap"><span class="lbl" style="white-space:nowrap">Smoothing Strength</span><input type="range" id="smoothStrength" min="0" max="100" value="35"><span class="sv" id="smoothStrengthVal">35%</span></div>
+  </section>
+
+  
+
+<div class="calc-bar"><button class="pri big" id="btnCalc">⚡ Calculate Map</button><span id="calcMsg"></span></div>
+
+  <!-- OUTPUT -->
+  <section class="panel" id="outputPanel">
+    <h2><span class="n">5</span>Final Fuel Map</h2>
+    <div class="viewtabs">
+      <button class="active" id="tabValues">Values</button>
+      <button id="tabDelta">Delta vs Base</button>
+    </div>
+    <div class="legend" id="legendValues">
+      <span>Low</span><div class="grad"></div><span>High</span>
+      <span style="margin-left:14px;display:flex;align-items:center;gap:6px"><span class="swatch warnbox"></span>Safety cap hit</span>
+      <span style="display:flex;align-items:center;gap:6px"><span class="swatch nodatabox"></span>No log coverage (unchanged)</span>
+    </div>
+    <div class="legend" id="legendDelta" style="display:none">
+      <span>Decrease</span><div class="grad" style="background:linear-gradient(90deg,#ea2f2f,#242521,#39a35a)"></div><span>Increase</span>
+      <span style="margin-left:14px;display:flex;align-items:center;gap:6px"><span class="swatch modbox"></span>Modified cell (shows Δ% / Δ)</span>
+    </div>
+    <div class="legend" id="legendConfidence" style="display:none;margin-top:8px">
+      <span style="display:flex;align-items:center;gap:5px"><span class="confdot c-green"></span>High confidence</span>
+      <span style="display:flex;align-items:center;gap:5px"><span class="confdot c-yellow"></span>Building confidence</span>
+      <span style="display:flex;align-items:center;gap:5px"><span class="confdot c-red"></span>Low / no confidence</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:14px">
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <label class="toggle-line" style="cursor:pointer">
+          <input type="checkbox" id="show3dCk" checked>
+          <span class="lbl2">Show 3D view</span>
+        </label>
+        <label class="toggle-line" style="cursor:pointer">
+          <input type="checkbox" id="heatCk" checked>
+          <span class="lbl2">Heatmap coloring</span>
+        </label>
+      </div>
+      <div class="cellsize-ctrl">
+        <span class="lbl">Cell size</span>
+        <button id="btnCellSm">−</button>
+        <button id="btnCellLg">+</button>
+      </div>
+    </div>
+    <div class="viewpanel-wrap" style="margin-top:14px">
+      <div id="tableColumn">
+        <div id="tableWrap"><div class="emptystate">Run Calculate Map to generate the final matrix.</div></div>
+      </div>
+      <div id="viewResizeHandle" title="Drag to resize"></div>
+      <div id="plot3dColumn">
+        <div class="plot3d-head">
+          <span class="lbl3">3D Surface</span>
+          <label class="radio-inline"><input type="checkbox" id="contCk" checked>Contours</label>
+          <div class="spacer3"></div>
+          <label class="radio-inline" id="diff3dWrap" style="display:none"><input type="checkbox" id="diff3dCk" checked>Delta surface</label>
+          <button id="btnResetCam">Reset view</button>
+        </div>
+        <div class="plot3d-body"><div id="plot3d"></div></div>
+      </div>
+    </div>
+    <div class="copybar">
+      <button class="pri" id="btnCopy">⧉ Copy Corrected Map</button>
+      <span id="copiedFlag">Copied to clipboard ✓</span>
+    </div>
+  </section>
+
+  <footer>HMSG Fuel Matrix Pro v1.0 runs entirely locally in your browser. No data leaves this page. - Christos Hadjigeorgiou - Power Unit Event Support Engineer </footer>
+</div>
+
+<script>
+"use strict";
+/* ---------- state ---------- */
+let baseMap = null;      // {xh:[], yh:[], vals:[[]]}
+let logData = null;      // {headers:[], rows:[[]]}
+let finalMap = null;     // computed result grid
+let viewMode = 'values'; // 'values' | 'delta'
+
+/* ---------- element refs ---------- */
+const id = (i)=>document.getElementById(i);
+const baseMapInput = id('baseMapInput'), logInput = id('logInput');
+const baseMeta = id('baseMeta'), logMeta = id('logMeta');
+const selX = id('selX'), selY = id('selY'), selCorr = id('selCorr');
+const selLambdaReading = id('selLambdaReading'), selLambdaTarget = id('selLambdaTarget');
+const decimalsInp = id('decimals'), safetyCapChk = id('safetyCap');
+const safetyPct = id('safetyPct'), safetyPctVal = id('safetyPctVal'), safetyCapSub = id('safetyCapSub');
+const cardModeDirect = id('cardModeDirect'), cardModeLambda = id('cardModeLambda');
+const fieldCorrDirect = id('fieldCorrDirect'), fieldLambdaReading = id('fieldLambdaReading'), fieldLambdaTarget = id('fieldLambdaTarget');
+let corrMode = 'direct'; // 'direct' | 'lambda'
+
+/* Advanced processing refs */
+const ckDeltaFilter=id('ckDeltaFilter'), deltaThresh=id('deltaThresh');
+const ckShiftFilter=id('ckShiftFilter'), shiftRpmDrop=id('shiftRpmDrop'), shiftPauseMs=id('shiftPauseMs');
+const ckLagFilter=id('ckLagFilter'), lag4000Ms=id('lag4000Ms'), lag7500Ms=id('lag7500Ms'), ckLagRpmScale=id('ckLagRpmScale');
+const ckStatFilter=id('ckStatFilter'), statMinHits=id('statMinHits'), statTrimHits=id('statTrimHits'), statTrimPct=id('statTrimPct');
+const ckHardnessFilter=id('ckHardnessFilter'), hardRpmMin=id('hardRpmMin'), hardYMin=id('hardYMin'), hardMult=id('hardMult');
+const stepApplyPct=id('stepApplyPct'), stepApplyPctVal=id('stepApplyPctVal');
+const legendConfidence=id('legendConfidence');
+
+[['ckDeltaFilter','cardDeltaFilter'],['ckShiftFilter','cardShiftFilter'],['ckLagFilter','cardLagFilter'],
+ ['ckStatFilter','cardStatFilter'],['ckHardnessFilter','cardHardnessFilter']]
+ .forEach(([ckId,cardId])=>{
+   const ck=id(ckId), card=id(cardId);
+   const sync=()=>card.classList.toggle('active', ck.checked);
+   ck.addEventListener('change', sync); sync();
+ });
+stepApplyPct.addEventListener('input', ()=>{ stepApplyPctVal.textContent = stepApplyPct.value+'%'; });
+
+const advPanel=id('advPanel'), advPanelBody=id('advPanelBody'), btnAdvToggle=id('btnAdvToggle'), advToggleHead=id('advToggleHead');
+function setAdvCollapsed(collapsed){
+  advPanel.classList.toggle('collapsed', collapsed);
+  btnAdvToggle.textContent = collapsed ? 'Expand' : 'Collapse';
+}
+btnAdvToggle.addEventListener('click', (e)=>{ e.stopPropagation(); setAdvCollapsed(!advPanel.classList.contains('collapsed')); });
+advToggleHead.addEventListener('click', (e)=>{ if(e.target.closest('button')) return; setAdvCollapsed(!advPanel.classList.contains('collapsed')); });
+
+
+
+const smoothStrength = id('smoothStrength'), smoothStrengthVal = id('smoothStrengthVal');
+const cardGauss = id('cardGauss'), cardLinear = id('cardLinear');
+const outputPanel = id('outputPanel'), tableWrap = id('tableWrap');
+const calcMsg = id('calcMsg');
+const statusMini = id('statusMini'), statusMiniText = id('statusMiniText');
+const tabValues = id('tabValues'), tabDelta = id('tabDelta');
+const legendValues = id('legendValues'), legendDelta = id('legendDelta');
+const btnCellSm = id('btnCellSm'), btnCellLg = id('btnCellLg');
+const heatCk = id('heatCk');
+let smoothMode = 'gauss';
+
+const show3dCk = id('show3dCk'), plot3dColumn = id('plot3dColumn');
+const contCk = id('contCk'), diff3dCk = id('diff3dCk'), diff3dWrap = id('diff3dWrap');
+const btnResetCam = id('btnResetCam');
+let plot3dCam = null;
+
+
+/* ---------- cell sizing (borrowed approach from HMSG Map Editor) ---------- */
+const CELLSIZES = [
+  {w:44,h:22}, {w:52,h:26}, {w:64,h:30}, {w:76,h:34}, {w:92,h:38}, {w:112,h:42}
+];
+let cellSzIdx = 2;
+function applyCellSize(){
+  const s = CELLSIZES[cellSzIdx];
+  document.documentElement.style.setProperty('--cell-w', s.w+'px');
+  document.documentElement.style.setProperty('--cell-h', s.h+'px');
+}
+btnCellSm.addEventListener('click', ()=>{ if(cellSzIdx>0){cellSzIdx--; applyCellSize();} });
+btnCellLg.addEventListener('click', ()=>{ if(cellSzIdx<CELLSIZES.length-1){cellSzIdx++; applyCellSize();} });
+
+/* ---------- helpers ---------- */
+function toNum(s){
+  if(s===undefined||s===null) return NaN;
+  const t = String(s).trim().replace(',', '.');
+  if(!t) return NaN;
+  const n = parseFloat(t);
+  return isFinite(n) ? n : NaN;
+}
+function splitLine(line){
+  if(line.indexOf('\t') !== -1) return line.split('\t');
+  if(line.indexOf(',') !== -1) return line.split(',');
+  return line.trim().split(/\s{2,}|\s+/);
+}
+function cleanLines(raw){
+  return raw.replace(/\r/g,'').split('\n').filter(l=>l.trim().length>0);
+}
+function updateStatus(){
+  const ok = baseMap && logData;
+  statusMini.className = ok ? 'ok' : '';
+  statusMiniText.textContent = ok ? 'Base map & log data loaded — ready to calculate'
+    : (baseMap ? 'Base map loaded — awaiting log data' : (logData ? 'Log data loaded — awaiting base map' : 'Awaiting base map & log data'));
+}
+
+/* ---------- BASE MAP PARSING ---------- */
+function parseBaseMap(raw){
+  const lines = cleanLines(raw);
+  if(lines.length < 2) return null;
+  const rows = lines.map(l=>splitLine(l).map(c=>c.trim()));
+  const headerRow = rows[0];
+  const xh = headerRow.slice(1).map(toNum);
+  if(xh.some(isNaN) || xh.length===0) return null;
+  const yh = [], vals = [];
+  for(let i=1;i<rows.length;i++){
+    const r = rows[i];
+    if(r.length<2) continue;
+    const yv = toNum(r[0]);
+    if(isNaN(yv)) continue;
+    const rowVals = r.slice(1, 1+xh.length).map(toNum);
+    if(rowVals.length !== xh.length) continue;
+    if(rowVals.some(isNaN)) continue;
+    yh.push(yv); vals.push(rowVals);
+  }
+  if(yh.length===0) return null;
+  return {xh, yh, vals};
+}
+function refreshBaseMap(){
+  const raw = baseMapInput.value;
+  if(!raw.trim()){ baseMap=null; baseMeta.textContent='No base map loaded yet.'; baseMeta.className='meta-line'; updateStatus(); return; }
+  const parsed = parseBaseMap(raw);
+  if(!parsed){ baseMap=null; baseMeta.textContent='Could not parse base map — check first row is X breakpoints and first column is Y breakpoints.'; baseMeta.className='meta-line err'; }
+  else{
+    baseMap = parsed;
+    baseMeta.textContent = `Parsed ${parsed.yh.length} rows × ${parsed.xh.length} cols — X ${parsed.xh[0]}→${parsed.xh[parsed.xh.length-1]}, Y ${parsed.yh[0]}→${parsed.yh[parsed.yh.length-1]}`;
+    baseMeta.className='meta-line ok';
+  }
+  updateStatus();
+}
+
+/* ---------- LOG DATA PARSING ---------- */
+const TIMERE = /^\d{1,2}:\d{2}(:\d{2})?(\.\d+)?$/;
+function parseLogData(raw){
+  const lines = cleanLines(raw);
+  if(lines.length<2) return null;
+  let headerIdx = 0;
+  if(/Samples|Start|End/i.test(lines[0])) headerIdx = 1;
+  if(headerIdx>=lines.length) return null;
+  const headers = splitLine(lines[headerIdx]).map(h=>h.trim());
+  if(headers.length<2) return null;
+  let dataStart = -1;
+  for(let i=headerIdx+1;i<lines.length;i++){
+    const cells = splitLine(lines[i]);
+    const first = (cells[0]||'').trim();
+    if(TIMERE.test(first) || !isNaN(toNum(first))){ dataStart=i; break; }
+  }
+  if(dataStart===-1) return null;
+  const rows = [];
+  for(let i=dataStart;i<lines.length;i++){
+    const cells = splitLine(lines[i]);
+    if(cells.length<2) continue;
+    rows.push(cells);
+  }
+  if(rows.length===0) return null;
+  return {headers, rows};
+}
+function populateChannelSelects(headers){
+  const channels = headers.slice(1);
+  const sels = [selX, selY, selCorr, selLambdaReading, selLambdaTarget];
+  sels.forEach((sel, idx)=>{
+    const prevVal = sel.value;
+    sel.innerHTML = '';
+    const blank = document.createElement('option'); blank.value=''; blank.textContent='— select channel —';
+    sel.appendChild(blank);
+    channels.forEach((h,i)=>{
+      const opt = document.createElement('option'); opt.value = String(i+1); opt.textContent = h; sel.appendChild(opt);
+    });
+    if(!prevVal){
+      if(idx===0){ const m = headers.findIndex(h=>/rpm/i.test(h)); if(m>0) sel.value=String(m); }
+      else if(idx===2){ const m = headers.findIndex(h=>/corr|fac|trim/i.test(h)); if(m>0) sel.value=String(m); }
+      else if(idx===3){ const m = headers.findIndex(h=>/lam.*(read|actual|meas)|^lambda$/i.test(h)); if(m>0) sel.value=String(m); }
+      else if(idx===4){ const m = headers.findIndex(h=>/lam.*(target|setp|set point|goal)/i.test(h)); if(m>0) sel.value=String(m); }
+    } else if(sel.options.some(o=>o.value===prevVal)) sel.value = prevVal;
+  });
+}
+function refreshLogData(){
+  const raw = logInput.value;
+  if(!raw.trim()){ logData=null; logMeta.textContent='No log data loaded yet.'; logMeta.className='meta-line'; updateStatus(); return; }
+  const parsed = parseLogData(raw);
+  if(!parsed){
+    logData=null; logMeta.textContent='Could not parse log data — expected a header row followed by timestamped samples.'; logMeta.className='meta-line err';
+    [selX,selY,selCorr,selLambdaReading,selLambdaTarget].forEach(s=>s.innerHTML='<option value="">— load log data first —</option>');
+  } else {
+    logData = parsed;
+    logMeta.textContent = `Parsed ${parsed.headers.length} channels, ${parsed.rows.length.toLocaleString()} samples`;
+    logMeta.className='meta-line ok';
+    populateChannelSelects(parsed.headers);
+  }
+  updateStatus();
+}
+
+/* ---------- CALCULATION ENGINE ---------- */
+function nearestIndex(breakpoints, value){
+  let bestI=0, bestD=Infinity;
+  for(let i=0;i<breakpoints.length;i++){ const d=Math.abs(breakpoints[i]-value); if(d<bestD){bestD=d;bestI=i;} }
+  return bestI;
+}
+function parseTimeMs(str, idx){
+  if(str===undefined||str===null) return idx*10;
+  const s=String(str).trim();
+  const m = s.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?(?:\.(\d+))?$/);
+  if(m){
+    const h = m[3]!==undefined ? parseInt(m[1],10) : 0;
+    const mi = m[3]!==undefined ? parseInt(m[2],10) : parseInt(m[1],10);
+    const se = m[3]!==undefined ? parseInt(m[3],10) : parseInt(m[2],10);
+    const frac = m[4] ? parseFloat('0.'+m[4]) : 0;
+    return ((h*60+mi)*60+se+frac)*1000;
+  }
+  const n = toNum(s);
+  if(!isNaN(n)) return n*1000;
+  return idx*10;
+}
+function computeCorrectionGrid(){
+  const xi=parseInt(selX.value,10), yi=parseInt(selY.value,10);
+  const ci = corrMode==='direct' ? parseInt(selCorr.value,10) : null;
+  const lri = corrMode==='lambda' ? parseInt(selLambdaReading.value,10) : null;
+  const lti = corrMode==='lambda' ? parseInt(selLambdaTarget.value,10) : null;
+  const nY=baseMap.yh.length, nX=baseMap.xh.length;
+
+  const useDelta = ckDeltaFilter.checked;
+  const useShift = ckShiftFilter.checked;
+  const useLag = ckLagFilter.checked;
+  const useStat = ckStatFilter.checked;
+  const useHard = ckHardnessFilter.checked;
+
+  const dThresh = parseFloat(deltaThresh.value)||Infinity;
+  const rpmDrop = parseFloat(shiftRpmDrop.value)||0;
+  const pauseMs = parseFloat(shiftPauseMs.value)||0;
+  const lag4000 = parseFloat(lag4000Ms.value)||0;
+  const lag7500 = parseFloat(lag7500Ms.value)||0;
+  const lagRpmScale = ckLagRpmScale.checked;
+  const statMin = parseInt(statMinHits.value,10)||1;
+  const statTrimAt = parseInt(statTrimHits.value,10)||20;
+  const statTrimPctV = Math.max(0,Math.min(40, parseFloat(statTrimPct.value)||0))/100;
+  const hardRpmT = parseFloat(hardRpmMin.value);
+  const hardYT = parseFloat(hardYMin.value);
+  const hardMultV = Math.max(1, parseFloat(hardMult.value)||1);
+
+  /* Step 1 — extract raw samples: {t, x, y, cv, rpmForShift} */
+  const raw = [];
+  for(let r=0;r<logData.rows.length;r++){
+    const row = logData.rows[r];
+    const xv = toNum(row[xi]), yv = toNum(row[yi]);
+    if(isNaN(xv) || isNaN(yv)) continue;
+    let cv;
+    if(corrMode==='direct'){
+      const c = toNum(row[ci]);
+      cv = (isNaN(c) || c===0) ? 1 : c; // NaN or 0.00 preserved as default 1
+    } else {
+      const lr = toNum(row[lri]), lt = toNum(row[lti]);
+      if(isNaN(lr) || isNaN(lt) || lr===0 || lt===0) cv = 1; // NaN / invalid / 0.00 preserved as default 1
+      else cv = lr / lt;
+    }
+    const t = parseTimeMs(row[0], r);
+    raw.push({t, x:xv, y:yv, cv, rpm:xv});
+  }
+  raw.sort((a,b)=>a.t-b.t);
+
+  /* Step 2 — Δ filter: reject samples where |Δx|/Δt exceeds threshold */
+  let samples = raw;
+  if(useDelta && samples.length>1){
+    const kept=[samples[0]];
+    for(let i=1;i<samples.length;i++){
+      const dt = samples[i].t - samples[i-1].t;
+      const dx = Math.abs(samples[i].x - samples[i-1].x);
+      const rate = dt>0 ? dx/dt : 0;
+      if(rate <= dThresh) kept.push(samples[i]);
+    }
+    samples = kept;
+  }
+
+  /* Step 3 — shift/clutch detection: pause collection after sudden RPM drop */
+  if(useShift && samples.length>1){
+    const kept=[];
+    let pauseUntil = -Infinity;
+    for(let i=0;i<samples.length;i++){
+      if(i>0){
+        const drop = samples[i-1].rpm - samples[i].rpm;
+        if(drop >= rpmDrop) pauseUntil = samples[i].t + pauseMs;
+      }
+      if(samples[i].t >= pauseUntil) kept.push(samples[i]);
+    }
+    samples = kept;
+  }
+
+  /* Step 4 — transport delay (lambda lag): shift cv assignment back to an earlier x/y bin */
+  let binSamples = samples;
+  if(useLag && samples.length>1){
+    binSamples = samples.map((s)=>{
+      let lag = lag4000;
+      if(lagRpmScale){
+        const t = Math.max(0, Math.min(1, (s.rpm - 4000) / (7500 - 4000)));
+        lag = lag4000 + (lag7500 - lag4000) * t;
+      }
+      const targetT = s.t - lag;
+      // find nearest sample by time <= s.t to source the RPM/Load bin from
+      let lo=0, hi=samples.length-1, bestIdx=0, bestD=Infinity;
+      for(let k=0;k<samples.length;k++){
+        const d=Math.abs(samples[k].t - targetT);
+        if(d<bestD){ bestD=d; bestIdx=k; }
+      }
+      const binSrc = samples[bestIdx];
+      return {t:s.t, x:binSrc.x, y:binSrc.y, cv:s.cv, rpm:binSrc.rpm};
+    });
+  }
+
+  /* Step 5 — bin into grid, collecting raw hit lists per cell for stats */
+  const hitLists = Array.from({length:nY},()=>Array.from({length:nX},()=>[]));
+  for(const s of binSamples){
+    const xIdx = nearestIndex(baseMap.xh, s.x), yIdx = nearestIndex(baseMap.yh, s.y);
+    hitLists[yIdx][xIdx].push(s.cv);
+  }
+
+  /* Step 6 — statistical weighting: trim outliers if enough hits, then average */
+  const corr = Array.from({length:nY},()=>new Array(nX).fill(1));
+  const hasData = Array.from({length:nY},()=>new Array(nX).fill(false));
+  const hitCounts = Array.from({length:nY},()=>new Array(nX).fill(0));
+  const confidence = Array.from({length:nY},()=>new Array(nX).fill('none')); // 'green'|'yellow'|'red'|'none'
+
+  for(let y=0;y<nY;y++) for(let x=0;x<nX;x++){
+    const list = hitLists[y][x];
+    const n = list.length;
+    hitCounts[y][x] = n;
+    if(n===0){ confidence[y][x]='none'; continue; }
+
+    let vals = list;
+    if(useStat && n >= statTrimAt && statTrimPctV > 0){
+      const sorted = list.slice().sort((a,b)=>a-b);
+      const trimN = Math.floor(n * statTrimPctV);
+      vals = sorted.slice(trimN, n - trimN);
+      if(vals.length===0) vals = sorted;
+    }
+    const avg = vals.reduce((a,b)=>a+b,0) / vals.length;
+    corr[y][x] = avg;
+    hasData[y][x] = true;
+
+    /* required hits for full confidence, adjusted by hardness zone */
+    let reqHits = statMin;
+    if(useHard){
+      const inHardZone = (!isNaN(hardRpmT) && baseMap.xh[x] >= hardRpmT) || (!isNaN(hardYT) && baseMap.yh[y] >= hardYT);
+      if(inHardZone) reqHits = statMin * hardMultV;
+    }
+    if(useStat || useHard){
+      if(n >= reqHits) confidence[y][x] = 'green';
+      else if(n >= reqHits*0.4) confidence[y][x] = 'yellow';
+      else confidence[y][x] = 'red';
+    } else {
+      confidence[y][x] = 'green';
+    }
+  }
+
+  return {corr, hasData, hitCounts, confidence};
+}
+function applySafetyCap(corr, hasData, capOn, capPct){
+  const nY=corr.length, nX=corr[0].length;
+  const capped=Array.from({length:nY},()=>new Array(nX).fill(false));
+  if(!capOn) return {corr, capped};
+  const hi = 1 + capPct/100, lo = 1 - capPct/100;
+  const out=corr.map(row=>row.slice());
+  for(let y=0;y<nY;y++) for(let x=0;x<nX;x++){
+    if(!hasData[y][x]) continue;
+    if(out[y][x]>hi){ out[y][x]=hi; capped[y][x]=true; }
+    else if(out[y][x]<lo){ out[y][x]=lo; capped[y][x]=true; }
+  }
+  return {corr:out, capped};
+}
+function gaussianSmooth(grid){
+  const nY=grid.length, nX=grid[0].length;
+  const kernel=[[1,2,1],[2,4,2],[1,2,1]];
+  const out=Array.from({length:nY},()=>new Array(nX).fill(0));
+  for(let y=0;y<nY;y++) for(let x=0;x<nX;x++){
+    let wsum=0, vsum=0;
+    for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){
+      const yy=y+dy, xx=x+dx;
+      if(yy<0||yy>=nY||xx<0||xx>=nX) continue;
+      const w=kernel[dy+1][dx+1]; wsum+=w; vsum+=w*grid[yy][xx];
+    }
+    out[y][x]= wsum>0 ? vsum/wsum : grid[y][x];
+  }
+  return out;
+}
+function linearSmooth(grid){
+  const nY=grid.length, nX=grid[0].length;
+  const out=Array.from({length:nY},()=>new Array(nX).fill(0));
+  const deltas=[[-1,0],[1,0],[0,-1],[0,1]];
+  for(let y=0;y<nY;y++) for(let x=0;x<nX;x++){
+    let sum=0, cnt=0;
+    for(const [dy,dx] of deltas){
+      const yy=y+dy, xx=x+dx;
+      if(yy<0||yy>=nY||xx<0||xx>=nX) continue;
+      sum+=grid[yy][xx]; cnt++;
+    }
+    out[y][x]= cnt>0 ? sum/cnt : grid[y][x];
+  }
+  return out;
+}
+function blend(orig, smoothed, strength){
+  const nY=orig.length, nX=orig[0].length;
+  const out=Array.from({length:nY},()=>new Array(nX).fill(0));
+  for(let y=0;y<nY;y++) for(let x=0;x<nX;x++) out[y][x]= orig[y][x]*(1-strength) + smoothed[y][x]*strength;
+  return out;
+}
+function calculate(){
+  calcMsg.textContent=''; calcMsg.style.color='var(--muted)';
+  if(!baseMap){ calcMsg.textContent='Add a valid Base Fuel Map first.'; calcMsg.style.color='var(--warn)'; return; }
+  if(!logData){ calcMsg.textContent='Add valid Log Data first.'; calcMsg.style.color='var(--warn)'; return; }
+  if(!selX.value || !selY.value){ calcMsg.textContent='Select X-axis and Y-axis channels.'; calcMsg.style.color='var(--warn)'; return; }
+  if(corrMode==='direct'){
+    if(!selCorr.value){ calcMsg.textContent='Select a Correction Factor channel.'; calcMsg.style.color='var(--warn)'; return; }
+    if(selX.value===selY.value || selX.value===selCorr.value || selY.value===selCorr.value){ calcMsg.textContent='X, Y, and Correction channels must be different from each other.'; calcMsg.style.color='var(--warn)'; return; }
+  } else {
+    if(!selLambdaReading.value || !selLambdaTarget.value){ calcMsg.textContent='Select both Lambda Reading and Lambda Setpoint channels.'; calcMsg.style.color='var(--warn)'; return; }
+    if(selLambdaReading.value===selLambdaTarget.value){ calcMsg.textContent='Lambda Reading and Lambda Setpoint channels must be different.'; calcMsg.style.color='var(--warn)'; return; }
+    if(selX.value===selY.value || selX.value===selLambdaReading.value || selY.value===selLambdaReading.value || selX.value===selLambdaTarget.value || selY.value===selLambdaTarget.value){ calcMsg.textContent='X, Y, and Lambda channels must be different from each other.'; calcMsg.style.color='var(--warn)'; return; }
+  }
+
+  const {corr, hasData, hitCounts, confidence} = computeCorrectionGrid();
+  const {corr:cappedCorr, capped} = applySafetyCap(corr, hasData, safetyCapChk.checked, parseInt(safetyPct.value,10));
+  const nY=baseMap.yh.length, nX=baseMap.xh.length;
+
+  /* Step-blend: only apply a percentage of the correction's distance from 1.0 */
+  let effCorr = cappedCorr;
+  const pct = Math.max(5, Math.min(100, parseFloat(stepApplyPct.value)||100)) / 100;
+  if(pct < 0.9999){
+    effCorr = cappedCorr.map(row=>row.map(c => 1 + (c-1)*pct));
+  }
+
+  let rawFinal=Array.from({length:nY},()=>new Array(nX).fill(0));
+  for(let y=0;y<nY;y++) for(let x=0;x<nX;x++) rawFinal[y][x]=baseMap.vals[y][x]*effCorr[y][x];
+
+  const strength = smoothStrength.value/100;
+  let out = rawFinal;
+  if(strength>0){
+    const sm = smoothMode==='gauss' ? gaussianSmooth(rawFinal) : linearSmooth(rawFinal);
+    out = blend(rawFinal, sm, strength);
+  }
+
+  finalMap = {xh:baseMap.xh, yh:baseMap.yh, vals:out, base:baseMap.vals, capped, hasData, corr:effCorr, hitCounts, confidence};
+  renderOutput();
+  renderPlot3D();
+
+  const cappedCount = capped.flat().filter(Boolean).length;
+  const noDataCount = hasData.flat().filter(v=>!v).length;
+  calcMsg.textContent = `Done — ${nY}×${nX} cells calculated.` + (cappedCount? ` ${cappedCount} cells hit the safety cap.`:'') + (noDataCount? ` ${noDataCount} cells had no log coverage (left unchanged).`:'');
+  calcMsg.style.color = cappedCount ? 'var(--warn)' : 'var(--green)';
+}
+
+/* ---------- RENDER ---------- */
+function colorForValue(v, min, max){
+  // Same gradient/algorithm as HMSG Map Editor's heatColor()
+  let t = (max>min) ? (v-min)/(max-min) : 0.5;
+  t = Math.max(0,Math.min(1,t));
+  const stops=[[0,[26,37,53]],[0.25,[26,82,120]],[0.5,[30,130,80]],[0.75,[200,140,30]],[1,[180,40,20]]];
+  let i=0; while(i<stops.length-2 && t>stops[i+1][0]) i++;
+  const [t0,c0]=stops[i], [t1,c1]=stops[i+1];
+  const f=(t-t0)/(t1-t0);
+  return `rgb(${Math.round(c0[0]+(c1[0]-c0[0])*f)},${Math.round(c0[1]+(c1[1]-c0[1])*f)},${Math.round(c0[2]+(c1[2]-c0[2])*f)})`;
+}
+function deltaColor(pct){
+  // Strong saturation even for small deltas: sqrt curve boosts low-magnitude changes.
+  const range = 15; // pct at which color reaches full saturation
+  const mag = Math.min(1, Math.abs(pct) / range);
+  const f = Math.pow(mag, 0.55); // sqrt-ish curve: small deltas still very visible
+  if(pct >= 0){
+    const c0=[46,48,43], c1=[40,200,100];
+    return `rgb(${Math.round(c0[0]+(c1[0]-c0[0])*f)},${Math.round(c0[1]+(c1[1]-c0[1])*f)},${Math.round(c0[2]+(c1[2]-c0[2])*f)})`;
+  } else {
+    const c0=[46,48,43], c1=[240,45,45];
+    return `rgb(${Math.round(c0[0]+(c1[0]-c0[0])*f)},${Math.round(c0[1]+(c1[1]-c0[1])*f)},${Math.round(c0[2]+(c1[2]-c0[2])*f)})`;
+  }
+}
+function formatNum(n, dec){
+  if(n===undefined||n===null||isNaN(n)) return '—';
+  return Number(n).toFixed(dec);
+}
+function renderOutput(){
+  outputPanel.style.display='block';
+  const dec = Math.max(0, Math.min(6, parseInt(decimalsInp.value,10)||0));
+  const {xh, yh, vals, base, capped, hasData, confidence} = finalMap;
+  const showConfidence = ckStatFilter.checked || ckHardnessFilter.checked;
+  legendConfidence.style.display = (showConfidence && viewMode==='values') ? 'flex' : 'none';
+
+  if(viewMode==='values'){
+    let min=Infinity, max=-Infinity;
+    vals.forEach(row=>row.forEach(v=>{ if(v<min)min=v; if(v>max)max=v; }));
+
+    const heatOn = heatCk.checked;
+    let html = '<table class="fuelgrid"><thead><tr><th class="corner">Y \\ X</th>';
+    xh.forEach(x=>{ html+=`<th>${formatNum(x,dec>2?0:dec)}</th>`; });
+    html+='</tr></thead><tbody>';
+    for(let y=0;y<yh.length;y++){
+      html+=`<tr><th class="yaxis">${formatNum(yh[y],dec>2?0:dec)}</th>`;
+      for(let x=0;x<xh.length;x++){
+        const v = vals[y][x];
+        const bg = heatOn ? colorForValue(v, min, max) : 'var(--surf2)';
+        const txtColor = heatOn ? '#0c0c0b' : 'var(--text)';
+        const cls=[];
+        if(capped[y][x]) cls.push('capped');
+        if(!hasData[y][x]) cls.push('nodata');
+        const confState = confidence ? confidence[y][x] : 'none';
+        const dot = (showConfidence && confState!=='none') ? `<span class="confdot c-${confState}"></span>` : '';
+        const confTip = showConfidence ? `\\nConfidence: ${confState}` : '';
+        const tip = `RPM ${formatNum(xh[x],2)}\\nY ${formatNum(yh[y],2)}\\n${formatNum(v,dec)}` + (capped[y][x]?'\\n⚠ Safety cap applied':'') + (!hasData[y][x]?'\\n(no log coverage)':'') + confTip;
+        html += `<td class="${cls.join(' ')}" style="background:${bg};color:${txtColor}" data-tip="${tip.replace(/"/g,'&quot;')}"><div class="cellval-wrap">${dot}<span>${formatNum(v,dec)}</span></div></td>`;
+      }
+      html+='</tr>';
+    }
+    html+='</tbody></table>';
+    tableWrap.innerHTML = html;
+  } else {
+    // Delta view
+    let maxAbsPct = 0.001;
+    for(let y=0;y<yh.length;y++) for(let x=0;x<xh.length;x++){
+      const b=base[y][x], v=vals[y][x];
+      if(b!==0){ const pct=((v-b)/Math.abs(b))*100; if(Math.abs(pct)>maxAbsPct) maxAbsPct=Math.abs(pct); }
+    }
+    let html = '<table class="fuelgrid"><thead><tr><th class="corner">Y \\ X</th>';
+    xh.forEach(x=>{ html+=`<th>${formatNum(x,dec>2?0:dec)}</th>`; });
+    html+='</tr></thead><tbody>';
+    for(let y=0;y<yh.length;y++){
+      html+=`<tr><th class="yaxis">${formatNum(yh[y],dec>2?0:dec)}</th>`;
+      for(let x=0;x<xh.length;x++){
+        const b = base[y][x], v = vals[y][x];
+        const delta = v - b;
+        const pct = b!==0 ? (delta/Math.abs(b))*100 : 0;
+        const modified = Math.abs(delta) > 1e-9;
+        const bg = modified ? deltaColor(pct) : 'transparent';
+        const cls=[];
+        if(modified) cls.push('modified');
+        if(capped[y][x]) cls.push('capped');
+        if(!hasData[y][x]) cls.push('nodata');
+        const sign = delta>=0 ? '+' : '';
+        const tip = `RPM ${formatNum(xh[x],2)}\\nY ${formatNum(yh[y],2)}\\nBase ${formatNum(b,dec)} → Now ${formatNum(v,dec)}\\nΔ ${sign}${formatNum(delta,dec)} (${sign}${pct.toFixed(1)}%)`;
+        let content;
+        if(modified){
+          content = `<div class="cellval" style="flex-direction:column;line-height:1.15"><div class="deltacell-top">${sign}${pct.toFixed(1)}%</div><div class="deltacell-sub">${sign}${formatNum(delta,dec)}</div></div>`;
+        } else {
+          content = `<div class="cellval" style="color:var(--faint)">·</div>`;
+        }
+        html += `<td class="${cls.join(' ')}" style="background:${bg}" data-tip="${tip.replace(/"/g,'&quot;')}">${content}</td>`;
+      }
+      html+='</tr>';
+    }
+    html+='</tbody></table>';
+    tableWrap.innerHTML = html;
+  }
+}
+
+
+/* ---------- 3D SURFACE (styled like HMSG Map Editor) ---------- */
+function heatColorScale(){
+  return [[0,'rgb(26,37,53)'],[0.25,'rgb(26,82,120)'],[0.5,'rgb(30,130,80)'],[0.75,'rgb(200,140,30)'],[1,'rgb(180,40,20)']];
+}
+function deltaColorScale(){
+  return [[0,'rgb(180,40,20)'],[0.5,'rgb(40,40,40)'],[1,'rgb(40,180,80)']];
+}
+function renderPlot3D(){
+  if(!finalMap || !show3dCk.checked){ plot3dColumn.classList.add('off'); try{Plotly.purge('plot3d');}catch(e){} return; }
+  plot3dColumn.classList.remove('off');
+  const {xh, yh, vals, base} = finalMap;
+  const isDelta = viewMode==='delta';
+  diff3dWrap.style.display = isDelta ? 'flex' : 'none';
+  const show3dDelta = isDelta && diff3dCk.checked;
+
+  let plotZ, plotTitle, colorscale;
+  if(show3dDelta){
+    plotZ = vals.map((row,y)=>row.map((v,x)=> v - base[y][x]));
+    plotTitle = 'Δ vs Base';
+    colorscale = deltaColorScale();
+  } else {
+    plotZ = vals;
+    plotTitle = 'Corrected Value';
+    colorscale = heatColorScale();
+  }
+
+  const trace = {
+    type:'surface', x:xh, y:yh, z:plotZ,
+    colorscale, showscale:true,
+    hovertemplate:'X %{x}<br>Y %{y}<br>Z %{z:.4f}<extra></extra>',
+    contours:{ z:{ show: contCk.checked, usecolormap:true, project:{z:true} } },
+    colorbar:{ thickness:10, len:0.65, title:{text:plotTitle, side:'right'}, tickfont:{size:10} }
+  };
+
+  const layout = {
+    margin:{l:0,r:0,t:0,b:0}, paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+    scene:{
+      bgcolor:'transparent',
+      camera: plot3dCam || {eye:{x:1.6,y:1.5,z:0.9}},
+      xaxis:{title:{text:'X'}, color:'#7a7874', gridcolor:'#2e2c29', showbackground:true, backgroundcolor:'rgba(28,27,25,.7)'},
+      yaxis:{title:{text:'Y'}, color:'#7a7874', gridcolor:'#2e2c29', showbackground:true, backgroundcolor:'rgba(24,23,21,.7)'},
+      zaxis:{title:{text:plotTitle}, color:'#7a7874', gridcolor:'#2e2c29', showbackground:true, backgroundcolor:'rgba(20,19,17,.7)'},
+      aspectratio:{x:1.2,y:1,z:0.65}
+    },
+    showlegend:false, font:{family:'Inter, sans-serif', color:'#7a7874'}
+  };
+
+  Plotly.react('plot3d', [trace], layout, {responsive:true, displaylogo:false, displayModeBar:false});
+  setTimeout(()=>{
+    try{
+      id('plot3d').on('plotly_relayout', (ev)=>{ if(ev['scene.camera']) plot3dCam = ev['scene.camera']; });
+    }catch(e){}
+  }, 400);
+}
+btnResetCam.addEventListener('click', ()=>{ plot3dCam=null; renderPlot3D(); });
+show3dCk.addEventListener('change', ()=>{
+  if(show3dCk.checked){ plot3dColumn.classList.remove('off'); setTimeout(()=>{ try{Plotly.Plots.resize('plot3d');}catch(e){} renderPlot3D(); },50); }
+  else { plot3dColumn.classList.add('off'); }
+});
+contCk.addEventListener('change', renderPlot3D);
+heatCk.addEventListener('change', ()=>{ if(finalMap) renderOutput(); });
+diff3dCk.addEventListener('change', renderPlot3D);
+
+
+/* ---------- resizable divider between table and 3D panel (same pattern as HMSG rh handle) ---------- */
+(function(){
+  const handle = id('viewResizeHandle');
+  const plotCol = id('plot3dColumn');
+  const wrap = document.querySelector('.viewpanel-wrap');
+  let rOn=false, rSx=0, rSw=0;
+  handle.addEventListener('mousedown', (e)=>{
+    rOn=true; rSx=e.clientX; rSw=plotCol.getBoundingClientRect().width;
+    handle.classList.add('dragging'); document.body.style.cursor='col-resize';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e)=>{
+    if(!rOn) return;
+    const wrapW = wrap.getBoundingClientRect().width;
+    const maxW = Math.max(220, wrapW - 260);
+    const nw = Math.max(220, Math.min(maxW, rSw - (e.clientX - rSx)));
+    plotCol.style.width = nw + 'px';
+    try{ Plotly.Plots.resize('plot3d'); }catch(err){}
+  });
+  document.addEventListener('mouseup', ()=>{
+    if(!rOn) return;
+    rOn=false; handle.classList.remove('dragging'); document.body.style.cursor='';
+    try{ Plotly.Plots.resize('plot3d'); }catch(err){}
+  });
+})();
+
+/* view tab wiring */
+tabValues.addEventListener('click', ()=>{ viewMode='values'; tabValues.classList.add('active'); tabDelta.classList.remove('active'); legendValues.style.display='flex'; legendDelta.style.display='none'; if(finalMap){ renderOutput(); renderPlot3D(); } });
+tabDelta.addEventListener('click', ()=>{ viewMode='delta'; tabDelta.classList.add('active'); tabValues.classList.remove('active'); legendValues.style.display='none'; legendDelta.style.display='flex'; if(finalMap){ renderOutput(); renderPlot3D(); } });
+
+/* ---------- COPY (fixed X-axis alignment: header row now correctly starts with blank corner + xh) ---------- */
+function copyFinalMap(){
+  if(!finalMap) return;
+  const dec = Math.max(0, Math.min(6, parseInt(decimalsInp.value,10)||0));
+  const {xh, yh, vals} = finalMap;
+  const lines = [];
+  // corner blank cell + X breakpoints — one blank cell, then each X value in its own column
+  lines.push(['', ...xh.map(x=>String(x))].join('\t'));
+  for(let y=0;y<yh.length;y++){
+    const row = [String(yh[y])];
+    for(let x=0;x<xh.length;x++) row.push(vals[y][x].toFixed(dec));
+    lines.push(row.join('\t'));
+  }
+  const text = lines.join('\n');
+  const flag = id('copiedFlag');
+  const doFlag = ()=>{ flag.classList.add('show'); setTimeout(()=>flag.classList.remove('show'),1800); };
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(doFlag).catch(()=>fallbackCopy(text, doFlag));
+  } else fallbackCopy(text, doFlag);
+}
+function fallbackCopy(text, cb){
+  const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); cb(); } catch(e){ alert('Copy failed, please select and copy manually.'); }
+  document.body.removeChild(ta);
+}
+async function pasteInto(textarea, afterFn){
+  try{ const text=await navigator.clipboard.readText(); textarea.value=text; afterFn(); }
+  catch(e){ alert('Clipboard access was blocked by your browser. Please click into the box and press Ctrl+V instead.'); textarea.focus(); }
+}
+
+/* ---------- RESET ---------- */
+function resetEverything(){
+  baseMapInput.value=''; logInput.value='';
+  baseMap=null; logData=null; finalMap=null;
+  baseMeta.textContent='No base map loaded yet.'; baseMeta.className='meta-line';
+  logMeta.textContent='No log data loaded yet.'; logMeta.className='meta-line';
+  [selX,selY,selCorr,selLambdaReading,selLambdaTarget].forEach(s=>s.innerHTML='<option value="">— load log data first —</option>');
+  decimalsInp.value=2; safetyCapChk.checked=true; smoothStrength.value=35; smoothStrengthVal.textContent='35%';
+  setSmoothMode('gauss');
+  calcMsg.textContent=''; outputPanel.style.display='none';
+  tableWrap.innerHTML='<div class="emptystate">Run Calculate Map to generate the final matrix.</div>';
+  plot3dCam=null; try{Plotly.purge('plot3d');}catch(e){}
+  updateStatus();
+}
+
+function setCorrMode(mode){
+  corrMode = mode;
+  cardModeDirect.classList.toggle('sel', mode==='direct');
+  cardModeLambda.classList.toggle('sel', mode==='lambda');
+  fieldCorrDirect.style.display = mode==='direct' ? '' : 'none';
+  fieldLambdaReading.style.display = mode==='lambda' ? '' : 'none';
+  fieldLambdaTarget.style.display = mode==='lambda' ? '' : 'none';
+}
+cardModeDirect.addEventListener('click', ()=>setCorrMode('direct'));
+cardModeLambda.addEventListener('click', ()=>setCorrMode('lambda'));
+
+function updateSafetyPctLabel(){
+  const p = parseInt(safetyPct.value,10);
+  safetyPctVal.textContent = p + '%';
+  const lo = (1 - p/100).toFixed(2), hi = (1 + p/100).toFixed(2);
+  safetyCapSub.textContent = `Clamps correction factors to ${lo} – ${hi}`;
+}
+safetyPct.addEventListener('input', updateSafetyPctLabel);
+updateSafetyPctLabel();
+
+function setSmoothMode(mode){
+  smoothMode = mode;
+  cardGauss.classList.toggle('sel', mode==='gauss');
+  cardLinear.classList.toggle('sel', mode==='linear');
+}
+
+/* ---------- wire up ---------- */
+let baseTimer=null, logTimer=null;
+baseMapInput.addEventListener('input', ()=>{ clearTimeout(baseTimer); baseTimer=setTimeout(refreshBaseMap,300); });
+logInput.addEventListener('input', ()=>{ clearTimeout(logTimer); logTimer=setTimeout(refreshLogData,300); });
+id('btnPasteBase').addEventListener('click', ()=>pasteInto(baseMapInput, refreshBaseMap));
+id('btnPasteLog').addEventListener('click', ()=>pasteInto(logInput, refreshLogData));
+id('btnClearBase').addEventListener('click', ()=>{ baseMapInput.value=''; refreshBaseMap(); });
+id('btnClearLog').addEventListener('click', ()=>{ logInput.value=''; refreshLogData(); });
+cardGauss.addEventListener('click', ()=>setSmoothMode('gauss'));
+cardLinear.addEventListener('click', ()=>setSmoothMode('linear'));
+smoothStrength.addEventListener('input', ()=>{ smoothStrengthVal.textContent=smoothStrength.value+'%'; });
+id('btnCalc').addEventListener('click', calculate);
+id('btnCopy').addEventListener('click', copyFinalMap);
+id('btnResetAll').addEventListener('click', ()=>{ if(confirm('Are you sure you want to Reset? This clears all inputs, settings, and the generated map.')) resetEverything(); });
+
+updateStatus();
+</script>
+</body>
+</html>
