@@ -1110,7 +1110,7 @@
           "roleAtEvent": "PU Engineer",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-11-24",
+          "travelToDate": "2026-11-23",
           "travelFromDate": "2026-11-26",
           "travelNotes": "",
           "accommodationNotes": "",
@@ -1123,7 +1123,7 @@
           "roleAtEvent": "PU Lead",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-11-24",
+          "travelToDate": "2026-11-23",
           "travelFromDate": "2026-11-26",
           "travelNotes": "",
           "accommodationNotes": "",
@@ -1136,7 +1136,7 @@
           "roleAtEvent": "Mechanic",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-11-24",
+          "travelToDate": "2026-11-23",
           "travelFromDate": "2026-11-26",
           "travelNotes": "",
           "accommodationNotes": "",
@@ -1149,9 +1149,9 @@
       "eventType": "Test",
       "status": "Confirmed",
       "location": "Portimao",
-      "startDate": "2026-11-25",
+      "startDate": "2026-11-24",
       "endDate": "2026-11-25",
-      "notes": ""
+      "notes": "1 Instal day, 1 running day"
     },
     {
       "id": "E_vi8ev5i",
@@ -1458,6 +1458,16 @@
       "endDate": "2027-01-22",
       "leaveType": "Annual",
       "approvalStatus": "Approved"
+    },
+    {
+      "id": "L_dvyz13d",
+      "conflictFlag": false,
+      "conflictDetails": "",
+      "person": "P_5ugsw3v",
+      "startDate": "2027-02-27",
+      "endDate": "2027-03-15",
+      "leaveType": "Annual",
+      "approvalStatus": "Pending"
     }
   ]
 }
