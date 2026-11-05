@@ -86,6 +86,11 @@
       "notes": "AVL Stuttgart"
     },
     {
+      "id": "08A",
+      "status": "In-Build",
+      "notes": ""
+    },
+    {
       "id": "09A",
       "status": "Dyno",
       "notes": "Oil in water - HMETC"
@@ -123,7 +128,7 @@
     {
       "id": "17A",
       "status": "Race",
-      "notes": ""
+      "notes": "Spare"
     },
     {
       "id": "18A",
@@ -133,7 +138,22 @@
     {
       "id": "19A",
       "status": "Race",
+      "notes": "Spare"
+    },
+    {
+      "id": "20A",
+      "status": "Race",
+      "notes": "@HMSG"
+    },
+    {
+      "id": "22A",
+      "status": "In-Build",
       "notes": ""
+    },
+    {
+      "id": "23A",
+      "status": "In-Build",
+      "notes": "Le Mans 2027"
     }
   ],
   "people": [
@@ -1092,7 +1112,7 @@
       "engineAssignments": [
         {
           "engine": "12A",
-          "notes": "Start: 3000 km - Expected Finish: 4000 km"
+          "notes": "Start: 3340 km - Expected Finish: 4400 km. New oil tank and airbox"
         },
         {
           "engine": "14A",
