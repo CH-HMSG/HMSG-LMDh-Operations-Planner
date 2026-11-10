@@ -662,7 +662,18 @@ function getGithubToken(promptIfMissing){
 async function loadData(){
   document.getElementById('dataStatus').textContent = 'Loading from GitHub...';
   try{
-    const res = await fetch(CLOUD_JSON_URL, { cache: 'no-store' });
+    // Read through the GitHub API: raw.githubusercontent.com is cached for 5 min,
+    // so a reload right after a push showed the old data. Falls back to the raw link.
+    let res = null;
+    if(GH_REPO_CFG){
+      const tok = localStorage.getItem('gh_pat') || '';
+      const h = { 'Accept': 'application/vnd.github.raw' };
+      if(tok) h['Authorization'] = 'Bearer ' + tok;
+      const apiUrl = `https://api.github.com/repos/${GH_REPO_CFG.owner}/${GH_REPO_CFG.repo}/contents/${GH_REPO_CFG.path}?ref=${encodeURIComponent(GH_REPO_CFG.branch)}`;
+      try{ res = await fetch(apiUrl, { headers: h, cache: 'no-store' }); }catch(e){ res = null; }
+      if(res && !res.ok){ console.warn('GitHub API load failed (HTTP ' + res.status + '), using raw link'); res = null; }
+    }
+    if(!res) res = await fetch(CLOUD_JSON_URL, { cache: 'no-store' });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     DATA = await res.json();
     document.getElementById('dataStatus').textContent = 'Loaded from GitHub (' + new Date().toLocaleTimeString() + ')';
