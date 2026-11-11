@@ -432,6 +432,81 @@ function plot3d(el, it) {
     scene: { xaxis: { title: 'x', color: '#7c8086', gridcolor: '#2d3034' }, yaxis: { title: 'y', color: '#7c8086', gridcolor: '#2d3034' }, zaxis: { color: '#7c8086', gridcolor: '#2d3034' }, bgcolor: '#1c1d20' }
   }, { displaylogo: false, responsive: true });
 }
+// Paste a table copied from the Map Editor into a (not signed-off) cal set item
+function parseEditorPaste(txt, it) {
+  const lines = (txt || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/^\n+/, '').replace(/\s+$/, '').split('\n');
+  const delim = lines.some(l => l.includes('\t')) ? '\t' : ',';
+  const rows = lines.map(l => l.split(delim).map(v => v.trim())).filter(r => r.some(c => c !== ''));
+  if (!rows.length) return { err: 'Nothing to paste — copy the map in the Map Editor first.' };
+  const isN = v => v !== '' && isFinite(+v);
+  const keep = (s, old) => { const d = (s.split(/[eE]/)[0].split('.')[1] || '').length; return (old !== undefined && old !== null && isFinite(old) && !/[eE]/.test(s) && (+old).toFixed(d) === (+s).toFixed(d)) ? old : f32(+s); };
+  const vec = (arr, old) => arr.map((s, k) => keep(s, old?.[k]));
+  const allNum = a => a.every(isN);
+  const nx = it.x?.length, ny = it.y?.length;
+  const size = (a, b) => `Size mismatch — the cal set item is ${a}, the pasted table is ${b}. Nothing was changed.`;
+  if (it.kind === 'SCALAR') {
+    if (rows.length !== 1 || rows[0].length !== 1 || !isN(rows[0][0])) return { err: 'A scalar needs a single number.' };
+    return { item: { ...it, value: keep(rows[0][0], it.value) } };
+  }
+  if (it.kind === 'AXIS') {
+    const v = rows.length === 1 ? rows[0] : rows.every(r => r.length === 1) ? rows.map(r => r[0]) : null;
+    if (!v || !allNum(v)) return { err: 'An axis needs one row or one column of numbers.' };
+    if (v.length !== nx) return { err: size(nx + ' points', v.length + ' points') };
+    return { item: { ...it, x: vec(v, it.x) } };
+  }
+  if (it.kind === '1AXIS') {
+    const n = it.v.length; let x = null, v = null;
+    if (rows.length === 2 && rows[0].length === rows[1].length) { x = rows[0]; v = rows[1]; }
+    else if (rows.every(r => r.length === 2)) { x = rows.map(r => r[0]); v = rows.map(r => r[1]); }
+    else if (rows.length === 1) v = rows[0];
+    else if (rows.every(r => r.length === 1)) v = rows.map(r => r[0]);
+    if (!v || !allNum(v) || (x && !allNum(x))) return { err: 'Could not read this as a curve — expected the axis row and the value row from the Map Editor.' };
+    if (v.length !== n) return { err: size(n + ' points', v.length + ' points') };
+    return { item: { ...it, x: x ? vec(x, it.x) : it.x, v: vec(v, it.v) } };
+  }
+  // 2AXIS
+  let xs = null, ys = null, z;
+  if (rows.length >= 2 && rows[0].length >= 2 && !isN(rows[0][0])) {
+    xs = rows[0].slice(1); const body = rows.slice(1);
+    ys = body.map(r => r[0]); z = body.map(r => r.slice(1));
+  } else z = rows;
+  if (!z.every(r => r.length === z[0].length)) return { err: 'Rows have different lengths. Nothing was changed.' };
+  if ((xs && xs.length !== z[0].length)) return { err: 'The x axis and the values have different lengths. Nothing was changed.' };
+  if (z.length !== ny || z[0].length !== nx) return { err: size(`${ny}×${nx}`, `${z.length}×${z[0].length}`) };
+  if (!z.every(allNum) || (xs && !allNum(xs)) || (ys && !allNum(ys))) return { err: 'Non-numeric values in the paste. Nothing was changed.' };
+  return { item: { ...it, x: xs ? vec(xs, it.x) : it.x, y: ys ? vec(ys, it.y) : it.y, z: z.map((r, i) => vec(r, it.z[i])) } };
+}
+function pasteEditorDlg(s, idx) {
+  const it = s.items[idx];
+  const sum = r => {
+    if (r.err) return `<div class="note bad">${esc(r.err)}</div>`;
+    const d = diffItem(it, r.item), ax = [];
+    if (it.x && r.item.x && it.x.some((v, k) => f32(v) !== f32(r.item.x[k]))) ax.push('x axis');
+    if (it.y && r.item.y && it.y.some((v, k) => f32(v) !== f32(r.item.y[k]))) ax.push('y axis');
+    if (d.st === 'same') return '<div class="note info">The pasted values are the same as this cal set — nothing to save.</div>';
+    return `<div class="note warn">${esc(d.txt)}${ax.length ? ` · <b>${ax.join(' and ')} changed</b>` : ''}</div>`;
+  };
+  const changed = r => !r.err && diffItem(it, r.item).st !== 'same';
+  dialog(`<div class="dlg-h"><h2>Paste from Map Editor</h2><div class="muted">Into <span class="mono">${esc(it.name)}</span> (${esc(kindLabel(it))}). In the Map Editor use “Copy map”, then paste here with Ctrl+V. Saves ${esc(s.name)} v${(s.version || 1) + 1}.</div></div>
+    <div class="dlg-b"><textarea class="inp mono" id="peTx" rows="8" placeholder="Ctrl+V here" spellcheck="false" autofocus></textarea><div id="peSum"></div>
+      <label class="form" style="padding:0;gap:6px"><span class="muted" style="font-size:12px">What changed (version message)</span><input class="inp" id="peMsg" placeholder="${esc(it.name)} pasted from Map Editor"></label></div>
+    <div class="dlg-f"><button class="btn" id="peNo">Cancel</button><button class="btn pri" id="peGo" disabled>Save new version</button></div>`);
+  let res = { err: '' };
+  const upd = () => { const t = $('#peTx').value; res = t.trim() ? parseEditorPaste(t, it) : { err: '' }; $('#peSum').innerHTML = t.trim() ? sum(res) : ''; $('#peGo').disabled = !changed(res); };
+  $('#peTx').oninput = upd;
+  $('#peNo').onclick = closeDlg;
+  $('#peGo').onclick = async () => {
+    if (!changed(res)) return;
+    const msg = $('#peMsg').value.trim() || `${it.name} pasted from Map Editor`;
+    const next = strip(s); next.items[idx] = { ...stripItem(res.item), note: it.note || '' };
+    if (!next.items[idx].note) delete next.items[idx].note;
+    Object.assign(next, { version: (s.version || 1) + 1, modified: today(), modifiedBy: userName(), versionMessage: msg });
+    $('#peGo').disabled = true;
+    try { await saveSet(next, s._sha, `${next.name} v${next.version}: ${msg}`); closeDlg(); toast(`Saved ${next.name} v${next.version}.`, 'ok'); S.smCmp = null; renderSet(); if (S.helper.ok) checkSetVsSM(); }
+    catch (e) { $('#peSum').innerHTML = `<div class="note bad">${esc(e.message)}</div>`; $('#peGo').disabled = false; }
+  };
+  if (navigator.clipboard?.readText) navigator.clipboard.readText().then(t => { if (t && !$('#peTx').value) { $('#peTx').value = t; upd(); } }).catch(() => {});
+}
 function editorClip(it) {
   const j = a => a.map(fmtNum).join('\t');
   if (it.kind === '2AXIS') return ['\t' + j(it.x), ...it.z.map((r, k) => fmtNum(it.y[k]) + '\t' + j(r))].join('\n');
@@ -710,6 +785,7 @@ function renderSet() {
           <div id="itemBody">${itemBodyHTML(s, it)}</div>
           <div class="panel-f" style="margin-top:auto">
             <span class="muted" style="flex:1 1 200px;font-size:12px">${it.note ? 'Note: “' + esc(it.note) + '”' : ''}</span>
+            ${!signed && S.itemView === 'table' ? '<button class="btn sm" id="pasteEd">Paste from Map Editor</button>' : ''}
             <button class="btn sm" id="clip">Copy for Map Editor</button>
             <button class="btn pri sm" id="sendOne" ${dnu ? 'disabled' : ''}>Send this item to SM</button>
           </div>` : '<div class="empty">This cal set has no items.</div>'}
@@ -732,6 +808,7 @@ function renderSet() {
   on('cmpWith', () => go('compare', { a: 'sm:', b: 'set:' + s.id }));
   on('dup', () => duplicateDlg(s));
   on('edit', () => editDlg(s));
+  on('pasteEd', () => pasteEditorDlg(s, s.items.indexOf(it)));
   on('del', () => deleteFlow(s));
   on('recap', () => recapture(s));
   on('sign', () => signDlg(s));
@@ -766,9 +843,7 @@ function itemBodyHTML(s, it) {
       <div><div style="font-weight:600;margin-bottom:6px">This cal set</div><div class="gridwrap">${gridHTML(it)}</div></div>
       <div>${diffHead('Difference (cal set − SM)', 'set', sm, it)}<div class="gridwrap" data-diffk="set">${diffGridHTML(sm, it)}</div></div></div>`;
   }
-  const i = s.items.indexOf(it), sm = S.smCmpSm?.[i]; let dc = null;
-  if (sm && sm.ok && sameShape(sm, it)) { const a = flatVals(sm), b = flatVals(it); dc = new Set(); a.forEach((v, k) => { if (f32(v) !== f32(b[k])) dc.add(k); }); }
-  return `<div class="gridwrap">${gridHTML(it, { diffCells: dc })}</div>${dc && dc.size ? `<div class="faint" style="font-size:11px;padding:0 14px 10px">Outlined cells differ from SM</div>` : ''}`;
+  return `<div class="gridwrap">${gridHTML(it)}</div>`;
 }
 async function saveSet(next, sha, message) {
   const newSha = await putSet(next, sha, message);
