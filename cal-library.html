@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMSG Cal Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+:root{
+  --bg:#111213;--surf:#17181a;--surf2:#1c1d20;--surf3:#24262a;--line:#2d3034;--line2:#3a3d42;--row:#1f2023;
+  --text:#d6d8db;--text2:#b4b8bd;--muted:#7c8086;--faint:#5e6268;
+  --pri:#4f98a3;--pri-bg:#182a2d;--pri-t:#8cc7cf;--link:#6fb3bd;
+  --ok:#4fc87a;--ok-bg:#17251d;--ok-l:#2b5a3a;
+  --warn:#fdab43;--warn-bg:#262420;--warn-l:#5c4420;
+  --bad:#e05c6a;--bad-bg:#2a1b1e;--bad-l:#a13544;
+  --mono:Inter,system-ui,sans-serif;
+}
+input[type=checkbox]{accent-color:var(--pri)}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:13px/1.45 Inter,system-ui,sans-serif}
+a{color:var(--link)}a:hover{color:var(--pri-t)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}.faint{color:var(--faint)}
+.btn{height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--text);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none}
+.btn:hover:not(:disabled){background:var(--surf3)}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+.btn.pri:hover:not(:disabled){background:#3a8290}
+.btn.out{border-color:var(--pri);color:var(--pri-t)}
+.btn.sm{height:30px;padding:0 10px;font-size:12px}
+.btn.danger{border-color:var(--bad-l);color:var(--bad)}
+.inp{height:36px;padding:0 11px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);color:var(--text);outline:0}
+.inp:focus{border-color:var(--pri)}
+textarea.inp{height:auto;padding:9px 11px;resize:vertical}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;background:#24262a;color:#b4b8bd;font-size:11px;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:6px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-draft{background:var(--warn-bg);color:var(--warn)}
+.b-signed{background:var(--ok-bg);color:var(--ok)}
+.b-legacy{background:#24262a;color:var(--muted)}
+.b-dnu{background:var(--bad-bg);color:var(--bad)}
+.b-active{background:var(--pri-bg);color:var(--pri-t)}
+.card{border:1px solid var(--line);border-radius:10px;background:var(--surf2)}
+.lbl{color:var(--faint);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px}
+.text2{color:var(--text2)}
+.c-ok{color:var(--ok)}.c-warn{color:var(--warn)}.c-bad{color:var(--bad)}.c-pri{color:var(--link)}
+
+/* header */
+#top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:0 22px;min-height:56px;border-bottom:1px solid var(--line);background:var(--surf);position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}
+.logo{width:24px;height:24px;border-radius:5px;background:linear-gradient(135deg,#4f98a3,#2c6870);display:grid;place-items:center}
+.logo svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#nav{display:flex;gap:4px;flex-wrap:wrap}
+#nav button{padding:8px 12px;border-radius:6px;border:0;background:transparent;color:var(--muted)}
+#nav button.on{background:#24262a;color:var(--text);font-weight:600}
+#nav button:hover{color:var(--text)}
+.toprt{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{display:flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:#151618;max-width:460px}
+.dot{width:8px;height:8px;border-radius:50%;background:#a13544;flex-shrink:0}
+.dot.on{background:#4fc87a}.dot.busy{background:var(--warn)}
+.pill .proj{color:var(--faint);font-family:var(--mono);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tag-sm{padding:2px 6px;border-radius:4px;background:var(--line);color:var(--muted);font-size:11px}
+.tag-sm.live{background:#5c4420;color:#ffd08a}
+.avatar{width:30px;height:30px;border-radius:50%;background:#24262a;display:grid;place-items:center;font-weight:600;font-size:11px;border:0;color:var(--text)}
+
+main{width:100%;margin:0;padding:20px 22px 40px}
+.row{display:flex;flex-wrap:wrap;gap:20px}
+.hdr{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.hdr h1{margin:0 8px 0 0;font-size:20px}
+
+/* library */
+.side{flex:1 1 220px;max-width:260px;display:flex;flex-direction:column;gap:22px}
+.side .opt{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);color:var(--text2);cursor:pointer}
+.side .opt.on{border-color:var(--pri);background:var(--pri-bg);color:var(--text)}
+.side .opt span:nth-child(2){flex:1}
+.legend{display:flex;flex-direction:column;gap:5px;color:#8a8e94;font-size:11px;line-height:1.45}
+.tagbtn{padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--text2);font-size:12px}
+.tagbtn.on{border-color:var(--pri);background:var(--pri-bg);color:var(--pri-t)}
+.listwrap{flex:999 1 640px;min-width:0}
+.tbl{border:1px solid var(--line);border-radius:10px;background:var(--surf2);overflow-x:auto}
+.tbl-in{min-width:900px}
+.lrow{display:grid;grid-template-columns:2.6fr 1.4fr 1.5fr .5fr 1.1fr 1fr .5fr;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--row);cursor:pointer}
+.lrow.h{cursor:default;padding:10px 16px;color:var(--faint);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;border-bottom-color:var(--line)}
+.lrow:not(.h):hover{background:#202226}
+.lrow.legacy{opacity:.72}
+.lrow.dnu .nm{color:var(--bad)}
+.lrow .nm{font-weight:600;font-size:14px}
+.lrow .ds{color:#8a8e94;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+
+/* set page */
+.crumb{color:var(--faint);font-size:12px;margin-bottom:12px}
+.crumb a{color:var(--muted);text-decoration:none;cursor:pointer}
+.sethead{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-start}
+.sethead h1{margin:0;font-size:26px}
+.metagrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:16px 0 20px}
+.metagrid>div{background:var(--surf2);padding:11px 14px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.metagrid .v{overflow-wrap:anywhere}
+.items .it{display:grid;grid-template-columns:24px minmax(0,2.6fr) .55fr .9fr 1.25fr;gap:10px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--row);cursor:pointer}
+.items .it:hover{background:#202226}
+.items .it.sel{background:#1f3a3e}
+.items .it .n{font-family:var(--mono);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.items .it .note{padding:0;border:0;color:var(--faint);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row.split{flex-wrap:nowrap;gap:0}
+.splitter{flex:0 0 16px;cursor:col-resize;position:relative;touch-action:none;outline:0}
+.splitter::before{content:"";position:absolute;left:7px;top:0;bottom:0;width:2px;border-radius:2px;background:var(--line)}
+.splitter::after{content:"";position:absolute;left:5px;top:50%;width:6px;height:36px;margin-top:-18px;border-radius:3px;background:var(--line2)}
+.splitter:hover::before,.splitter:hover::after,.splitter:focus-visible::before,.splitter.drag::before,.splitter.drag::after{background:var(--pri)}
+@media (max-width:900px){.row.split{flex-wrap:wrap;gap:20px}.splitter{display:none}.split-left{flex:1 1 100%!important}}
+.panel-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 14px;border-bottom:1px solid var(--line)}
+.panel-f{display:flex;gap:8px;padding:11px 14px;border-top:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:4px}
+.seg button{height:30px;padding:0 10px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:12px}
+.seg button.on{border-color:var(--line2);background:var(--surf3);color:var(--text)}
+
+/* map grid */
+.gridwrap{overflow:auto;max-height:560px;padding:12px 14px}
+table.mg{border-collapse:separate;border-spacing:0;width:max-content;table-layout:fixed;font-family:Inter,sans-serif;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+table.mg th,table.mg td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);height:24px;padding:0 2px;box-sizing:border-box;overflow:hidden;white-space:nowrap}
+table.mg th{position:sticky;top:0;z-index:2;background:var(--surf2);width:52px;min-width:52px;max-width:52px;text-align:center;font:600 11px/1 Inter,sans-serif;color:var(--muted)}
+table.mg th.ya{left:0;z-index:1;width:64px;min-width:64px;max-width:64px}
+table.mg tr:first-child th.ya{z-index:3;font-size:9px;color:var(--faint)}
+table.mg td{width:52px;min-width:52px;max-width:52px;text-align:center;font:500 12px/1 Inter,sans-serif;color:var(--text)}
+table.mg td.df{box-shadow:inset 0 0 0 2px #fff}
+table.mg td.dz{background:var(--surf);color:var(--muted)}
+table.mg th.c-bad{color:var(--bad)}
+.scalar{padding:28px 14px;font-family:Inter,sans-serif;font-weight:500;font-size:30px}
+.plot3d{height:460px}
+
+/* compare */
+.pick{flex:1 1 320px;border:1px solid var(--line2);border-radius:10px;padding:12px 14px;background:var(--surf);display:flex;flex-direction:column;gap:7px}
+.pick select{height:36px}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0;align-items:center}
+.stat{padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surf);cursor:pointer}
+.stat b{font-size:18px;margin-right:4px}
+.cmpitem{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-bottom:1px solid var(--row);border-left:3px solid transparent;cursor:pointer}
+.cmpitem:hover{background:#202226}
+.cmpitem.sel{background:#1f3a3e}
+.triple{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;padding:12px 14px}
+.triple .gridwrap{padding:0;max-height:440px}
+.triple.stack{grid-template-columns:minmax(0,1fr);gap:18px}
+.triple.stack .gridwrap{max-height:none}
+
+/* capture */
+.step{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin-bottom:12px}
+.step i{width:26px;height:26px;border-radius:50%;background:var(--pri);display:grid;place-items:center;font-style:normal;font-size:12px}
+.crow{display:grid;grid-template-columns:minmax(0,2.4fr) .6fr .9fr 1.3fr minmax(0,1.2fr) 28px;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--row)}
+.crow.h{color:var(--faint);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;border-bottom-color:var(--line)}
+.crow .inp{height:30px;font-size:12px}
+.x{width:26px;height:26px;border:0;border-radius:6px;background:transparent;color:var(--faint)}
+.x:hover{background:var(--surf3);color:var(--text)}
+.form{display:flex;flex-direction:column;gap:13px;padding:16px}
+.form label{display:flex;flex-direction:column;gap:6px}
+.form label>span:first-child{color:var(--muted);font-size:12px}
+.tagbox{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:5px 8px;min-height:36px;border-radius:8px;border:1px solid var(--line2);background:var(--bg)}
+.tagbox input{flex:1;min-width:120px;background:transparent;border:0;outline:0;height:24px}
+.tagbox .chip button{border:0;background:transparent;color:var(--faint);padding:0;font-size:12px}
+
+/* dialog + toast */
+#dlg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;overflow:auto}
+#dlg.on{display:flex}
+.dlg{width:100%;max-width:820px;border:1px solid var(--line2);border-radius:14px;background:var(--surf);overflow:hidden}
+.dlg.narrow{max-width:520px}
+.dlg-h{padding:16px 20px;border-bottom:1px solid var(--line)}
+.dlg-h h2{margin:0 0 4px;font-size:17px}
+.dlg-b{padding:14px 20px;display:flex;flex-direction:column;gap:12px;max-height:62vh;overflow:auto}
+.dlg-f{display:flex;gap:10px;justify-content:flex-end;align-items:center;padding:14px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+.note{padding:11px 13px;border-radius:10px;line-height:1.5}
+.note.warn{border:1px solid #6b5226;background:rgba(253,171,67,.08);color:#f0c27a}
+.note.info{border:1px solid #1f3a3e;background:#16262a;color:#a9d3d9}
+.note.bad{border:1px solid var(--bad-l);background:rgba(224,92,106,.06);color:var(--bad)}
+.note.ok{border:1px solid var(--ok-l);background:rgba(79,200,122,.06);color:#8fdcaa}
+.srow{display:grid;grid-template-columns:minmax(0,2.3fr) .6fr minmax(0,2fr);gap:10px;padding:9px 13px;border-top:1px solid var(--row)}
+.srow.h{border-top:0;color:var(--faint);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;background:var(--surf2)}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+#toast div{padding:10px 16px;border-radius:9px;background:#24262a;border:1px solid var(--line2);box-shadow:0 8px 30px rgba(0,0,0,.4);max-width:640px}
+#toast div.bad{border-color:var(--bad-l);color:var(--bad)}
+#toast div.ok{border-color:var(--ok-l);color:#8fdcaa}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--pri-t);border-radius:50%;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (max-width:700px){main{padding:14px}#top{padding:8px 14px}.side{max-width:none}}
+</style>
+</head>
+<body>
+<header id="top">
+  <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17 10 7l4 7 6-10"/><path d="M4 20h16"/></svg></div>HMSG Cal Library</div>
+  <nav id="nav">
+    <button data-go="library">Library</button>
+    <button data-go="compare">Compare</button>
+    <button data-go="capture">Capture from SM</button>
+    <button data-go="restore">Restore points</button>
+  </nav>
+  <div class="toprt">
+    <div class="pill" id="smPill" title=""><span class="dot" id="smDot"></span><span id="smTxt">SM link: checking…</span><span class="proj" id="smProj"></span><span class="tag-sm" id="smOn" style="display:none"></span></div>
+    <button class="avatar" id="userBtn" title="GitHub settings">?</button>
+  </div>
+</header>
+<main id="main"></main>
+<div id="dlg"></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ════════════════════════════════════════════════════════════════════
+//  HMSG Cal Library — cal sets in a private GitHub repo, sent to
+//  System Monitor through the local HMSG SM Link helper (127.0.0.1:8765).
+// ════════════════════════════════════════════════════════════════════
+const APPVER = '1.0';
+const HELPER = (location.hostname === '127.0.0.1' && location.port === '8765') ? '' : 'http://127.0.0.1:8765';
+const DIR = 'calsets';
+const KIND = { '2AXIS': '3D map', '1AXIS': 'Curve', 'AXIS': 'Axis', 'SCALAR': 'Scalar' };
+const STATUS = {
+  active:   { label: 'Active',     cls: 'b-active', hint: 'current, use these' },
+  legacy:   { label: 'Legacy',     cls: 'b-legacy', hint: 'older but still usable; shown greyed' },
+  donotuse: { label: 'Do not use', cls: 'b-dnu',    hint: 'kept for reference only; hidden by default, can be viewed and compared but not sent to SM' }
+};
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const f32 = v => Math.fround(v);
+const fmtNum = v => { if (v === null || v === undefined || !isFinite(v)) return '—'; const r = +f32(v).toPrecision(7); return String(r); };
+const today = () => new Date().toISOString();
+const fmtDate = s => { if (!s) return '—'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }); };
+const fmtDT = s => { if (!s) return '—'; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(undefined, { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); };
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('hmsg.cal.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('hmsg.cal.' + k, JSON.stringify(v)); } catch {} },
+  del(k) { try { localStorage.removeItem('hmsg.cal.' + k); } catch {} }
+};
+
+function toast(msg, cls = '') {
+  const d = document.createElement('div'); d.className = cls; d.textContent = msg;
+  $('#toast').appendChild(d); setTimeout(() => d.remove(), cls === 'bad' ? 7000 : 4000);
+}
+
+// ───────────── state ─────────────
+const S = {
+  cfg: store.get('cfg', { owner: 'CH-HMSG', repo: 'HMSG-LMDh-Cal-Library', token: '' }),
+  user: null,
+  sets: [], loaded: false, loading: false, loadErr: '',
+  view: 'library',
+  lib: store.get('libFilters', { st: { active: true, legacy: true, donotuse: false }, tags: [], q: '', sort: 'new' }),
+  setId: null, set: null, setSha: null, selItem: 0, itemView: 'table', checked: new Set(), smCmp: null, smCmpBusy: false,
+  cmp: { a: '', b: '', res: null, sel: 0, only: true, view: 'side', busy: false },
+  cap: store.get('captureDraft', null) || newCapture(),
+  helper: { ok: false, status: null, index: [], indexVer: -1, byName: new Map() },
+  restore: { list: null, busy: false }
+};
+function newCapture() { return { items: [], mode: 'new', target: '', name: '', desc: '', tags: [], msg: '', keep: true, savedAt: null }; }
+function saveDraft() { S.cap.savedAt = today(); store.set('captureDraft', S.cap); }
+
+// ───────────── SM link helper ─────────────
+async function helper(path, body) {
+  const opt = body ? { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(body) } : {};
+  if (HELPER) opt.targetAddressSpace = 'loopback';
+  const r = await fetch(HELPER + path, opt);
+  return r.json();
+}
+async function pollHelper() {
+  try {
+    const s = await helper('/api/status');
+    S.helper.ok = !!s.connected; S.helper.status = s;
+    if (s.connected && s.indexVer !== S.helper.indexVer) {
+      const d = await helper('/api/index');
+      if (d.ok) {
+        S.helper.index = d.items; S.helper.indexVer = d.ver; S.helper.byName = new Map();
+        d.items.forEach(e => { const k = e[0].toLowerCase(); if (!S.helper.byName.has(k)) S.helper.byName.set(k, []); S.helper.byName.get(k).push(e); });
+        const dl = document.getElementById('smNames'); if (dl) fillNames(dl);
+      }
+    }
+  } catch { S.helper.ok = false; S.helper.status = null; }
+  paintHelper();
+}
+function paintHelper() {
+  const s = S.helper.status, dot = $('#smDot'), txt = $('#smTxt'), pr = $('#smProj'), on = $('#smOn');
+  if (!s) { dot.className = 'dot'; txt.textContent = 'SM link not running — start HMSG_SM_Link.bat'; pr.textContent = ''; on.style.display = 'none'; return; }
+  if (!s.connected) { dot.className = 'dot'; txt.textContent = 'System Monitor: ' + (s.error || 'not connected'); pr.textContent = ''; on.style.display = 'none'; return; }
+  dot.className = 'dot on'; txt.textContent = 'SM connected';
+  pr.textContent = (s.project || '').split(/[\\/]/).pop(); $('#smPill').title = s.project || '';
+  if (s.online === null || s.online === undefined) on.style.display = 'none';
+  else { on.style.display = ''; on.className = 'tag-sm' + (s.live ? ' live' : ''); on.textContent = s.live ? 'LIVE' : (s.online ? 'Online' : 'Offline'); }
+}
+function smProjectName() { return S.helper.status?.project || ''; }
+function needHelper() { if (!S.helper.ok) { toast('Not connected to System Monitor — start HMSG_SM_Link.bat and open a project in SM.', 'bad'); return false; } return true; }
+
+// ───────────── GitHub ─────────────
+const GH = 'https://api.github.com';
+function ghHeaders(raw) {
+  const h = { 'Accept': raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  if (S.cfg.token) h.Authorization = 'Bearer ' + S.cfg.token;
+  return h;
+}
+async function gh(path, opt = {}) {
+  const r = await fetch(GH + path, { ...opt, headers: { ...ghHeaders(opt.raw), ...(opt.body ? { 'Content-Type': 'application/json' } : {}) } });
+  if (!r.ok) { let m = ''; try { m = (await r.json()).message; } catch {} const e = new Error(m || ('GitHub ' + r.status)); e.status = r.status; throw e; }
+  return opt.raw ? r.text() : r.json();
+}
+const repoPath = p => `/repos/${encodeURIComponent(S.cfg.owner)}/${encodeURIComponent(S.cfg.repo)}${p}`;
+function b64(str) { const bytes = new TextEncoder().encode(str); let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); }
+async function loadUser() { try { S.user = await gh('/user'); } catch { S.user = null; } paintUser(); }
+function userName() { return S.user ? (S.user.name || S.user.login) : (S.cfg.name || 'unknown'); }
+function paintUser() { const b = $('#userBtn'); const n = userName(); b.textContent = S.user ? n.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() : '?'; b.title = S.user ? `${n} — GitHub settings` : 'Connect GitHub'; }
+
+async function loadSets() {
+  if (!S.cfg.token) { S.loaded = true; S.sets = []; render(); return; }
+  S.loading = true; S.loadErr = ''; render();
+  try {
+    let files = [];
+    try { files = await gh(repoPath(`/contents/${DIR}`)); }
+    catch (e) { if (e.status !== 404) throw e; }
+    files = files.filter(f => f.type === 'file' && f.name.endsWith('.json'));
+    const cache = store.get('setCache', {});
+    const out = await Promise.all(files.map(async f => {
+      let data = cache[f.sha];
+      if (!data) { try { data = JSON.parse(await gh(repoPath(`/contents/${encodeURIComponent(DIR)}/${encodeURIComponent(f.name)}`), { raw: true })); } catch { return null; } }
+      return { ...data, _sha: f.sha, _path: f.path };
+    }));
+    S.sets = out.filter(Boolean);
+    const nc = {}; S.sets.forEach(s => { const { _sha, _path, ...d } = s; if (JSON.stringify(d).length < 400000) nc[_sha] = d; });
+    store.set('setCache', nc);
+    S.loaded = true;
+  } catch (e) { S.loadErr = e.message; S.loaded = true; }
+  S.loading = false; render();
+}
+async function putSet(set, sha, message) {
+  const path = `${DIR}/${set.id}.json`;
+  const body = { message, content: b64(JSON.stringify(set, null, 1) + '\n') };
+  if (sha) body.sha = sha;
+  try {
+    const r = await gh(repoPath(`/contents/${path.split('/').map(encodeURIComponent).join('/')}`), { method: 'PUT', body: JSON.stringify(body) });
+    return r.content.sha;
+  } catch (e) {
+    if (e.status === 409 || e.status === 422) throw new Error('Someone else saved this cal set after you opened it. Reload the library and try again — nothing was overwritten.');
+    throw e;
+  }
+}
+function slug(name) { let s = name.toLowerCase().normalize('NFKD').replace(/[^\w]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'cal-set'; let k = s, n = 2; while (S.sets.some(x => x.id === k)) k = `${s}-${n++}`; return k; }
+const setById = id => S.sets.find(s => s.id === id);
+const isSigned = s => !!(s && s.signoff);
+
+// ───────────── items & compare helpers ─────────────
+const itemKey = it => (it.app || '').toUpperCase() + '|' + it.name;
+function dims(it) { if (it.kind === '2AXIS') return `${it.y?.length}×${it.x?.length}`; if (it.kind === '1AXIS') return String(it.v?.length); if (it.kind === 'AXIS') return String(it.x?.length); return ''; }
+function kindLabel(it) { const d = dims(it); return KIND[it.kind] + (d ? ' ' + d : ''); }
+function flatVals(it) { if (it.kind === '2AXIS') return it.z.flat(); if (it.kind === '1AXIS') return it.v; if (it.kind === 'AXIS') return it.x; return [it.value]; }
+function sameShape(a, b) {
+  if (a.kind !== b.kind) return false;
+  if (a.kind === '2AXIS') return a.x.length === b.x.length && a.y.length === b.y.length;
+  if (a.kind === '1AXIS') return a.v.length === b.v.length;
+  if (a.kind === 'AXIS') return a.x.length === b.x.length;
+  return true;
+}
+function diffItem(a, b) {
+  if (!sameShape(a, b)) return { st: 'size', txt: a.kind !== b.kind ? `Type differs · ${KIND[a.kind]} vs ${KIND[b.kind]}` : `Size differs · ${dims(a)} vs ${dims(b)}` };
+  const va = flatVals(a), vb = flatVals(b); let n = 0, mx = 0, mi = -1;
+  for (let i = 0; i < va.length; i++) if (f32(va[i]) !== f32(vb[i])) { n++; const d = Math.abs(vb[i] - va[i]); if (d > mx) { mx = d; mi = i; } }
+  let ax = 0, axTxt = [];
+  if (a.kind === '2AXIS' || a.kind === '1AXIS') {
+    const ca = a.x.filter((v, i) => f32(v) !== f32(b.x[i])).length; if (ca) { ax += ca; axTxt.push(`X axis ${ca}`); }
+    if (a.kind === '2AXIS') { const cy = a.y.filter((v, i) => f32(v) !== f32(b.y[i])).length; if (cy) { ax += cy; axTxt.push(`Y axis ${cy}`); } }
+  }
+  if (!n && !ax) return { st: 'same', txt: 'Identical' };
+  let txt = a.kind === 'SCALAR' ? `${fmtNum(a.value)} → ${fmtNum(b.value)}` : (n ? `${n} of ${va.length} ${a.kind === '2AXIS' ? 'cells' : 'points'}` : 'values identical');
+  if (axTxt.length) txt += ' · ' + axTxt.join(', ') + ' pts';
+  if (n && a.kind !== 'SCALAR') txt += ` · max Δ ${fmtNum(mx)}`;
+  return { st: 'diff', txt, n, ax };
+}
+function stripItem(r) { const o = { name: r.name, app: r.app, kind: r.kind }; ['axes', 'x', 'y', 'z', 'v', 'value', 'note'].forEach(k => { if (r[k] !== undefined && r[k] !== null) o[k] = r[k]; }); return o; }
+
+// heat colours (blue → red over the item's range)
+function heatFn(vals) {
+  let lo = Infinity, hi = -Infinity; vals.forEach(v => { if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } });
+  const span = hi - lo || 1;
+  return v => {
+    const t = Math.max(0, Math.min(1, (v - lo) / span));
+    const stops = [[0, [26, 37, 53]], [0.25, [26, 82, 120]], [0.5, [30, 130, 80]], [0.75, [200, 140, 30]], [1, [180, 40, 20]]];
+    let i = 0; while (i < stops.length - 2 && t > stops[i + 1][0]) i++;
+    const [t0, c0] = stops[i], [t1, c1] = stops[i + 1], f = (t - t0) / (t1 - t0);
+    return `rgb(${Math.round(c0[0] + (c1[0] - c0[0]) * f)},${Math.round(c0[1] + (c1[1] - c0[1]) * f)},${Math.round(c0[2] + (c1[2] - c0[2]) * f)})`;
+  };
+}
+function gridHTML(it, opts = {}) {
+  if (!it) return '<div class="empty">No item</div>';
+  if (it.kind === 'SCALAR') return `<div class="scalar ${opts.diffCells?.has(0) ? 'c-warn' : ''}">${esc(fmtNum(it.value))}</div>`;
+  const heat = heatFn(flatVals(it));
+  const cell = (v, i) => `<td class="${opts.diffCells?.has(i) ? 'df' : ''}" style="background:${heat(v)}">${esc(fmtNum(v))}</td>`;
+  let h = '<table class="mg">';
+  if (it.kind === '2AXIS') {
+    h += `<tr><th class="ya">${opts.corner || 'y \\ x'}</th>${it.x.map(v => `<th>${esc(fmtNum(v))}</th>`).join('')}</tr>`;
+    it.z.forEach((row, k) => { h += `<tr><th class="ya">${esc(fmtNum(it.y[k]))}</th>${row.map((v, i) => cell(v, k * it.x.length + i)).join('')}</tr>`; });
+  } else if (it.kind === '1AXIS') {
+    h += `<tr><th class="ya">x</th>${it.x.map(v => `<th>${esc(fmtNum(v))}</th>`).join('')}</tr><tr><th class="ya">value</th>${it.v.map(cell).join('')}</tr>`;
+  } else {
+    h += `<tr><th class="ya">#</th>${it.x.map((v, i) => `<th>${i}</th>`).join('')}</tr><tr><th class="ya">value</th>${it.x.map(cell).join('')}</tr>`;
+  }
+  return h + '</table>';
+}
+const DIFFS = {};
+function diffDp() { const v = store.get('diffDp', ''); return v === '' || v === null ? null : Math.max(0, Math.min(7, +v)); }
+function fmtDelta(x) { const dp = diffDp(); return dp === null ? fmtNum(x) : f32(x).toFixed(dp); }
+function diffHead(title, k, a, b) {
+  DIFFS[k] = [a, b]; const dp = diffDp();
+  return `<div style="font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:10px"><span class="c-warn">${title}</span><label style="display:inline-flex;align-items:center;gap:6px;font-weight:400;font-size:11px;color:var(--muted)">Decimals <input class="dpinp" type="number" min="0" max="7" step="1" placeholder="auto" value="${dp === null ? '' : dp}" style="width:58px;height:24px;padding:0 6px;border-radius:6px;border:1px solid var(--line2);background:var(--surf);color:var(--text);font-size:12px"></label></div>`;
+}
+document.addEventListener('input', e => {
+  if (!e.target.classList?.contains('dpinp')) return;
+  const v = e.target.value.trim(); store.set('diffDp', v === '' ? '' : Math.max(0, Math.min(7, Math.round(+v))));
+  document.querySelectorAll('.dpinp').forEach(el => { if (el !== e.target) el.value = e.target.value; });
+  document.querySelectorAll('[data-diffk]').forEach(w => { const d = DIFFS[w.dataset.diffk]; if (d) w.innerHTML = diffGridHTML(d[0], d[1]); });
+});
+function diffGridHTML(a, b) {
+  const va = flatVals(a), vb = flatVals(b);
+  const d = vb.map((v, i) => v - va[i]);
+  const cell = (i) => { const x = d[i]; if (f32(va[i]) === f32(vb[i])) return '<td class="dz">·</td>'; return `<td style="background:${x > 0 ? '#1e3a28' : '#4a1f25'};color:${x > 0 ? '#4fc87a' : '#e05c6a'}">${x > 0 ? '+' : ''}${esc(fmtDelta(x))}</td>`; };
+  if (a.kind === 'SCALAR') { const x = b.value - a.value; return `<div class="scalar ${x ? 'c-warn' : 'faint'}">${x ? (x > 0 ? '+' : '') + fmtDelta(x) : '·'}</div>`; }
+  let h = '<table class="mg">';
+  if (a.kind === '2AXIS') {
+    h += `<tr><th class="ya">B − A</th>${b.x.map((v, i) => `<th class="${f32(v) !== f32(a.x[i]) ? 'c-bad' : ''}">${esc(fmtNum(v))}</th>`).join('')}</tr>`;
+    b.z.forEach((row, k) => { h += `<tr><th class="ya ${f32(b.y[k]) !== f32(a.y[k]) ? 'c-bad' : ''}">${esc(fmtNum(b.y[k]))}</th>${row.map((_, i) => cell(k * b.x.length + i)).join('')}</tr>`; });
+  } else {
+    h += `<tr><th class="ya">B − A</th>${(a.kind === 'AXIS' ? b.x.map((_, i) => i) : b.x).map((v, i) => `<th class="${a.kind !== 'AXIS' && f32(v) !== f32(a.x[i]) ? 'c-bad' : ''}">${esc(fmtNum(v))}</th>`).join('')}</tr><tr><th class="ya">Δ</th>${va.map((_, i) => cell(i)).join('')}</tr>`;
+  }
+  return h + '</table>';
+}
+function plot3d(el, it) {
+  if (!window.Plotly || !el || it.kind !== '2AXIS') return;
+  Plotly.react(el, [{ type: 'surface', x: it.x, y: it.y, z: it.z, colorscale: [[0, 'rgb(26,37,53)'], [0.25, 'rgb(26,82,120)'], [0.5, 'rgb(30,130,80)'], [0.75, 'rgb(200,140,30)'], [1, 'rgb(180,40,20)']], showscale: false }], {
+    paper_bgcolor: '#1c1d20', margin: { l: 0, r: 0, t: 0, b: 0 },
+    scene: { xaxis: { title: 'x', color: '#7c8086', gridcolor: '#2d3034' }, yaxis: { title: 'y', color: '#7c8086', gridcolor: '#2d3034' }, zaxis: { color: '#7c8086', gridcolor: '#2d3034' }, bgcolor: '#1c1d20' }
+  }, { displaylogo: false, responsive: true });
+}
+function editorClip(it) {
+  const j = a => a.map(fmtNum).join('\t');
+  if (it.kind === '2AXIS') return ['\t' + j(it.x), ...it.z.map((r, k) => fmtNum(it.y[k]) + '\t' + j(r))].join('\n');
+  if (it.kind === '1AXIS') return [j(it.x), j(it.v)].join('\n');
+  if (it.kind === 'AXIS') return j(it.x);
+  return fmtNum(it.value);
+}
+
+// ───────────── dialog ─────────────
+function dialog(html, narrow) { const d = $('#dlg'); d.innerHTML = `<div class="dlg${narrow ? ' narrow' : ''}" role="dialog">${html}</div>`; d.classList.add('on'); const f = d.querySelector('[autofocus]'); if (f) f.focus(); }
+function closeDlg() { $('#dlg').classList.remove('on'); $('#dlg').innerHTML = ''; }
+$('#dlg').addEventListener('mousedown', e => { if (e.target.id === 'dlg') closeDlg(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#dlg').classList.contains('on')) closeDlg(); });
+
+// ───────────── send to SM (preview → restore point → write → report) ─────────────
+async function sendFlow(items, label, setStatus) {
+  if (!needHelper()) return;
+  if (setStatus === 'donotuse') { toast('This cal set is marked “Do not use” — it can be viewed and compared, but not sent to SM.', 'bad'); return; }
+  if (!items.length) { toast('No items selected.'); return; }
+  dialog(`<div class="dlg-h"><h2>Checking against System Monitor…</h2></div><div class="dlg-b"><span class="spin"></span></div>`);
+  let d;
+  try { d = await helper('/api/writemany', { dryRun: true, label, items }); }
+  catch { closeDlg(); toast('The SM link is not responding.', 'bad'); return; }
+  if (!d.ok) { closeDlg(); toast('SM refused: ' + d.error, 'bad'); return; }
+  const ch = d.items.filter(x => x.ok && x.changed), same = d.items.filter(x => x.ok && !x.changed), bad = d.items.filter(x => !x.ok);
+  const row = (n, a, c, cls) => `<div class="srow"><span class="mono" style="font-size:12px;overflow-wrap:anywhere">${esc(n)}</span><span class="muted">${esc(a)}</span><span class="${cls}">${c}</span></div>`;
+  let rows = '';
+  ch.forEach(x => {
+    let c = x.kind === 'SCALAR' ? `${fmtNum(x.from)} → ${fmtNum(x.to)}` : `${x.cellsChanged} of ${x.cellsTotal} ${x.kind === '2AXIS' ? 'cells' : 'points'}`;
+    (x.axes || []).filter(a => a.changed).forEach(a => c += ` · ${a.dir} axis ${a.changed} of ${a.points} points`);
+    rows += row(x.name, x.app, esc(c), 'c-warn');
+  });
+  bad.forEach(x => rows += row(x.name, x.app || '', esc(x.error), 'c-bad'));
+  const shared = [];
+  ch.forEach(x => { (x.axes || []).filter(a => a.changed && a.users?.length).forEach(a => shared.push({ ax: a.name, users: a.users })); if (x.kind === 'AXIS' && x.axisUsers?.length) shared.push({ ax: x.name, users: x.axisUsers }); });
+  const sharedHTML = shared.map(s => `<div class="note warn">⚠ Axis <span class="mono">${esc(s.ax)}</span> changes. It is also used by: ${s.users.slice(0, 25).map(u => `<span class="mono">${esc(u)}</span>`).join(', ')}${s.users.length > 25 ? ` and ${s.users.length - 25} more` : ''} — those change too.</div>`).join('');
+  const proj = (d.project || '').split(/[\\/]/).pop();
+  dialog(`
+    <div class="dlg-h"><h2>Send “${esc(label)}” to System Monitor</h2>
+      <div class="muted">Into project <span class="mono" style="color:var(--text2)">${esc(proj)}</span> · SM ${d.live ? '<b class="c-warn">LIVE</b>' : (d.online ? 'online' : 'offline')} · nothing is downloaded to the ECU</div></div>
+    <div class="dlg-b">
+      <div class="stats" style="margin:0">
+        <div class="stat" style="cursor:default;background:var(--warn-bg);border-color:var(--warn-l)"><b class="c-warn">${ch.length}</b><span class="muted">will change</span></div>
+        <div class="stat" style="cursor:default;background:var(--ok-bg);border-color:var(--ok-l)"><b class="c-ok">${same.length}</b><span class="muted">already match SM</span></div>
+        <div class="stat" style="cursor:default;background:var(--bad-bg);border-color:var(--bad-l)"><b class="c-bad">${bad.length}</b><span class="muted">cannot be sent</span></div>
+      </div>
+      ${rows ? `<div style="border:1px solid var(--line);border-radius:10px;overflow:hidden"><div class="srow h"><span>Item</span><span>App</span><span>Change</span></div>${rows}</div>` : ''}
+      ${sharedHTML}
+      ${d.live ? '<div class="note warn">⚠ Live updates are ON — this write may go straight to the ECU.</div>' : ''}
+      ${ch.length ? `<div class="note info"><b>A restore point is saved first.</b> The current SM values of the ${ch.length} item${ch.length > 1 ? 's' : ''} that change are read and saved before anything is written. Undo it any time under Restore points.</div>` : '<div class="note ok">SM already matches — nothing to send.</div>'}
+    </div>
+    <div class="dlg-f"><span class="faint" style="margin-right:auto;font-size:12px">After writing, every value is read back and checked.</span>
+      <button class="btn" onclick="closeDlg()">Cancel</button>
+      ${ch.length ? `<button class="btn pri" id="sendGo" autofocus>Send ${ch.length} item${ch.length > 1 ? 's' : ''} to SM</button>` : ''}
+    </div>`);
+  const go = $('#sendGo'); if (!go) return;
+  go.onclick = async () => {
+    go.disabled = true; go.innerHTML = '<span class="spin"></span> Writing…';
+    let r; try { r = await helper('/api/writemany', { dryRun: false, label, items }); } catch { closeDlg(); toast('The SM link stopped responding during the write — check SM and Restore points.', 'bad'); return; }
+    if (!r.ok) { closeDlg(); toast('Write failed: ' + r.error, 'bad'); return; }
+    const failed = r.items.filter(x => x.ok && x.changed && (!x.written || x.verifyMismatches));
+    dialog(`<div class="dlg-h"><h2>${failed.length ? 'Sent with problems' : 'Sent to System Monitor'}</h2><div class="muted">Restore point <span class="mono">${esc(r.restoreId || '—')}</span></div></div>
+      <div class="dlg-b">
+        <div class="note ${failed.length ? 'bad' : 'ok'}">${r.written} item${r.written === 1 ? '' : 's'} written and verified${failed.length ? ` · ${failed.length} failed` : ''}.</div>
+        ${failed.map(x => `<div class="srow"><span class="mono">${esc(x.name)}</span><span>${esc(x.app)}</span><span class="c-bad">${esc(x.error || (x.verifyMismatches + ' value(s) read back different'))}</span></div>`).join('')}
+      </div>
+      <div class="dlg-f"><button class="btn" data-undo="${esc(r.restoreId || '')}">Undo this send</button><button class="btn pri" onclick="closeDlg()" autofocus>Done</button></div>`, true);
+    const u = $('[data-undo]'); if (u && r.restoreId) u.onclick = () => undoFlow(r.restoreId);
+    if (S.view === 'set') checkSetVsSM();
+  };
+}
+async function undoFlow(id) {
+  if (!needHelper()) return;
+  dialog(`<div class="dlg-h"><h2>Checking restore point…</h2></div><div class="dlg-b"><span class="spin"></span></div>`, true);
+  let d; try { d = await helper('/api/restore', { id, dryRun: true }); } catch { closeDlg(); toast('The SM link is not responding.', 'bad'); return; }
+  if (!d.ok) { closeDlg(); toast(d.error, 'bad'); return; }
+  const ch = d.items.filter(x => x.ok && x.changed), bad = d.items.filter(x => !x.ok);
+  dialog(`<div class="dlg-h"><h2>Undo: put SM back to restore point</h2><div class="muted mono">${esc(id)}</div></div>
+    <div class="dlg-b">
+      <div>${ch.length} item${ch.length === 1 ? '' : 's'} will be put back${bad.length ? `, ${bad.length} can't be (${bad.map(x => esc(x.name)).join(', ')})` : ''}.</div>
+      ${ch.map(x => `<div class="mono" style="font-size:12px">${esc(x.name)} <span class="muted">· ${esc(x.app)}</span></div>`).join('')}
+      <div class="note info">The undo saves its own restore point first, so it can be undone too.</div>
+    </div>
+    <div class="dlg-f"><button class="btn" onclick="closeDlg()">Cancel</button>${ch.length ? '<button class="btn pri" id="undoGo" autofocus>Undo</button>' : ''}</div>`, true);
+  const g = $('#undoGo'); if (!g) return;
+  g.onclick = async () => {
+    g.disabled = true; g.innerHTML = '<span class="spin"></span> Writing…';
+    try { const r = await helper('/api/restore', { id, dryRun: false }); closeDlg(); if (r.ok && !r.failed) toast(`SM put back — ${r.written} item(s) restored and verified.`, 'ok'); else toast('Undo finished with problems: ' + (r.error || `${r.failed} failed`), 'bad'); }
+    catch { closeDlg(); toast('The SM link stopped responding.', 'bad'); }
+    S.restore.list = null; if (S.view === 'restore') renderRestore(); if (S.view === 'set') checkSetVsSM();
+  };
+}
+
+// ───────────── router / render ─────────────
+function go(view, arg) {
+  S.view = view;
+  if (view === 'set') { S.setId = arg; S.selItem = 0; S.itemView = 'table'; S.smCmp = null; S.checked = new Set(); }
+  if (view === 'compare' && arg) { S.cmp.a = arg.a ?? S.cmp.a; S.cmp.b = arg.b ?? S.cmp.b; S.cmp.res = null; }
+  if (view === 'restore') S.restore.list = null;
+  render(); window.scrollTo(0, 0);
+  if (view === 'set') checkSetVsSM();
+  if (view === 'compare' && S.cmp.a && S.cmp.b) runCompare();
+}
+document.querySelectorAll('#nav [data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
+$('#userBtn').onclick = () => settingsDlg();
+
+function render() {
+  document.querySelectorAll('#nav [data-go]').forEach(b => b.classList.toggle('on', b.dataset.go === S.view || (S.view === 'set' && b.dataset.go === 'library')));
+  if (!S.cfg.token) return renderConnect();
+  ({ library: renderLibrary, set: renderSet, compare: renderCompare, capture: renderCapture, restore: renderRestore }[S.view] || renderLibrary)();
+}
+
+// ───────────── connect / settings ─────────────
+function renderConnect() {
+  $('#main').innerHTML = `<div style="max-width:620px;margin:40px auto" class="card"><div class="form">
+    <div style="font-size:20px;font-weight:700">Connect to the cal library</div>
+    <div class="muted">Cal sets are stored in the private GitHub repo <span class="mono">${esc(S.cfg.owner)}/${esc(S.cfg.repo)}</span>. Paste a GitHub token once; it stays in this browser only.</div>
+    ${tokenHelp()}
+    <label><span>GitHub token</span><input class="inp mono" id="tkn" type="password" placeholder="github_pat_…" autofocus></label>
+    <details><summary class="muted" style="cursor:pointer">Repository</summary><div class="row" style="gap:8px;margin-top:8px"><input class="inp" id="own" value="${esc(S.cfg.owner)}" style="flex:1"><input class="inp" id="rep" value="${esc(S.cfg.repo)}" style="flex:2"></div></details>
+    <button class="btn pri" id="tknGo" style="justify-content:center">Connect</button></div></div>`;
+  $('#tknGo').onclick = () => saveToken($('#tkn').value.trim(), $('#own').value.trim(), $('#rep').value.trim());
+  $('#tkn').onkeydown = e => { if (e.key === 'Enter') $('#tknGo').click(); };
+}
+function tokenHelp() {
+  const u = a => `https://github.com/settings/personal-access-tokens/new?name=HMSG+Cal+Library&description=HMSG+Cal+Library+access&contents=${a}`;
+  return `<div class="note info" style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+    <div>Create a token on GitHub (opens pre-filled): <a href="${u('write')}" target="_blank" rel="noopener"><b>Read and write</b></a> (save cal sets) · <a href="${u('read')}" target="_blank" rel="noopener"><b>Read only</b></a> (view, compare and send to SM)</div>
+    <div>On that page: Resource owner <span class="mono">${esc(S.cfg.owner)}</span> → Repository access <b>Only select repositories</b> → <span class="mono">${esc(S.cfg.repo)}</span> → check Permissions shows <b>Contents</b> (if not, type “contents” in the permissions search box and add it) → Generate token → copy it here.</div></div>`;
+}
+async function saveToken(token, owner, repo) {
+  if (!token) { toast('Paste a token first.'); return; }
+  S.cfg = { ...S.cfg, token, owner: owner || S.cfg.owner, repo: repo || S.cfg.repo };
+  try { await gh(repoPath('')); } catch (e) { S.cfg.token = ''; toast(e.status === 404 ? `Repo ${S.cfg.owner}/${S.cfg.repo} not found with this token — check the token's repository access.` : 'GitHub: ' + e.message, 'bad'); render(); return; }
+  store.set('cfg', S.cfg); closeDlg(); await loadUser(); loadSets(); toast('Connected to GitHub.', 'ok');
+}
+function settingsDlg() {
+  dialog(`<div class="dlg-h"><h2>GitHub</h2><div class="muted">${S.user ? `Signed in as <b>${esc(userName())}</b> (${esc(S.user.login)})` : 'Not connected'} · repo <span class="mono">${esc(S.cfg.owner)}/${esc(S.cfg.repo)}</span></div></div>
+    <div class="dlg-b">${tokenHelp()}<label class="form" style="padding:0"><span class="muted" style="font-size:12px">New token</span><input class="inp mono" id="tkn2" type="password" placeholder="github_pat_…"></label>
+    <div class="faint" style="font-size:12px">Cal Library v${APPVER}</div></div>
+    <div class="dlg-f"><button class="btn danger" id="lo" style="margin-right:auto">Disconnect</button><button class="btn" onclick="closeDlg()">Close</button><button class="btn pri" id="tk2">Save token</button></div>`, true);
+  $('#tk2').onclick = () => saveToken($('#tkn2').value.trim());
+  $('#lo').onclick = () => { S.cfg.token = ''; store.set('cfg', S.cfg); store.del('setCache'); S.user = null; S.sets = []; paintUser(); closeDlg(); render(); };
+}
+
+// ───────────── LIBRARY ─────────────
+function libRows() {
+  const f = S.lib, q = f.q.trim().toLowerCase();
+  let rows = S.sets.filter(s => f.st[s.status || 'active']);
+  if (f.tags.length) rows = rows.filter(s => f.tags.every(t => (s.tags || []).includes(t)));
+  if (q) rows = rows.filter(s => [s.name, s.description, ...(s.tags || []), s.author, ...(s.items || []).map(i => i.name)].join(' ').toLowerCase().includes(q));
+  const by = { new: (a, b) => (b.modified || '').localeCompare(a.modified || ''), old: (a, b) => (a.modified || '').localeCompare(b.modified || ''), name: (a, b) => a.name.localeCompare(b.name) }[f.sort];
+  return rows.sort(by);
+}
+function renderLibrary() {
+  const f = S.lib, cnt = k => S.sets.filter(s => (s.status || 'active') === k).length;
+  const allTags = [...new Set(S.sets.flatMap(s => s.tags || []))].sort();
+  const rows = libRows();
+  const hiddenDnu = !f.st.donotuse ? cnt('donotuse') : 0;
+  $('#main').innerHTML = `<div class="row">
+    <aside class="side">
+      <div style="display:flex;flex-direction:column;gap:6px"><div class="lbl">Show</div>
+        ${Object.entries(STATUS).map(([k, v]) => `<label class="opt ${f.st[k] ? 'on' : ''}"><input type="checkbox" data-st="${k}" ${f.st[k] ? 'checked' : ''}><span>${v.label}</span><span class="${k === 'donotuse' ? 'c-bad' : 'muted'}">${cnt(k)}</span></label>`).join('')}
+        <div class="legend">${Object.values(STATUS).map(v => `<span><b style="color:${v.label === 'Do not use' ? 'var(--bad)' : 'var(--text2)'}">${v.label}</b> – ${v.hint}.</span>`).join('')}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px"><div class="lbl">Tags</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${allTags.map(t => `<button class="tagbtn ${f.tags.includes(t) ? 'on' : ''}" data-tag="${esc(t)}">${esc(t)}</button>`).join('') || '<span class="faint">No tags yet</span>'}</div>
+        <div class="faint" style="font-size:11px">Tags are created by authors when saving.</div>
+      </div>
+    </aside>
+    <div class="listwrap">
+      <div class="hdr"><h1>Cal sets</h1>
+        <input class="inp" id="q" placeholder="Search name, description, tag, map name…" value="${esc(f.q)}" style="flex:1 1 260px">
+        <label class="muted" style="display:flex;align-items:center;gap:8px">Sort <select class="inp" id="sort"><option value="new">Newest first</option><option value="old">Oldest first</option><option value="name">Name A–Z</option></select></label>
+        <button class="btn" id="reload" title="Reload from GitHub">↻</button>
+        <button class="btn" data-go2="compare">Compare</button>
+        <button class="btn pri" data-go2="capture">+ New cal set</button>
+      </div>
+      ${S.loadErr ? `<div class="note bad" style="margin-bottom:12px">GitHub: ${esc(S.loadErr)}</div>` : ''}
+      <div class="tbl"><div class="tbl-in">
+        <div class="lrow h"><div>Cal set</div><div>Tags</div><div>Status</div><div>Ver.</div><div>Author</div><div>Updated</div><div>Items</div></div>
+        ${S.loading && !S.sets.length ? '<div class="empty"><span class="spin"></span> Loading cal sets from GitHub…</div>' : ''}
+        ${!S.loading && !rows.length ? `<div class="empty">${S.sets.length ? 'No cal sets match the filters.' : 'The library is empty — capture your first cal set from SM.'}</div>` : ''}
+        ${rows.map(s => { const st = s.status || 'active'; return `<div class="lrow ${st === 'legacy' ? 'legacy' : ''} ${st === 'donotuse' ? 'dnu' : ''}" data-open="${esc(s.id)}">
+          <div style="min-width:0"><div class="nm">${esc(s.name)}</div><div class="ds">${esc(s.description || '')}</div></div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">${(s.tags || []).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap"><span class="badge ${isSigned(s) ? 'b-signed' : 'b-draft'}">${isSigned(s) ? 'Signed off' : 'Draft'}</span>${st !== 'active' ? `<span class="badge ${STATUS[st].cls}">${STATUS[st].label}</span>` : ''}</div>
+          <div class="mono text2">v${s.version || 1}</div>
+          <div class="text2">${esc(s.modifiedBy || s.author || '')}</div>
+          <div class="muted">${esc(fmtDate(s.modified))}</div>
+          <div class="mono text2">${(s.items || []).length}</div></div>`; }).join('')}
+        ${hiddenDnu ? `<div style="display:flex;justify-content:space-between;padding:12px 16px;color:var(--faint);font-size:12px"><span>${hiddenDnu} “Do not use” cal set${hiddenDnu > 1 ? 's' : ''} hidden</span><a href="#" id="showDnu">Show them</a></div>` : ''}
+      </div></div>
+    </div></div>`;
+  $('#sort').value = f.sort;
+  const save = () => { store.set('libFilters', S.lib); renderLibrary(); };
+  document.querySelectorAll('[data-st]').forEach(c => c.onchange = () => { f.st[c.dataset.st] = c.checked; save(); });
+  document.querySelectorAll('[data-tag]').forEach(b => b.onclick = () => { const t = b.dataset.tag; f.tags = f.tags.includes(t) ? f.tags.filter(x => x !== t) : [...f.tags, t]; save(); });
+  $('#q').oninput = e => { f.q = e.target.value; store.set('libFilters', f); const pos = e.target.selectionStart; renderLibrary(); const q = $('#q'); q.focus(); q.setSelectionRange(pos, pos); };
+  $('#sort').onchange = e => { f.sort = e.target.value; save(); };
+  $('#reload').onclick = () => { store.del('setCache'); loadSets(); };
+  const sd = $('#showDnu'); if (sd) sd.onclick = e => { e.preventDefault(); f.st.donotuse = true; save(); };
+  document.querySelectorAll('[data-open]').forEach(r => r.onclick = () => go('set', r.dataset.open));
+  document.querySelectorAll('[data-go2]').forEach(b => b.onclick = () => go(b.dataset.go2));
+}
+
+// ───────────── CAL SET ─────────────
+async function checkSetVsSM() {
+  const s = setById(S.setId); if (!s || !S.helper.ok) { S.smCmp = null; if (S.view === 'set') renderSet(); return; }
+  S.smCmpBusy = true; renderSet();
+  try {
+    const r = await helper('/api/readmany', { items: s.items.map(i => ({ name: i.name, app: i.app })) });
+    S.smCmp = s.items.map((it, i) => { const sm = r.items[i]; if (!sm || !sm.ok) return { st: 'missing', txt: sm?.error?.includes('not found') || sm?.error?.includes('not in') ? 'Not in open project' : (sm?.error || 'Not in SM') }; return diffItem(sm, it); });
+    S.smCmpSm = r.items;
+  } catch { S.smCmp = null; }
+  S.smCmpBusy = false; if (S.view === 'set' && S.setId === s.id) renderSet();
+}
+function renderSet() {
+  const s = setById(S.setId);
+  if (!s) { $('#main').innerHTML = S.loading ? '<div class="empty"><span class="spin"></span></div>' : '<div class="empty">Cal set not found. <a href="#" onclick="go(\'library\');return false">Back to library</a></div>'; return; }
+  const st = s.status || 'active', signed = isSigned(s), dnu = st === 'donotuse';
+  const it = s.items[S.selItem] || s.items[0];
+  const cmp = S.smCmp; const cnt = k => cmp ? cmp.filter(c => c.st === k).length : 0;
+  const nSel = S.checked.size;
+  $('#main').innerHTML = `
+    <div class="crumb"><a data-go2="library">Library</a>  ›  ${esc(s.name)}</div>
+    <div class="sethead">
+      <div style="display:flex;flex-direction:column;gap:10px;flex:1 1 520px;min-width:0">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><h1>${esc(s.name)}</h1>
+          <span class="badge ${signed ? 'b-signed' : 'b-draft'}">${signed ? 'Signed off' : 'Draft'}</span>
+          <span class="badge ${STATUS[st].cls}">${STATUS[st].label}</span>
+          <span class="mono muted">v${s.version || 1}</span>
+          ${(s.tags || []).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>
+        <p style="margin:0;color:#b4b8bd;max-width:820px;white-space:pre-wrap">${esc(s.description || '')}</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="cmpWith">Compare with…</button>
+        <button class="btn" id="edit" ${signed ? 'disabled title="Signed off — duplicate it to make changes"' : ''}>Edit…</button>
+        <button class="btn" id="dup">Duplicate</button>
+        <button class="btn" id="recap" ${signed ? 'disabled title="Signed off — duplicate it to make changes"' : ''}>Re-capture from SM</button>
+        ${signed ? '' : '<button class="btn" id="sign">Sign off…</button>'}
+        <select class="inp" id="stSel" title="Status" style="width:auto">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === st ? 'selected' : ''}>${v.label}</option>`).join('')}</select>
+        <button class="btn danger" id="del">Delete…</button>
+        <button class="btn pri" id="sendAll" ${dnu ? 'disabled title="Do not use — cannot be sent"' : ''}>Send whole set to SM</button>
+      </div>
+    </div>
+    ${dnu ? '<div class="note bad" style="margin-top:12px">This cal set is marked <b>Do not use</b>. You can view and compare it, but it cannot be sent to SM.</div>' : ''}
+    <div class="metagrid">
+      <div><span class="lbl">Author</span><span class="v">${esc(s.author || '—')}</span><span class="faint" style="font-size:12px">created ${esc(fmtDate(s.created))}</span></div>
+      <div><span class="lbl">Last change</span><span class="v">v${s.version || 1} · ${esc(fmtDT(s.modified))} · ${esc(s.modifiedBy || '')}</span><span class="muted" style="font-size:12px">“${esc(s.versionMessage || '')}”</span></div>
+      <div><span class="lbl">Captured from</span><span class="v mono" style="font-size:12px">${esc((s.source?.project || '—').split(/[\\/]/).pop())}</span></div>
+      <div><span class="lbl">Sign-off</span>${signed ? `<span class="v c-ok">${esc(s.signoff.by)} · ${esc(fmtDate(s.signoff.date))}</span><span class="muted" style="font-size:12px">“${esc(s.signoff.comment || '')}”</span>` : '<span class="c-warn">Not signed off</span>'}<a href="#" id="hist" style="font-size:12px">Version history</a></div>
+    </div>
+    <div class="row split" id="splitRow">
+      <section class="card items split-left" id="splitLeft" style="flex:0 0 ${splitW()}px;min-width:0;overflow:hidden">
+        <div class="panel-h"><b>Items <span class="faint" style="font-weight:400">· ${s.items.length}</span></b>
+          <span class="muted" style="font-size:12px">${!S.helper.ok ? 'SM not connected' : S.smCmpBusy ? '<span class="spin"></span> checking SM…' : cmp ? `vs SM now: <span class="c-warn">${cnt('diff')} differ</span> · <span class="c-ok">${cnt('same')} same</span>${cnt('missing') + cnt('size') ? ` · <span class="c-bad">${cnt('missing') + cnt('size')} can't send</span>` : ''} <a href="#" id="recheck">↻</a>` : ''}</span></div>
+        <div style="overflow-x:auto"><div style="min-width:560px">
+          ${s.items.map((x, i) => { const c = cmp?.[i]; return `<div class="it ${i === S.selItem ? 'sel' : ''}" data-item="${i}">
+            <input type="checkbox" data-chk="${i}" ${S.checked.has(i) ? 'checked' : ''} aria-label="Select ${esc(x.name)}">
+            <div style="min-width:0"><div class="n">${esc(x.name)}</div>${x.note ? `<div class="note">${esc(x.note)}</div>` : ''}</div>
+            <span class="muted">${esc(x.app)}</span><span class="muted">${esc(kindLabel(x))}</span>
+            <span style="font-size:12px" class="${!c ? 'faint' : c.st === 'same' ? 'c-ok' : c.st === 'diff' ? 'c-warn' : 'c-bad'}">${c ? esc(c.st === 'same' ? 'same as SM' : c.txt) : ''}</span></div>`; }).join('')}
+        </div></div>
+        <div class="panel-f">
+          <button class="btn out sm" id="sendSel" ${!nSel || dnu ? 'disabled' : ''}>Send selected${nSel ? ` (${nSel})` : ''} to SM</button>
+          <button class="btn sm" id="selDiff" ${!cmp ? 'disabled' : ''}>Select items that differ</button>
+          <button class="btn sm" id="selNone" ${!nSel ? 'disabled' : ''}>Clear selection</button>
+        </div>
+      </section>
+      <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" aria-label="Resize panels" tabindex="0" title="Drag to resize"></div>
+      <section class="card" style="flex:1 1 0;min-width:360px;display:flex;flex-direction:column">
+        ${it ? `<div class="panel-h"><div style="min-width:0"><div class="mono" style="font-weight:500;overflow-wrap:anywhere">${esc(it.name)}</div>
+            <div class="muted" style="font-size:12px">${esc(it.app)} · ${esc(kindLabel(it))}${it.axes?.length ? ' · ' + it.axes.map(a => esc(a)).join(' · ') : ''}</div></div>
+          <div class="seg">${['table', it.kind === '2AXIS' ? '3d' : null, 'vs SM'].filter(Boolean).map(v => `<button class="${S.itemView === v ? 'on' : ''}" data-iv="${v}">${v === '3d' ? '3D' : v === 'table' ? 'Table' : 'vs SM'}</button>`).join('')}</div></div>
+          <div id="itemBody">${itemBodyHTML(s, it)}</div>
+          <div class="panel-f" style="margin-top:auto">
+            <span class="muted" style="flex:1 1 200px;font-size:12px">${it.note ? 'Note: “' + esc(it.note) + '”' : ''}</span>
+            <button class="btn sm" id="clip">Copy for Map Editor</button>
+            <button class="btn pri sm" id="sendOne" ${dnu ? 'disabled' : ''}>Send this item to SM</button>
+          </div>` : '<div class="empty">This cal set has no items.</div>'}
+      </section>
+    </div>`;
+  if (it && S.itemView === '3d') plot3d($('#plot'), it);
+  initSplitter();
+  document.querySelectorAll('[data-go2]').forEach(b => b.onclick = () => go(b.dataset.go2));
+  document.querySelectorAll('[data-item]').forEach(r => r.onclick = e => { if (e.target.matches('input')) return; S.selItem = +r.dataset.item; if (S.itemView === '3d' && s.items[S.selItem].kind !== '2AXIS') S.itemView = 'table'; renderSet(); });
+  document.querySelectorAll('[data-chk]').forEach(c => c.onchange = () => { const i = +c.dataset.chk; c.checked ? S.checked.add(i) : S.checked.delete(i); renderSet(); });
+  document.querySelectorAll('[data-iv]').forEach(b => b.onclick = () => { S.itemView = b.dataset.iv; renderSet(); });
+  const on = (id, fn) => { const el = document.getElementById(id); if (el) el.onclick = fn; };
+  on('recheck', e => { e.preventDefault(); checkSetVsSM(); });
+  on('selDiff', () => { S.checked = new Set(cmp.map((c, i) => c.st === 'diff' ? i : -1).filter(i => i >= 0)); renderSet(); });
+  on('selNone', () => { S.checked = new Set(); renderSet(); });
+  on('sendAll', () => sendFlow(s.items.map(stripItem), `${s.name} v${s.version || 1}`, st));
+  on('sendSel', () => sendFlow([...S.checked].sort((a, b) => a - b).map(i => stripItem(s.items[i])), `${s.name} v${s.version || 1} (${S.checked.size} item${S.checked.size > 1 ? 's' : ''})`, st));
+  on('sendOne', () => sendFlow([stripItem(it)], `${s.name} v${s.version || 1}: ${it.name}`, st));
+  on('clip', async () => { try { await navigator.clipboard.writeText(editorClip(it)); toast('Copied — paste into the Map Editor.', 'ok'); } catch { toast('Clipboard blocked by the browser.', 'bad'); } });
+  on('cmpWith', () => go('compare', { a: 'sm:', b: 'set:' + s.id }));
+  on('dup', () => duplicateDlg(s));
+  on('edit', () => editDlg(s));
+  on('del', () => deleteFlow(s));
+  on('recap', () => recapture(s));
+  on('sign', () => signDlg(s));
+  on('hist', e => { e.preventDefault(); historyDlg(s); });
+  $('#stSel').onchange = e => setStatusFlow(s, e.target.value);
+}
+// draggable divider between the Items list and the item panel (width remembered per browser)
+function splitW() { return store.get('splitW', Math.round(Math.max(360, (innerWidth - 60) * 0.45))); }
+function initSplitter() {
+  const sp = $('#splitter'), left = $('#splitLeft'), row = $('#splitRow'); if (!sp || !left || !row) return;
+  const clamp = w => Math.max(300, Math.min(w, row.getBoundingClientRect().width - 16 - 360));
+  const setW = (w, save) => { w = Math.round(clamp(w)); left.style.flexBasis = w + 'px'; if (save) { store.set('splitW', w); const p = $('#plot'); if (p && window.Plotly) Plotly.Plots.resize(p); } };
+  setW(splitW(), false);
+  sp.onpointerdown = e => {
+    e.preventDefault(); sp.setPointerCapture(e.pointerId); sp.classList.add('drag');
+    const x0 = row.getBoundingClientRect().left;
+    sp.onpointermove = ev => setW(ev.clientX - x0 - 8, false);
+    sp.onpointerup = ev => { sp.classList.remove('drag'); sp.onpointermove = sp.onpointerup = null; setW(ev.clientX - x0 - 8, true); };
+  };
+  sp.onkeydown = e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); setW(left.getBoundingClientRect().width + (e.key === 'ArrowLeft' ? -40 : 40), true); } };
+}
+function itemBodyHTML(s, it) {
+  if (S.itemView === '3d') return '<div id="plot" class="plot3d"></div>';
+  if (S.itemView === 'vs SM') {
+    const i = s.items.indexOf(it), sm = S.smCmpSm?.[i];
+    if (!S.helper.ok) return '<div class="empty">Connect to System Monitor to compare.</div>';
+    if (!sm) return '<div class="empty"><span class="spin"></span></div>';
+    if (!sm.ok) return `<div class="empty c-bad">${esc(sm.error)}</div>`;
+    const d = diffItem(sm, it);
+    if (d.st === 'size') return `<div class="empty c-bad">${esc(d.txt)}</div>`;
+    return `<div class="triple${it.kind === 'SCALAR' ? '' : ' stack'}"><div><div style="font-weight:600;margin-bottom:6px">SM now</div><div class="gridwrap">${gridHTML(sm)}</div></div>
+      <div><div style="font-weight:600;margin-bottom:6px">This cal set</div><div class="gridwrap">${gridHTML(it)}</div></div>
+      <div>${diffHead('Difference (cal set − SM)', 'set', sm, it)}<div class="gridwrap" data-diffk="set">${diffGridHTML(sm, it)}</div></div></div>`;
+  }
+  const i = s.items.indexOf(it), sm = S.smCmpSm?.[i]; let dc = null;
+  if (sm && sm.ok && sameShape(sm, it)) { const a = flatVals(sm), b = flatVals(it); dc = new Set(); a.forEach((v, k) => { if (f32(v) !== f32(b[k])) dc.add(k); }); }
+  return `<div class="gridwrap">${gridHTML(it, { diffCells: dc })}</div>${dc && dc.size ? `<div class="faint" style="font-size:11px;padding:0 14px 10px">Outlined cells differ from SM</div>` : ''}`;
+}
+async function saveSet(next, sha, message) {
+  const newSha = await putSet(next, sha, message);
+  const i = S.sets.findIndex(x => x.id === next.id);
+  const rec = { ...next, _sha: newSha, _path: `${DIR}/${next.id}.json` };
+  if (i >= 0) S.sets[i] = rec; else S.sets.push(rec);
+  store.del('setCache');
+  return rec;
+}
+function setStatusFlow(s, st) {
+  if (st === (s.status || 'active')) return;
+  dialog(`<div class="dlg-h"><h2>Mark “${esc(s.name)}” as ${STATUS[st].label}?</h2><div class="muted">${STATUS[st].label} – ${STATUS[st].hint}.</div></div>
+    <div class="dlg-b"><label class="form" style="padding:0"><span class="muted" style="font-size:12px">Reason (saved in the history)</span><input class="inp" id="why" placeholder="e.g. superseded by WG new" autofocus></label></div>
+    <div class="dlg-f"><button class="btn" id="no">Cancel</button><button class="btn pri" id="yes">Mark as ${STATUS[st].label}</button></div>`, true);
+  $('#no').onclick = () => { closeDlg(); renderSet(); };
+  $('#yes').onclick = async () => {
+    const why = $('#why').value.trim();
+    try { const next = { ...strip(s), status: st, statusNote: why, modified: today(), modifiedBy: userName() }; await saveSet(next, s._sha, `${s.name}: status → ${STATUS[st].label}${why ? ' (' + why + ')' : ''}`); closeDlg(); toast(`Marked as ${STATUS[st].label}.`, 'ok'); renderSet(); }
+    catch (e) { closeDlg(); toast(e.message, 'bad'); renderSet(); }
+  };
+}
+const strip = s => { const { _sha, _path, ...d } = s; return JSON.parse(JSON.stringify(d)); };
+function signDlg(s) {
+  dialog(`<div class="dlg-h"><h2>Sign off “${esc(s.name)}” v${s.version || 1}</h2><div class="muted">Signed-off cal sets are locked. To change one later, duplicate it.</div></div>
+    <div class="dlg-b"><div>Signed off by <b>${esc(userName())}</b> · ${esc(fmtDate(today()))}</div>
+      <label class="form" style="padding:0"><span class="muted" style="font-size:12px">Sign-off comment</span><textarea class="inp" id="sc" rows="3" placeholder="e.g. validated on dyno run 14, approved for track" autofocus></textarea></label></div>
+    <div class="dlg-f"><button class="btn" onclick="closeDlg()">Cancel</button><button class="btn pri" id="sgo">Sign off</button></div>`, true);
+  $('#sgo').onclick = async () => {
+    const c = $('#sc').value.trim();
+    try { const next = { ...strip(s), signoff: { by: userName(), login: S.user?.login || '', date: today(), comment: c }, modified: today(), modifiedBy: userName() }; await saveSet(next, s._sha, `${s.name} v${s.version || 1}: signed off by ${userName()}${c ? ' — ' + c : ''}`); closeDlg(); toast('Signed off.', 'ok'); renderSet(); }
+    catch (e) { closeDlg(); toast(e.message, 'bad'); }
+  };
+}
+function duplicateDlg(s) {
+  dialog(`<div class="dlg-h"><h2>Duplicate “${esc(s.name)}”</h2><div class="muted">Makes an editable Draft copy with all ${s.items.length} items.</div></div>
+    <div class="dlg-b"><label class="form" style="padding:0"><span class="muted" style="font-size:12px">Name of the copy</span><input class="inp" id="dn" value="${esc(s.name)} (copy)" autofocus></label></div>
+    <div class="dlg-f"><button class="btn" onclick="closeDlg()">Cancel</button><button class="btn pri" id="dgo">Duplicate</button></div>`, true);
+  $('#dgo').onclick = async () => {
+    const name = $('#dn').value.trim(); if (!name) return;
+    const next = { ...strip(s), id: slug(name), name, version: 1, signoff: null, status: 'active', author: userName(), created: today(), modified: today(), modifiedBy: userName(), versionMessage: `Duplicated from ${s.name} v${s.version || 1}`, duplicatedFrom: { id: s.id, version: s.version || 1 } };
+    try { await saveSet(next, null, `New cal set ${name} (duplicated from ${s.name} v${s.version || 1})`); closeDlg(); toast('Copy created.', 'ok'); go('set', next.id); }
+    catch (e) { closeDlg(); toast(e.message, 'bad'); }
+  };
+}
+function editDlg(s) {
+  if (isSigned(s)) { toast('Signed off — duplicate it to make changes.', 'bad'); return; }
+  const E = { name: s.name, desc: s.description || '', tags: [...(s.tags || [])], items: s.items.map(x => ({ ...x, _rm: false })), adds: [], msg: '', err: '', busy: false };
+  const tagList = [...new Set(S.sets.flatMap(x => x.tags || []))];
+  const addNames = names => {
+    const unknown = [], dup = [];
+    names.map(n => n.trim()).filter(Boolean).forEach(n => {
+      const hits = lookup(n);
+      if (!hits.length) { unknown.push(n); return; }
+      const nm = hits[0][0], app = hits.length === 1 ? hits[0][1] : '';
+      const inSet = E.items.some(x => !x._rm && x.name.toLowerCase() === nm.toLowerCase() && (!app || x.app === app));
+      if (inSet || E.adds.some(x => x.name.toLowerCase() === nm.toLowerCase() && (!app || x.app === app))) { dup.push(nm); return; }
+      E.adds.push({ name: nm, app, kind: hits.length === 1 ? hits[0][3] : '', apps: hits.length > 1 ? hits.map(h => h[1]) : null });
+    });
+    if (unknown.length) toast(`Not in the open SM project: ${unknown.slice(0, 5).join(', ')}${unknown.length > 5 ? '…' : ''}`, 'bad');
+    if (dup.length) toast(`Already in this cal set: ${dup.slice(0, 5).join(', ')}${dup.length > 5 ? '…' : ''}`);
+  };
+  const nRm = () => E.items.filter(x => x._rm).length;
+  const autoMsg = () => { const p = []; if (E.adds.length) p.push(`added ${E.adds.map(a => a.name).join(', ')}`); const r = E.items.filter(x => x._rm); if (r.length) p.push(`removed ${r.map(x => x.name).join(', ')}`); return p.join('; '); };
+  const draw = () => {
+    const keep = E.items.filter(x => !x._rm).length + E.adds.length;
+    dialog(`<div class="dlg-h"><h2>Edit “${esc(s.name)}”</h2><div class="muted">Details are saved as they are. Adding or removing items saves a new version v${(s.version || 1) + 1}; the old version stays in the history.</div></div>
+      <div class="dlg-b">
+        <label class="form" style="padding:0;gap:6px"><span class="muted" style="font-size:12px">Name</span><input class="inp" id="edNm" value="${esc(E.name)}"></label>
+        <label class="form" style="padding:0;gap:6px"><span class="muted" style="font-size:12px">Description</span><textarea class="inp" id="edDs" rows="3">${esc(E.desc)}</textarea></label>
+        <div style="display:flex;flex-direction:column;gap:6px"><span class="muted" style="font-size:12px">Tags</span>
+          <div class="tagbox">${E.tags.map((t, i) => `<span class="chip">${esc(t)} <button data-edrt="${i}" aria-label="Remove tag ${esc(t)}">✕</button></span>`).join('')}<input id="edTag" list="edTagList" placeholder="type a tag + Enter"><datalist id="edTagList">${tagList.map(t => `<option value="${esc(t)}">`).join('')}</datalist></div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span class="muted" style="font-size:12px">Items · ${keep}${E.adds.length ? ` · <span class="c-ok">+${E.adds.length} to add</span>` : ''}${nRm() ? ` · <span class="c-bad">−${nRm()} to remove</span>` : ''}</span>
+          <div class="card" style="overflow:hidden">
+            ${E.items.map((x, i) => `<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--row);${x._rm ? 'opacity:.55' : ''}">
+              <span class="mono" style="flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;${x._rm ? 'text-decoration:line-through' : ''}" title="${esc(x.name)}">${esc(x.name)}</span>
+              <span class="muted" style="font-size:12px">${esc(x.app)}</span><span class="muted" style="font-size:12px;width:96px">${esc(kindLabel(x))}</span>
+              ${x._rm ? `<button class="btn sm" data-edun="${i}">Undo</button>` : `<button class="btn sm danger" data-edrm="${i}">Remove</button>`}</div>`).join('')}
+            ${E.adds.map((x, i) => `<div style="display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--row)">
+              <span class="mono c-ok" style="flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(x.name)}">+ ${esc(x.name)}</span>
+              ${x.apps ? `<select class="inp" data-edapp="${i}" style="width:auto;height:28px;font-size:12px;padding:0 4px"><option value="">pick app…</option>${x.apps.map(a => `<option ${a === x.app ? 'selected' : ''}>${esc(a)}</option>`).join('')}</select>` : `<span class="muted" style="font-size:12px">${esc(x.app)}</span>`}
+              <span class="muted" style="font-size:12px;width:96px">${esc(KIND[x.kind] || '')}</span>
+              <button class="btn sm" data-edad="${i}">Cancel</button></div>`).join('')}
+            ${!E.items.length && !E.adds.length ? '<div class="empty">No items.</div>' : ''}
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input class="inp" id="edAdd" list="edNames" placeholder="${S.helper.ok ? 'Add a map, curve, axis or scalar from SM (or paste a list)' : 'Connect SM to add items'}" style="flex:1 1 300px" autocomplete="off" spellcheck="false" ${S.helper.ok ? '' : 'disabled'}>
+            <datalist id="edNames"></datalist>
+            <button class="btn" id="edAddBtn" ${S.helper.ok ? '' : 'disabled'}>Add</button>
+          </div>
+          ${E.adds.length ? '<span class="faint" style="font-size:12px">New items are read from SM when you save.</span>' : ''}
+        </div>
+        ${E.adds.length || nRm() ? `<label class="form" style="padding:0;gap:6px"><span class="muted" style="font-size:12px">What changed (version message)</span><input class="inp" id="edMsg" value="${esc(E.msg)}" placeholder="${esc(autoMsg())}"></label>` : ''}
+        ${E.err ? `<div class="note bad">${esc(E.err)}</div>` : ''}
+      </div>
+      <div class="dlg-f"><button class="btn" id="edNo">Cancel</button><button class="btn pri" id="edGo" ${E.busy ? 'disabled' : ''}>${E.busy ? '<span class="spin"></span> Saving…' : 'Save'}</button></div>`);
+    const dl = $('#edNames'); if (dl && S.helper.ok) fillNames(dl);
+    $('#edNm').oninput = e => { E.name = e.target.value; };
+    $('#edDs').oninput = e => { E.desc = e.target.value; };
+    const m = $('#edMsg'); if (m) m.oninput = e => { E.msg = e.target.value; };
+    $('#edTag').onkeydown = e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); const t = e.target.value.trim(); if (t && !E.tags.includes(t)) E.tags.push(t); draw(); $('#edTag').focus(); } };
+    document.querySelectorAll('[data-edrt]').forEach(b => b.onclick = () => { E.tags.splice(+b.dataset.edrt, 1); draw(); });
+    document.querySelectorAll('[data-edrm]').forEach(b => b.onclick = () => { E.items[+b.dataset.edrm]._rm = true; draw(); });
+    document.querySelectorAll('[data-edun]').forEach(b => b.onclick = () => { E.items[+b.dataset.edun]._rm = false; draw(); });
+    document.querySelectorAll('[data-edad]').forEach(b => b.onclick = () => { E.adds.splice(+b.dataset.edad, 1); draw(); });
+    document.querySelectorAll('[data-edapp]').forEach(sl => sl.onchange = () => { E.adds[+sl.dataset.edapp].app = sl.value; });
+    const add = () => { const v = $('#edAdd').value; if (!v.trim()) return; addNames(v.split(/[\s,;]+/)); draw(); $('#edAdd').focus(); };
+    $('#edAddBtn').onclick = add;
+    $('#edAdd').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); add(); } };
+    $('#edNo').onclick = () => { closeDlg(); renderSet(); };
+    $('#edGo').onclick = save;
+  };
+  const save = async () => {
+    E.err = '';
+    const name = E.name.trim();
+    if (!name) { E.err = 'The name cannot be empty.'; draw(); return; }
+    if (S.sets.some(x => x.id !== s.id && x.name.trim().toLowerCase() === name.toLowerCase())) { E.err = 'Another cal set already has this name.'; draw(); return; }
+    if (E.adds.some(a => !a.app)) { E.err = 'Pick the app for every new item that exists in more than one app.'; draw(); return; }
+    const itemsChanged = E.adds.length > 0 || nRm() > 0;
+    const detailsChanged = name !== s.name || E.desc.trim() !== (s.description || '') || JSON.stringify(E.tags) !== JSON.stringify(s.tags || []);
+    if (!itemsChanged && !detailsChanged) { closeDlg(); return; }
+    E.busy = true; draw();
+    let added = [];
+    if (E.adds.length) {
+      if (!S.helper.ok) { E.busy = false; E.err = 'Not connected to System Monitor — cannot read the new items.'; draw(); return; }
+      try {
+        const r = await helper('/api/readmany', { items: E.adds.map(a => ({ name: a.name, app: a.app })) });
+        const bad = r.items.map((res, k) => res.ok ? null : `${E.adds[k].name}: ${res.error}`).filter(Boolean);
+        if (bad.length) { E.busy = false; E.err = 'Could not read from SM — nothing was saved. ' + bad.join(' · '); draw(); return; }
+        added = r.items.map(res => ({ ...stripItem(res), note: '' }));
+      } catch { E.busy = false; E.err = 'The SM link is not responding — nothing was saved.'; draw(); return; }
+    }
+    const next = strip(s);
+    Object.assign(next, { name, description: E.desc.trim(), tags: E.tags, modified: today(), modifiedBy: userName() });
+    let msg;
+    if (itemsChanged) {
+      next.items = E.items.filter(x => !x._rm).map(({ _rm, ...x }) => x).concat(added);
+      next.version = (s.version || 1) + 1;
+      next.versionMessage = E.msg.trim() || autoMsg();
+      msg = `${name} v${next.version}: ${next.versionMessage}`;
+    } else msg = `${name}: details edited`;
+    try { await saveSet(next, s._sha, msg); closeDlg(); toast(itemsChanged ? `Saved ${name} v${next.version}.` : 'Saved.', 'ok'); S.selItem = 0; S.checked = new Set(); S.smCmp = null; renderSet(); if (S.helper.ok) checkSetVsSM(); }
+    catch (e) { E.busy = false; E.err = e.message; draw(); }
+  };
+  draw();
+}
+function deleteFlow(s) {
+  dialog(`<div class="dlg-h"><h2 class="c-bad">Delete “${esc(s.name)}”?</h2><div class="muted">This removes the cal set from the library for everyone.</div></div>
+    <div class="dlg-b"><div>${esc(s.name)} · v${s.version || 1} · ${s.items.length} item${s.items.length === 1 ? '' : 's'} · ${isSigned(s) ? `<span class="c-ok">signed off by ${esc(s.signoff.by)}</span>` : 'draft'} · ${esc(STATUS[s.status || 'active'].label)}</div>
+      <div class="note warn" style="font-size:12px">If you only want to stop people using it, set the status to <b>Do not use</b> or <b>Legacy</b> instead.</div></div>
+    <div class="dlg-f"><button class="btn" id="d1No" autofocus>Cancel</button><button class="btn danger" id="d1Go">Yes, continue…</button></div>`, true);
+  $('#d1No').onclick = closeDlg;
+  $('#d1Go').onclick = () => {
+    dialog(`<div class="dlg-h"><h2 class="c-bad">Are you sure? Delete “${esc(s.name)}”</h2><div class="muted">Type the name of the cal set to confirm.</div></div>
+      <div class="dlg-b"><input class="inp" id="d2Nm" placeholder="${esc(s.name)}" autocomplete="off" spellcheck="false" autofocus><div id="d2Err"></div></div>
+      <div class="dlg-f"><button class="btn" id="d2No">Cancel</button><button class="btn danger" id="d2Go" disabled>Delete cal set</button></div>`, true);
+    $('#d2No').onclick = closeDlg;
+    $('#d2Nm').oninput = e => { $('#d2Go').disabled = e.target.value.trim() !== s.name.trim(); };
+    $('#d2Go').onclick = async () => {
+      $('#d2Go').disabled = true; $('#d2Go').innerHTML = '<span class="spin"></span> Deleting…';
+      try {
+        await gh(repoPath(`/contents/${DIR}/${encodeURIComponent(s.id)}.json`), { method: 'DELETE', body: JSON.stringify({ message: `Deleted cal set ${s.name} v${s.version || 1} (by ${userName()})`, sha: s._sha }) });
+        S.sets = S.sets.filter(x => x.id !== s.id); store.del('setCache');
+        closeDlg(); toast(`Deleted “${s.name}”.`, 'ok'); go('library');
+      } catch (e) {
+        $('#d2Err').innerHTML = `<div class="note bad">${esc(e.status === 409 || e.status === 422 ? 'Someone else changed this cal set after you opened it. Reload the library and try again — nothing was deleted.' : e.message)}</div>`;
+        $('#d2Go').innerHTML = 'Delete cal set'; $('#d2Go').disabled = $('#d2Nm').value.trim() !== s.name.trim();
+      }
+    };
+  };
+}
+async function historyDlg(s) {
+  dialog(`<div class="dlg-h"><h2>History — ${esc(s.name)}</h2></div><div class="dlg-b"><span class="spin"></span></div>`);
+  let commits = [];
+  try { commits = await gh(repoPath(`/commits?path=${encodeURIComponent(`${DIR}/${s.id}.json`)}&per_page=50`)); }
+  catch (e) { dialog(`<div class="dlg-h"><h2>History</h2></div><div class="dlg-b"><div class="note bad">${esc(e.message)}</div></div><div class="dlg-f"><button class="btn" onclick="closeDlg()">Close</button></div>`); return; }
+  dialog(`<div class="dlg-h"><h2>History — ${esc(s.name)}</h2><div class="muted">Every save is kept. Compare any version or bring it back as a new version.</div></div>
+    <div class="dlg-b" style="gap:0;padding:0">${commits.map((c, i) => `<div style="display:flex;gap:12px;align-items:center;padding:11px 20px;border-bottom:1px solid var(--row);flex-wrap:wrap">
+      <div style="flex:1 1 300px;min-width:0"><div>${esc(c.commit.message.split('\n')[0])}</div><div class="faint" style="font-size:12px">${esc(c.commit.author?.name || '')} · ${esc(fmtDT(c.commit.author?.date))} · <span class="mono">${esc(c.sha.slice(0, 7))}</span>${i === 0 ? ' · <span class="c-ok">current</span>' : ''}</div></div>
+      ${i ? `<button class="btn sm" data-hc="${esc(c.sha)}">Compare with current</button>${isSigned(s) ? '' : `<button class="btn sm" data-hr="${esc(c.sha)}">Restore this version</button>`}` : ''}</div>`).join('') || '<div class="empty">No history.</div>'}</div>
+    <div class="dlg-f"><button class="btn" onclick="closeDlg()">Close</button></div>`);
+  document.querySelectorAll('[data-hc]').forEach(b => b.onclick = () => { closeDlg(); go('compare', { a: `ver:${s.id}@${b.dataset.hc}`, b: 'set:' + s.id }); });
+  document.querySelectorAll('[data-hr]').forEach(b => b.onclick = async () => {
+    try {
+      const old = JSON.parse(await gh(repoPath(`/contents/${DIR}/${encodeURIComponent(s.id)}.json?ref=${b.dataset.hr}`), { raw: true }));
+      const next = { ...old, version: (s.version || 1) + 1, signoff: null, modified: today(), modifiedBy: userName(), versionMessage: `Restored from v${old.version || '?'} (${b.dataset.hr.slice(0, 7)})` };
+      await saveSet(next, s._sha, `${s.name} v${next.version}: ${next.versionMessage}`); closeDlg(); toast(`Restored as v${next.version}.`, 'ok'); renderSet();
+    } catch (e) { toast(e.message, 'bad'); }
+  });
+}
+async function recapture(s) {
+  if (!needHelper()) return;
+  if (S.cap.items.length && !confirm('Replace the current capture draft with the items of this cal set?')) return;
+  S.cap = { ...newCapture(), items: s.items.map(i => ({ name: i.name, app: i.app, kind: i.kind, note: i.note || '' })), mode: 'version', target: s.id, name: s.name, desc: s.description || '', tags: [...(s.tags || [])] };
+  saveDraft(); go('capture'); readCapture();
+}
+
+// ───────────── COMPARE ─────────────
+function sourceOptions(sel) {
+  const sets = [...S.sets].sort((a, b) => a.name.localeCompare(b.name));
+  let h = `<option value="">— choose —</option><optgroup label="Cal sets">${sets.map(s => `<option value="set:${esc(s.id)}" ${sel === 'set:' + s.id ? 'selected' : ''}>${esc(s.name)} · v${s.version || 1}${s.status && s.status !== 'active' ? ' · ' + STATUS[s.status].label : ''}</option>`).join('')}</optgroup>`;
+  h += `<optgroup label="System Monitor"><option value="sm:" ${sel === 'sm:' ? 'selected' : ''}>SM now (current values of the other side's items)</option></optgroup>`;
+  if (sel && sel.startsWith('ver:')) h += `<option value="${esc(sel)}" selected>${esc(srcLabel(sel))}</option>`;
+  return h;
+}
+function srcLabel(src) {
+  if (!src) return '';
+  const [t, rest] = [src.slice(0, src.indexOf(':')), src.slice(src.indexOf(':') + 1)];
+  if (t === 'set') { const s = setById(rest); return s ? `${s.name} v${s.version || 1}` : rest; }
+  if (t === 'sm') return 'SM now';
+  if (t === 'ver') { const [id, sha] = rest.split('@'); const s = setById(id); return `${s ? s.name : id} @ ${sha.slice(0, 7)}`; }
+  return src;
+}
+async function loadSource(src, otherItems) {
+  const t = src.slice(0, src.indexOf(':')), rest = src.slice(src.indexOf(':') + 1);
+  if (t === 'set') { const s = setById(rest); if (!s) throw new Error('Cal set not found'); return { items: s.items, status: s.status, set: s }; }
+  if (t === 'ver') { const [id, sha] = rest.split('@'); const d = JSON.parse(await gh(repoPath(`/contents/${DIR}/${encodeURIComponent(id)}.json?ref=${sha}`), { raw: true })); return { items: d.items, status: d.status, ver: true }; }
+  if (t === 'sm') {
+    if (!S.helper.ok) throw new Error('System Monitor is not connected');
+    if (!otherItems) throw new Error('Choose a cal set or version on the other side — SM is read for those items.');
+    const base = otherItems;
+    const r = await helper('/api/readmany', { items: base.map(i => ({ name: i.name, app: i.app })) });
+    return { items: r.items.filter(x => x.ok).map(stripItem), sm: true, missing: r.items.filter(x => !x.ok).map(x => x.name) };
+  }
+  throw new Error('Unknown source');
+}
+async function runCompare() {
+  const c = S.cmp; if (!c.a || !c.b) { renderCompare(); return; }
+  c.busy = true; c.res = null; renderCompare();
+  try {
+    let A, B;
+    if (c.a.startsWith('sm:') && c.b.startsWith('sm:')) throw new Error('A and B are both SM — choose a cal set on one side.');
+    if (c.a.startsWith('sm:')) { B = await loadSource(c.b); A = await loadSource(c.a, B.items); }
+    else { A = await loadSource(c.a); B = await loadSource(c.b, A.items); }
+    const mA = new Map(A.items.map(i => [itemKey(i), i])), mB = new Map(B.items.map(i => [itemKey(i), i]));
+    const keys = [...new Set([...mA.keys(), ...mB.keys()])];
+    const rows = keys.map(k => { const a = mA.get(k), b = mB.get(k); const it = a || b;
+      if (!a) return { k, name: it.name, app: it.app, a, b, st: 'onlyB', txt: A.sm ? 'Not in open SM project' : 'Only in B' };
+      if (!b) return { k, name: it.name, app: it.app, a, b, st: 'onlyA', txt: B.sm ? 'Not in open SM project' : 'Only in A' };
+      return { k, name: it.name, app: it.app, a, b, ...diffItem(a, b) }; });
+    const order = { diff: 0, size: 1, onlyA: 2, onlyB: 3, same: 4 };
+    rows.sort((x, y) => order[x.st] - order[y.st] || x.name.localeCompare(y.name));
+    c.res = { rows, A, B }; c.sel = 0;
+  } catch (e) { c.res = { err: e.message }; }
+  c.busy = false; renderCompare();
+}
+function renderCompare() {
+  const c = S.cmp, r = c.res;
+  const shown = r?.rows ? r.rows.filter(x => !c.only || x.st !== 'same') : [];
+  const sel = shown[c.sel] || shown[0];
+  const n = k => r?.rows ? r.rows.filter(x => x.st === k).length : 0;
+  const canSend = side => { const src = side === 'a' ? c.a : c.b, L = side === 'a' ? r?.A : r?.B; return src && !src.startsWith('sm:') && L && L.status !== 'donotuse'; };
+  const canCopy = c.b.startsWith('set:') && (() => { const s = setById(c.b.slice(4)); return s && !isSigned(s); })();
+  $('#main').innerHTML = `
+    <div class="hdr"><h1>Compare</h1><span class="muted">A and B can each be a cal set, an older version (from History), or what is in SM right now.</span></div>
+    <div class="row" style="gap:12px;align-items:stretch">
+      <div class="pick"><span class="lbl">A</span><select class="inp" id="srcA">${sourceOptions(c.a)}</select><span class="muted" style="font-size:12px">${esc(srcStatus(c.a))}</span></div>
+      <button class="btn" id="swap" title="Swap A and B" style="align-self:center;height:40px">⇄</button>
+      <div class="pick"><span class="lbl">B</span><select class="inp" id="srcB">${sourceOptions(c.b)}</select><span class="muted" style="font-size:12px">${esc(srcStatus(c.b))}</span></div>
+    </div>
+    ${c.busy ? '<div class="empty"><span class="spin"></span> Comparing…</div>' : ''}
+    ${r?.err ? `<div class="note bad" style="margin-top:14px">${esc(r.err)}</div>` : ''}
+    ${!c.a || !c.b ? '<div class="empty">Choose A and B.</div>' : ''}
+    ${r?.rows ? `
+    <div class="stats">
+      <div class="stat"><b>${r.rows.length}</b><span class="muted">items</span></div>
+      <div class="stat" style="background:var(--ok-bg);border-color:var(--ok-l)"><b class="c-ok">${n('same')}</b><span class="muted">identical</span></div>
+      <div class="stat" style="background:var(--warn-bg);border-color:var(--warn-l)"><b class="c-warn">${n('diff')}</b><span class="muted">different</span></div>
+      <div class="stat" style="background:var(--pri-bg);border-color:#1f3a3e"><b class="c-pri">${n('onlyA') + n('onlyB')}</b><span class="muted">only on one side</span></div>
+      <div class="stat" style="background:var(--bad-bg);border-color:var(--bad-l)"><b class="c-bad">${n('size')}</b><span class="muted">size mismatch</span></div>
+      <label style="margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--text2)"><input type="checkbox" id="only" ${c.only ? 'checked' : ''}> Show differences only</label>
+    </div>
+    <div class="row" style="gap:16px">
+      <section class="card" style="flex:1 1 360px;max-width:460px;min-width:0;overflow:hidden;align-self:flex-start">
+        ${shown.map((x, i) => `<div class="cmpitem ${x === sel ? 'sel' : ''}" data-ci="${i}" style="border-left-color:${{ diff: 'var(--warn)', size: 'var(--bad)', onlyA: 'var(--link)', onlyB: 'var(--link)', same: 'var(--ok)' }[x.st]}">
+          <span class="mono" style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(x.name)} <span class="faint">· ${esc(x.app)}</span></span>
+          <span style="font-size:12px" class="${{ diff: 'c-warn', size: 'c-bad', onlyA: 'c-pri', onlyB: 'c-pri', same: 'c-ok' }[x.st]}">${esc(x.txt)}</span></div>`).join('') || '<div class="empty">A and B are identical.</div>'}
+      </section>
+      <section class="card" style="flex:999 1 640px;min-width:0;display:flex;flex-direction:column">
+        ${sel ? `<div class="panel-h"><div><div class="mono">${esc(sel.name)}</div><div class="muted" style="font-size:12px">${esc(sel.app)} · ${esc(kindLabel(sel.a || sel.b))} · ${esc(sel.txt)}</div></div>
+          ${sel.a && sel.b && sel.a.kind === '2AXIS' && sel.st !== 'size' ? `<div class="seg"><button class="${c.view === 'side' ? 'on' : ''}" data-cv="side">Tables</button><button class="${c.view === '3d' ? 'on' : ''}" data-cv="3d">3D overlay</button></div>` : ''}</div>
+          ${c.view === '3d' && sel.a?.kind === '2AXIS' && sel.b && sel.st !== 'size' ? `<div class="ovl-leg" style="display:flex;gap:18px;flex-wrap:wrap;padding:10px 14px 0;font-size:12px"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#4f98a3"></span>A · ${esc(srcLabel(c.a))}</span><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#fdab43"></span>B · ${esc(srcLabel(c.b))}</span></div><div id="plotC" class="plot3d"></div>` :
+          `<div class="triple${(sel.a || sel.b).kind === 'SCALAR' ? '' : ' stack'}">
+            <div><div style="font-weight:600;margin-bottom:6px">A · ${esc(srcLabel(c.a))}</div><div class="gridwrap">${sel.a ? gridHTML(sel.a) : '<div class="empty">—</div>'}</div></div>
+            <div><div style="font-weight:600;margin-bottom:6px">B · ${esc(srcLabel(c.b))}</div><div class="gridwrap">${sel.b ? gridHTML(sel.b) : '<div class="empty">—</div>'}</div></div>
+            ${sel.a && sel.b && sel.st !== 'size' ? `<div>${diffHead('Difference (B − A)', 'cmp', sel.a, sel.b)}<div class="gridwrap" data-diffk="cmp">${diffGridHTML(sel.a, sel.b)}</div></div>` : ''}
+          </div><div class="faint" style="font-size:11px;padding:0 14px 10px">Difference: green = B higher, red = B lower. Red axis values differ.</div>`}
+          <div class="panel-f" style="margin-top:auto">
+            ${canCopy && sel.a ? `<button class="btn sm" id="copyAB">Copy A’s item into B…</button>` : ''}
+            ${canSend('a') && sel.a ? '<button class="btn out sm" id="sendA1">Send A’s item to SM</button>' : ''}
+            ${canSend('b') && sel.b ? '<button class="btn pri sm" id="sendB1">Send B’s item to SM</button>' : ''}
+            <span style="flex:1"></span>
+            ${canSend('a') ? '<button class="btn sm" id="sendAall">Send all of A to SM</button>' : ''}
+            ${canSend('b') ? '<button class="btn sm" id="sendBall">Send all of B to SM</button>' : ''}
+          </div>` : '<div class="empty">Nothing to show.</div>'}
+      </section>
+    </div>` : ''}`;
+  if (sel && c.view === '3d' && $('#plotC')) {
+    Plotly.react($('#plotC'), [{ type: 'surface', x: sel.a.x, y: sel.a.y, z: sel.a.z, colorscale: [[0, '#4f98a3'], [1, '#4f98a3']], showscale: false, opacity: .75, name: 'A' }, { type: 'surface', x: sel.b.x, y: sel.b.y, z: sel.b.z, colorscale: [[0, '#fdab43'], [1, '#fdab43']], showscale: false, opacity: .75, name: 'B' }],
+      { paper_bgcolor: '#1c1d20', margin: { l: 0, r: 0, t: 0, b: 0 }, scene: { bgcolor: '#1c1d20', xaxis: { color: '#7c8086' }, yaxis: { color: '#7c8086' }, zaxis: { color: '#7c8086' } } }, { displaylogo: false, responsive: true });
+  }
+  $('#srcA').onchange = e => { c.a = e.target.value; runCompare(); };
+  $('#srcB').onchange = e => { c.b = e.target.value; runCompare(); };
+  $('#swap').onclick = () => { [c.a, c.b] = [c.b, c.a]; runCompare(); };
+  const o = $('#only'); if (o) o.onchange = e => { c.only = e.target.checked; c.sel = 0; renderCompare(); };
+  document.querySelectorAll('[data-ci]').forEach(el => el.onclick = () => { c.sel = +el.dataset.ci; renderCompare(); });
+  document.querySelectorAll('[data-cv]').forEach(el => el.onclick = () => { c.view = el.dataset.cv; renderCompare(); });
+  const on = (id, fn) => { const el = document.getElementById(id); if (el) el.onclick = fn; };
+  on('sendA1', () => sendFlow([stripItem(sel.a)], `${srcLabel(c.a)}: ${sel.name}`, r.A.status));
+  on('sendB1', () => sendFlow([stripItem(sel.b)], `${srcLabel(c.b)}: ${sel.name}`, r.B.status));
+  on('sendAall', () => sendFlow(r.A.items.map(stripItem), srcLabel(c.a), r.A.status));
+  on('sendBall', () => sendFlow(r.B.items.map(stripItem), srcLabel(c.b), r.B.status));
+  on('copyAB', () => copyItemDlg(sel.a, setById(c.b.slice(4))));
+}
+function srcStatus(src) {
+  if (!src) return '';
+  if (src.startsWith('sm:')) return S.helper.ok ? 'Current values in ' + (smProjectName().split(/[\\/]/).pop() || 'SM') : 'SM not connected';
+  if (src.startsWith('ver:')) return 'Older version from history';
+  const s = setById(src.slice(4)); if (!s) return '';
+  return `${isSigned(s) ? 'Signed off' : 'Draft'} · ${STATUS[s.status || 'active'].label}${s.statusNote ? ' · ' + s.statusNote : ''}`;
+}
+function copyItemDlg(item, target) {
+  dialog(`<div class="dlg-h"><h2>Copy into “${esc(target.name)}”</h2><div class="muted">Saves a new version v${(target.version || 1) + 1} of ${esc(target.name)} with A’s <span class="mono">${esc(item.name)}</span>.</div></div>
+    <div class="dlg-b"><label class="form" style="padding:0"><span class="muted" style="font-size:12px">What changed (version message)</span><input class="inp" id="cm" value="${esc(item.name)} copied from ${esc(srcLabel(S.cmp.a))}" autofocus></label></div>
+    <div class="dlg-f"><button class="btn" onclick="closeDlg()">Cancel</button><button class="btn pri" id="cgo">Save new version</button></div>`, true);
+  $('#cgo').onclick = async () => {
+    const msg = $('#cm').value.trim() || 'Item copied';
+    const next = strip(target); const k = itemKey(item); const i = next.items.findIndex(x => itemKey(x) === k);
+    const copy = { ...stripItem(item), note: next.items[i]?.note || item.note || '' };
+    if (i >= 0) next.items[i] = copy; else next.items.push(copy);
+    Object.assign(next, { version: (target.version || 1) + 1, modified: today(), modifiedBy: userName(), versionMessage: msg });
+    try { await saveSet(next, target._sha, `${next.name} v${next.version}: ${msg}`); closeDlg(); toast(`Saved ${next.name} v${next.version}.`, 'ok'); runCompare(); }
+    catch (e) { closeDlg(); toast(e.message, 'bad'); }
+  };
+}
+
+// ───────────── CAPTURE ─────────────
+function fillNames(dl) { dl.innerHTML = S.helper.index.map(e => `<option value="${esc(e[0])}" label="${esc(e[1] + ' · ' + KIND[e[3]])}"></option>`).join(''); }
+function lookup(name) { return S.helper.byName.get(name.trim().toLowerCase()) || []; }
+function addCaptureNames(names) {
+  let added = 0, unknown = [];
+  names.map(n => n.trim()).filter(Boolean).forEach(n => {
+    const hits = lookup(n);
+    if (S.helper.ok && !hits.length) { unknown.push(n); return; }
+    const app = hits.length === 1 ? hits[0][1] : '';
+    if (S.cap.items.some(x => x.name.toLowerCase() === n.toLowerCase() && (!app || x.app === app))) return;
+    S.cap.items.push({ name: hits[0]?.[0] || n, app, kind: hits.length === 1 ? hits[0][3] : '', note: '', apps: hits.length > 1 ? hits.map(h => h[1]) : null });
+    added++;
+  });
+  saveDraft(); renderCapture();
+  if (unknown.length) toast(`Not in the open SM project: ${unknown.slice(0, 5).join(', ')}${unknown.length > 5 ? '…' : ''}`, 'bad');
+  return added;
+}
+async function readCapture() {
+  if (!needHelper()) return;
+  const its = S.cap.items.filter(x => x.app || !x.apps);
+  if (!its.length) { toast('Add items first (and pick an app where a name is in more than one).'); return; }
+  S.cap.reading = true; renderCapture();
+  try {
+    const r = await helper('/api/readmany', { items: its.map(i => ({ name: i.name, app: i.app || undefined })) });
+    r.items.forEach((res, k) => { const it = its[k]; if (res.ok) { it.data = stripItem(res); it.app = res.app; it.kind = res.kind; it.err = ''; } else { it.data = null; it.err = res.error; } });
+    S.cap.readAt = today(); S.cap.readProject = r.project;
+  } catch { toast('The SM link is not responding.', 'bad'); }
+  S.cap.reading = false; saveDraft(); renderCapture();
+}
+function renderCapture() {
+  const c = S.cap, sets = [...S.sets].sort((a, b) => a.name.localeCompare(b.name));
+  const tgt = c.mode === 'version' ? setById(c.target) : null;
+  const readOk = c.items.filter(x => x.data).length, readBad = c.items.filter(x => x.err).length;
+  $('#main').innerHTML = `
+    <div class="hdr"><h1>Capture from SM</h1><span class="faint" style="margin-left:auto;font-size:12px">${c.savedAt ? 'Draft auto-saved ' + esc(fmtDT(c.savedAt)) : ''}</span>${c.items.length ? '<button class="btn sm" id="clr">Clear draft</button>' : ''}</div>
+    <div class="row">
+      <section style="flex:999 1 620px;min-width:0">
+        <div class="step"><i>1</i>Choose items</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+          <input class="inp" id="addName" list="smNames" placeholder="${S.helper.ok ? 'Add a map, curve, axis or scalar — autocompletes across all apps' : 'Connect SM for autocomplete'}" style="flex:1 1 320px" autocomplete="off" spellcheck="false">
+          <datalist id="smNames"></datalist>
+          <button class="btn" id="addBtn">Add</button>
+          <button class="btn" id="pasteBtn">Paste list</button>
+          <select class="inp" id="fromSet" style="width:auto"><option value="">Take items from cal set…</option>${sets.map(s => `<option value="${esc(s.id)}">${esc(s.name)} (${s.items.length})</option>`).join('')}</select>
+        </div>
+        <div class="card" style="overflow-x:auto"><div style="min-width:640px">
+          <div class="crow h"><span>Item</span><span>App</span><span>Type</span><span>Read from SM</span><span>Note</span><span></span></div>
+          ${c.items.map((x, i) => `<div class="crow">
+            <span class="mono" style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(x.name)}">${esc(x.name)}</span>
+            <span>${x.apps && x.apps.length > 1 ? `<select class="inp" data-app="${i}" style="height:28px;font-size:12px;padding:0 4px"><option value="">pick…</option>${x.apps.map(a => `<option ${a === x.app ? 'selected' : ''}>${esc(a)}</option>`).join('')}</select>` : `<span class="muted">${esc(x.app || '—')}</span>`}</span>
+            <span class="muted">${x.data ? esc(kindLabel(x.data)) : esc(KIND[x.kind] || '')}</span>
+            <span style="font-size:12px" class="${x.data ? 'c-ok' : x.err ? 'c-bad' : 'faint'}">${x.data ? '✓ read' + (x.data.kind === 'SCALAR' ? ' · ' + esc(fmtNum(x.data.value)) : '') : x.err ? esc(x.err) : x.apps && !x.app ? 'In ' + x.apps.length + ' apps — pick one' : 'not read yet'}</span>
+            <input class="inp" data-note="${i}" value="${esc(x.note || '')}" placeholder="note (optional)">
+            <button class="x" data-rm="${i}" aria-label="Remove">✕</button></div>`).join('') || '<div class="empty">No items yet. Add names above, paste a list, or take the items of an existing cal set.</div>'}
+        </div></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+          <button class="btn out" id="readBtn" ${!c.items.length || c.reading ? 'disabled' : ''}>${c.reading ? '<span class="spin"></span> Reading…' : 'Read from SM'}</button>
+          <span class="muted" style="font-size:12px">${c.readAt ? `${readOk} read${readBad ? `, <span class="c-bad">${readBad} failed</span>` : ''} · ${esc(fmtDT(c.readAt))} from <span class="mono">${esc((c.readProject || '').split(/[\\/]/).pop())}</span>` : `${c.items.length} item${c.items.length === 1 ? '' : 's'}`}</span>
+        </div>
+      </section>
+      <section style="flex:1 1 420px;min-width:0">
+        <div class="step"><i>2</i>Save to library</div>
+        <div class="card"><div class="form">
+          <div class="seg" style="padding:4px;border-radius:8px;background:var(--bg);border:1px solid var(--line)">
+            <button class="${c.mode === 'new' ? 'on' : ''}" data-mode="new" style="flex:1;height:32px">New cal set</button>
+            <button class="${c.mode === 'version' ? 'on' : ''}" data-mode="version" style="flex:1;height:32px">New version of…</button></div>
+          ${c.mode === 'version' ? `<label><span>Cal set</span><select class="inp" id="tgt"><option value="">— choose —</option>${sets.map(s => `<option value="${esc(s.id)}" ${s.id === c.target ? 'selected' : ''} ${isSigned(s) ? 'disabled' : ''}>${esc(s.name)} · v${s.version || 1}${isSigned(s) ? ' · signed off (locked)' : ''}</option>`).join('')}</select></label>` : ''}
+          ${c.mode === 'version' && tgt ? `<label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="keep" ${c.keep !== false ? 'checked' : ''}><span style="color:var(--text2);font-size:13px">Keep items of v${tgt.version || 1} that are not in this capture</span></label>` : ''}
+          <label><span>Name</span><input class="inp" id="nm" value="${esc(c.name)}" placeholder="e.g. WG new, Spa 2026 ALS v2, Test item 1"></label>
+          <label><span>Description</span><textarea class="inp" id="ds" rows="3" placeholder="What it is for, conditions, notes">${esc(c.desc)}</textarea></label>
+          <div style="display:flex;flex-direction:column;gap:6px"><span class="muted" style="font-size:12px">Tags</span>
+            <div class="tagbox">${c.tags.map((t, i) => `<span class="chip">${esc(t)} <button data-rmt="${i}" aria-label="Remove tag ${esc(t)}">✕</button></span>`).join('')}<input id="tagIn" list="tagList" placeholder="type a tag + Enter"><datalist id="tagList">${[...new Set(S.sets.flatMap(s => s.tags || []))].map(t => `<option value="${esc(t)}">`).join('')}</datalist></div></div>
+          <label><span>What changed (version message)</span><input class="inp" id="msg" value="${esc(c.msg)}" placeholder="${c.mode === 'new' ? 'e.g. first capture after dyno run 12' : 'e.g. dyno run 14: WG duty +3%'}"></label>
+          <div class="note info" style="font-size:12px">Saved as <b class="c-warn">Draft</b> · author ${esc(userName())}. Sign off later on the cal set page — signed-off cal sets are locked.${tgt ? ` Saves ${esc(tgt.name)} v${(tgt.version || 1) + 1}.` : ''}</div>
+          <button class="btn pri" id="saveBtn" style="justify-content:center;height:40px">Save to library</button>
+        </div></div>
+      </section>
+    </div>`;
+  const dl = $('#smNames'); if (dl) fillNames(dl);
+  const add = () => { const v = $('#addName').value; if (v.trim()) { addCaptureNames([v]); $('#addName').focus(); } };
+  $('#addBtn').onclick = add;
+  $('#addName').onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); add(); } };
+  $('#pasteBtn').onclick = () => {
+    dialog(`<div class="dlg-h"><h2>Paste a list of names</h2><div class="muted">One per line, or separated by commas, tabs or spaces.</div></div>
+      <div class="dlg-b"><textarea class="inp mono" id="pl" rows="10" autofocus></textarea></div>
+      <div class="dlg-f"><button class="btn" onclick="closeDlg()">Cancel</button><button class="btn pri" id="plGo">Add</button></div>`, true);
+    $('#plGo').onclick = () => { const names = $('#pl').value.split(/[\s,;]+/); closeDlg(); const n = addCaptureNames(names); toast(`${n} item(s) added.`); };
+  };
+  $('#fromSet').onchange = e => { const s = setById(e.target.value); if (!s) return; s.items.forEach(i => { if (!c.items.some(x => itemKey(x) === itemKey(i))) c.items.push({ name: i.name, app: i.app, kind: i.kind, note: i.note || '' }); }); saveDraft(); renderCapture(); };
+  document.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { c.items.splice(+b.dataset.rm, 1); saveDraft(); renderCapture(); });
+  document.querySelectorAll('[data-app]').forEach(s => s.onchange = () => { const it = c.items[+s.dataset.app]; it.app = s.value; it.data = null; it.err = ''; saveDraft(); renderCapture(); });
+  document.querySelectorAll('[data-note]').forEach(i => i.oninput = () => { c.items[+i.dataset.note].note = i.value; saveDraft(); });
+  document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { c.mode = b.dataset.mode; saveDraft(); renderCapture(); });
+  const tg = $('#tgt'); if (tg) tg.onchange = e => { c.target = e.target.value; const s = setById(c.target); if (s) { c.name = s.name; c.desc = s.description || ''; c.tags = [...(s.tags || [])]; } saveDraft(); renderCapture(); };
+  const kp = $('#keep'); if (kp) kp.onchange = e => { c.keep = e.target.checked; saveDraft(); };
+  $('#nm').oninput = e => { c.name = e.target.value; saveDraft(); };
+  $('#ds').oninput = e => { c.desc = e.target.value; saveDraft(); };
+  $('#msg').oninput = e => { c.msg = e.target.value; saveDraft(); };
+  $('#tagIn').onkeydown = e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); const t = e.target.value.trim(); if (t && !c.tags.includes(t)) c.tags.push(t); saveDraft(); renderCapture(); $('#tagIn').focus(); } };
+  document.querySelectorAll('[data-rmt]').forEach(b => b.onclick = () => { c.tags.splice(+b.dataset.rmt, 1); saveDraft(); renderCapture(); });
+  $('#readBtn').onclick = readCapture;
+  $('#saveBtn').onclick = saveCapture;
+  const cl = $('#clr'); if (cl) cl.onclick = () => { if (confirm('Clear the capture draft?')) { S.cap = newCapture(); store.del('captureDraft'); renderCapture(); } };
+}
+async function saveCapture() {
+  const c = S.cap;
+  const ready = c.items.filter(x => x.data);
+  if (!ready.length) { toast('Read the items from SM first.', 'bad'); return; }
+  if (c.items.some(x => !x.data)) { if (!confirm(`${c.items.length - ready.length} item(s) were not read and will be left out. Save the other ${ready.length}?`)) return; }
+  if (!c.name.trim()) { toast('Give the cal set a name.', 'bad'); $('#nm').focus(); return; }
+  if (!c.msg.trim()) { toast('Write what changed (version message).', 'bad'); $('#msg').focus(); return; }
+  const items = ready.map(x => ({ ...x.data, note: x.note || '' }));
+  let next, sha = null, msg;
+  if (c.mode === 'version') {
+    const t = setById(c.target); if (!t) { toast('Choose the cal set to update.', 'bad'); return; }
+    if (isSigned(t)) { toast('That cal set is signed off — duplicate it to make changes.', 'bad'); return; }
+    let merged = items;
+    if (c.keep !== false) { const got = new Set(items.map(itemKey)); merged = [...t.items.filter(x => !got.has(itemKey(x))), ...items]; const order = new Map(t.items.map((x, i) => [itemKey(x), i])); merged.sort((a, b) => (order.get(itemKey(a)) ?? 1e9) - (order.get(itemKey(b)) ?? 1e9)); }
+    next = { ...strip(t), name: c.name.trim(), description: c.desc, tags: c.tags, items: merged, version: (t.version || 1) + 1, modified: today(), modifiedBy: userName(), versionMessage: c.msg.trim(), source: { project: c.readProject || smProjectName(), readAt: c.readAt } };
+    sha = t._sha; msg = `${next.name} v${next.version}: ${c.msg.trim()}`;
+  } else {
+    next = { format: 'hmsg-calset/1', id: slug(c.name.trim()), name: c.name.trim(), description: c.desc, tags: c.tags, status: 'active', signoff: null, version: 1, author: userName(), created: today(), modified: today(), modifiedBy: userName(), versionMessage: c.msg.trim(), source: { project: c.readProject || smProjectName(), readAt: c.readAt }, items };
+    msg = `New cal set ${next.name}: ${c.msg.trim()}`;
+  }
+  const btn = $('#saveBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Saving…';
+  try { await saveSet(next, sha, msg); S.cap = newCapture(); store.del('captureDraft'); toast(`Saved ${next.name} v${next.version}.`, 'ok'); go('set', next.id); }
+  catch (e) { toast(e.message, 'bad'); btn.disabled = false; btn.textContent = 'Save to library'; }
+}
+
+// ───────────── RESTORE POINTS ─────────────
+async function renderRestore() {
+  const R = S.restore;
+  $('#main').innerHTML = `<div class="hdr"><h1>Restore points</h1><span class="muted">Saved automatically on this PC before every send to SM. Undo puts SM back exactly as it was.</span><button class="btn sm" id="rrl" style="margin-left:auto">↻</button></div>
+    <div id="rpl">${!S.helper.status ? '<div class="note bad">The SM link is not running — start HMSG_SM_Link.bat.</div>' : '<div class="empty"><span class="spin"></span></div>'}</div>`;
+  $('#rrl').onclick = () => { S.restore.list = null; renderRestore(); };
+  if (!S.helper.status) return;
+  if (!R.list) { try { R.list = await helper('/api/restorepoints'); } catch { R.list = { ok: false, error: 'SM link not responding' }; } }
+  if (S.view !== 'restore') return;
+  const L = R.list;
+  if (!L.ok) { $('#rpl').innerHTML = `<div class="note bad">${esc(L.error)}</div>`; return; }
+  $('#rpl').innerHTML = `<div class="tbl"><div style="min-width:760px">
+    ${L.points.map((p, i) => `<div style="display:flex;gap:14px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--row);flex-wrap:wrap">
+      <div style="flex:1 1 360px;min-width:0"><div style="font-weight:600">${esc(p.label || '(no label)')}${i === 0 ? ' <span class="chip">latest</span>' : ''}</div>
+        <div class="faint" style="font-size:12px">${esc(p.created)} · ${p.count} item${p.count === 1 ? '' : 's'} · <span class="mono">${esc((p.project || '').split(/[\\/]/).pop())}</span></div>
+        <div class="muted mono" style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc((p.names || []).join(', '))}</div></div>
+      <button class="btn sm" data-und="${esc(p.id)}">Undo to here…</button></div>`).join('') || '<div class="empty">No restore points yet. One is saved automatically before every send.</div>'}
+    </div></div><div class="faint" style="font-size:12px;margin-top:10px">Stored in <span class="mono">${esc(L.folder)}</span> · last 200 kept.</div>`;
+  document.querySelectorAll('[data-und]').forEach(b => b.onclick = () => undoFlow(b.dataset.und));
+}
+
+// ───────────── start ─────────────
+(async function start() {
+  paintUser(); render();
+  pollHelper(); setInterval(pollHelper, 5000);
+  if (S.cfg.token) { loadUser(); await loadSets(); }
+  else S.loaded = true;
+  if (S.cap.items.length && S.view === 'library') toast('You have an unsaved capture draft — open “Capture from SM” to continue it.');
+})();
+</script>
+</body>
+</html>
