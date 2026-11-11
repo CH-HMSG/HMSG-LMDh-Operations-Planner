@@ -10,10 +10,10 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#0e0f0d;--surf:#161715;--surf2:#1c1d1a;--surf3:#242521;
-  --border:#2e2f2a;--div:#1f201c;--text:#dcdad5;--muted:#8a8883;--faint:#4a4842;
-  --pri:#4f98a3;--pri-h:#3a8290;--pri-bg:rgba(79,152,163,.14);
-  --orange:#fdab43;--green:#39ff8a;--warn:#ff2f6d;
+  --bg:#111213;--surf:#17181a;--surf2:#1c1d20;--surf3:#24262a;
+  --border:#3a3d42;--div:#2d3034;--text:#d6d8db;--muted:#7c8086;--faint:#5e6268;
+  --pri:#4f98a3;--pri-h:#3a8290;--pri-bg:#182a2d;
+  --orange:#fdab43;--green:#4fc87a;--warn:#e05c6a;
   --r:8px;--mono:'JetBrains Mono',monospace;
   --cell-w:64px;--cell-h:30px;--axis-w:72px;
 }
@@ -27,7 +27,7 @@ button:active{transform:scale(.97);}
 button.pri{background:var(--pri);border-color:var(--pri);color:#fff;}
 button.pri:hover{background:var(--pri-h);}
 button.big{height:46px;font-size:14px;padding:0 26px;letter-spacing:.3px;}
-button.danger{background:transparent;border-color:#a13544;color:#ef8b95;}
+button.danger{background:transparent;border-color:#a13544;color:#e05c6a;}
 button.danger:hover{background:rgba(161,53,68,.12);}
 button.ghost{background:transparent;}
 button:disabled{opacity:.4;cursor:not-allowed;}
@@ -42,7 +42,7 @@ textarea::placeholder{color:var(--faint);}
 #app{max-width:1560px;margin:0 auto;padding:0 22px;}
 #topbar{display:flex;align-items:center;gap:12px;padding:16px 4px 18px;border-bottom:1px solid var(--div);margin-bottom:20px;flex-wrap:wrap;}
 .brand{display:flex;align-items:center;gap:10px;}
-.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#4f98a3,#245057);display:grid;place-items:center;flex-shrink:0;}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#4f98a3,#2c6870);display:grid;place-items:center;flex-shrink:0;}
 .logo svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 .brandtext .appname{font-weight:800;font-size:16px;letter-spacing:.2px;}
 .brandtext .tag{color:var(--muted);font-size:11px;}
@@ -103,7 +103,7 @@ table.fuelgrid th.corner{left:0;top:0;z-index:3;background:var(--surf3);width:va
 table.fuelgrid th.yaxis{left:0;z-index:2;text-align:right;width:var(--axis-w);min-width:var(--axis-w);max-width:var(--axis-w);}
 table.fuelgrid td{padding:0;height:var(--cell-h);width:var(--cell-w);min-width:var(--cell-w);max-width:var(--cell-w);border-bottom:1px solid rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.04);color:var(--text);font-weight:500;font-family:'Inter',sans-serif;font-size:12px;position:relative;text-align:center;}
 table.fuelgrid td .cellval{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
-table.fuelgrid td.capped{outline:2px solid var(--warn);outline-offset:-2px;box-shadow:0 0 8px var(--warn),inset 0 0 10px rgba(255,47,109,.35);z-index:1;}
+table.fuelgrid td.capped{outline:2px solid var(--warn);outline-offset:-2px;box-shadow:0 0 8px var(--warn),inset 0 0 10px rgba(224,92,106,.35);z-index:1;}
 table.fuelgrid td.nodata{outline:1.5px dashed rgba(255,255,255,.22);outline-offset:-1.5px;}
 table.fuelgrid td.modified{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25);}
 .deltacell-top{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);}
@@ -168,7 +168,7 @@ footer{text-align:center;color:var(--faint);font-size:10.5px;margin-top:30px;}
   <header id="topbar">
     <div class="brand">
       <div class="logo"><svg viewBox="0 0 24 24"><path d="M4 17 10 7l4 7 6-10"/><path d="M4 20h16"/></svg></div>
-      <div class="brandtext"><div class="appname">HMSG Fuel Matrix Pro v1.0</div><div class="tag">2D/3D Fuel Map Matrix Calibrator</div></div>
+      <div class="brandtext"><div class="appname">HMSG - LMDh Fuel Matrix Pro v1.3</div><div class="tag">3D Fuel Map Matrix Calibrator</div></div>
     </div>
     <div class="spacer"></div>
     <div id="statusMini"><span class="dot"></span><span id="statusMiniText">Awaiting base map & log data</span></div>
@@ -207,13 +207,13 @@ footer{text-align:center;color:var(--faint);font-size:10.5px;margin-top:30px;}
         <div class="od">Derive the correction factor from two channels — actual measured Lambda and the target Lambda setpoint — computed as Reading ÷ Setpoint.</div>
       </div>
     </div>
-    <div class="controls-flow">
-      <div class="field"><span class="lbl">Base Map X-Axis Channel</span><select id="selX"><option value="">— load log data first —</option></select></div>
-      <div class="field"><span class="lbl">Base Map Y-Axis Channel</span><select id="selY"><option value="">— load log data first —</option></select></div>
+    <div class="controls-flow" style="align-items:flex-start">
+      <div class="field"><span class="lbl">Base Map X-Axis Channel</span><select id="selX"><option value="">— load log data first —</option></select><div class="field-row"><span class="lbl" style="font-size:10.5px">Ignore below</span><input type="number" id="minX" step="any" value="0"></div></div>
+      <div class="field"><span class="lbl">Base Map Y-Axis Channel</span><select id="selY"><option value="">— load log data first —</option></select><div class="field-row"><span class="lbl" style="font-size:10.5px">Ignore below</span><input type="number" id="minY" step="any" value="0"></div></div>
       <div class="field" id="fieldCorrDirect"><span class="lbl">Correction Factor Channel</span><select id="selCorr"><option value="">— load log data first —</option></select></div>
       <div class="field" id="fieldLambdaReading" style="display:none"><span class="lbl">Lambda Reading Channel</span><select id="selLambdaReading"><option value="">— load log data first —</option></select></div>
       <div class="field" id="fieldLambdaTarget" style="display:none"><span class="lbl">Lambda Setpoint Channel</span><select id="selLambdaTarget"><option value="">— load log data first —</option></select></div>
-      <div class="field"><span class="lbl">Output Decimals</span><div class="field-row"><input type="number" id="decimals" min="0" max="6" value="2"></div></div>
+      <div class="field"><span class="lbl">Output Decimals</span><div class="field-row"><input type="number" id="decimals" min="0" max="6" value="3"></div></div>
     </div>
     <div class="controls-flow" style="margin-top:18px">
       <div class="field">
@@ -233,8 +233,8 @@ footer{text-align:center;color:var(--faint);font-size:10.5px;margin-top:30px;}
   </section>
 
   <!-- ADVANCED DATA PROCESSING -->
-  <section class="panel" id="advPanel">
-    <h2 style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" id="advToggleHead"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="n">3</span><span>Advanced Data Processing <span style="color:var(--faint);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(all optional — enable only what you need)</span></span></span><button type="button" class="ghost" id="btnAdvToggle" style="height:28px;padding:0 10px">Collapse</button></h2>
+  <section class="panel collapsed" id="advPanel">
+    <h2 style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" id="advToggleHead"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="n">3</span><span>Advanced Data Processing <span style="color:var(--faint);font-weight:400;text-transform:none;letter-spacing:0;font-size:11px">(all optional — enable only what you need)</span></span></span><button type="button" class="ghost" id="btnAdvToggle" style="height:28px;padding:0 10px">Expand</button></h2>
     <div id="advPanelBody">
 
     <div class="filter-card" id="cardDeltaFilter">
@@ -369,7 +369,7 @@ footer{text-align:center;color:var(--faint);font-size:10.5px;margin-top:30px;}
     </div>
   </section>
 
-  <footer>HMSG Fuel Matrix Pro v1.0 runs entirely locally in your browser. No data leaves this page. - Christos Hadjigeorgiou - Power Unit Event Support Engineer </footer>
+  <footer>HMSG Fuel Matrix Pro v1.3 runs entirely locally in your browser. No data leaves this page. - Christos Hadjigeorgiou - Power Unit Event Support Engineer </footer>
 </div>
 
 <script>
@@ -385,6 +385,7 @@ const id = (i)=>document.getElementById(i);
 const baseMapInput = id('baseMapInput'), logInput = id('logInput');
 const baseMeta = id('baseMeta'), logMeta = id('logMeta');
 const selX = id('selX'), selY = id('selY'), selCorr = id('selCorr');
+const minXInp = id('minX'), minYInp = id('minY');
 const selLambdaReading = id('selLambdaReading'), selLambdaTarget = id('selLambdaTarget');
 const decimalsInp = id('decimals'), safetyCapChk = id('safetyCap');
 const safetyPct = id('safetyPct'), safetyPctVal = id('safetyPctVal'), safetyCapSub = id('safetyCapSub');
@@ -686,7 +687,9 @@ function computeCorrectionGrid(){
 
   /* Step 5 — bin into grid, collecting raw hit lists per cell for stats */
   const hitLists = Array.from({length:nY},()=>Array.from({length:nX},()=>[]));
+  const minXV = parseFloat(minXInp.value)||0, minYV = parseFloat(minYInp.value)||0;
   for(const s of binSamples){
+    if(s.x < minXV || s.y < minYV) continue; // ignore samples below X/Y axis minimums
     const xIdx = nearestIndex(baseMap.xh, s.x), yIdx = nearestIndex(baseMap.yh, s.y);
     hitLists[yIdx][xIdx].push(s.cv);
   }
@@ -966,12 +969,12 @@ function renderPlot3D(){
     scene:{
       bgcolor:'transparent',
       camera: plot3dCam || {eye:{x:1.6,y:1.5,z:0.9}},
-      xaxis:{title:{text:'X'}, color:'#7a7874', gridcolor:'#2e2c29', showbackground:true, backgroundcolor:'rgba(28,27,25,.7)'},
-      yaxis:{title:{text:'Y'}, color:'#7a7874', gridcolor:'#2e2c29', showbackground:true, backgroundcolor:'rgba(24,23,21,.7)'},
-      zaxis:{title:{text:plotTitle}, color:'#7a7874', gridcolor:'#2e2c29', showbackground:true, backgroundcolor:'rgba(20,19,17,.7)'},
+      xaxis:{title:{text:'X'}, color:'#7c8086', gridcolor:'#2d3034', showbackground:true, backgroundcolor:'rgba(28,29,32,.7)'},
+      yaxis:{title:{text:'Y'}, color:'#7c8086', gridcolor:'#2d3034', showbackground:true, backgroundcolor:'rgba(23,24,26,.7)'},
+      zaxis:{title:{text:plotTitle}, color:'#7c8086', gridcolor:'#2d3034', showbackground:true, backgroundcolor:'rgba(17,18,19,.7)'},
       aspectratio:{x:1.2,y:1,z:0.65}
     },
-    showlegend:false, font:{family:'Inter, sans-serif', color:'#7a7874'}
+    showlegend:false, font:{family:'Inter, sans-serif', color:'#7c8086'}
   };
 
   Plotly.react('plot3d', [trace], layout, {responsive:true, displaylogo:false, displayModeBar:false});
@@ -1059,10 +1062,35 @@ function resetEverything(){
   baseMeta.textContent='No base map loaded yet.'; baseMeta.className='meta-line';
   logMeta.textContent='No log data loaded yet.'; logMeta.className='meta-line';
   [selX,selY,selCorr,selLambdaReading,selLambdaTarget].forEach(s=>s.innerHTML='<option value="">— load log data first —</option>');
-  decimalsInp.value=2; safetyCapChk.checked=true; smoothStrength.value=35; smoothStrengthVal.textContent='35%';
+
+  decimalsInp.value=3; minXInp.value=0; minYInp.value=0;
+  safetyCapChk.checked=true; safetyPct.value=20; updateSafetyPctLabel();
+  setCorrMode('direct');
+  stepApplyPct.value=100; stepApplyPctVal.textContent='100%';
+
+  ckDeltaFilter.checked=false; deltaThresh.value=2.0;
+  ckShiftFilter.checked=false; shiftRpmDrop.value=400; shiftPauseMs.value=1500;
+  ckLagFilter.checked=false; lag4000Ms.value=220; lag7500Ms.value=120; ckLagRpmScale.checked=true;
+  ckStatFilter.checked=false; statMinHits.value=8; statTrimHits.value=20; statTrimPct.value=10;
+  ckHardnessFilter.checked=false; hardRpmMin.value=6000; hardYMin.value=80; hardMult.value=5;
+  ['cardDeltaFilter','cardShiftFilter','cardLagFilter','cardStatFilter','cardHardnessFilter'].forEach(cid=>id(cid).classList.remove('active'));
+  setAdvCollapsed(true);
+
+  smoothStrength.value=35; smoothStrengthVal.textContent='35%';
   setSmoothMode('gauss');
+
   calcMsg.textContent=''; outputPanel.style.display='none';
   tableWrap.innerHTML='<div class="emptystate">Run Calculate Map to generate the final matrix.</div>';
+
+  viewMode='values'; tabValues.classList.add('active'); tabDelta.classList.remove('active');
+  legendValues.style.display='flex'; legendDelta.style.display='none'; legendConfidence.style.display='none';
+
+  show3dCk.checked=true; heatCk.checked=true; contCk.checked=true; diff3dCk.checked=true;
+  diff3dWrap.style.display='none';
+  plot3dColumn.classList.remove('off'); plot3dColumn.style.width='';
+
+  cellSzIdx=2; applyCellSize();
+
   plot3dCam=null; try{Plotly.purge('plot3d');}catch(e){}
   updateStatus();
 }
