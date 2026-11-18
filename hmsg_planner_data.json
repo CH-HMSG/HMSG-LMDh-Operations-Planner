@@ -1062,20 +1062,6 @@
       "notes": ""
     },
     {
-      "id": "E_lg0o74l",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "270521_PRC",
-      "name": "PRC Test - BLCKR",
-      "eventType": "Test",
-      "status": "Draft",
-      "location": "Paul Ricard",
-      "startDate": "2027-05-21",
-      "endDate": "2027-05-22",
-      "notes": ""
-    },
-    {
       "id": "E_puvnoyp",
       "chassisAssignments": [],
       "engineAssignments": [
@@ -1418,6 +1404,20 @@
       "startDate": "2027-02-25",
       "endDate": "2027-02-25",
       "notes": "36h tbc"
+    },
+    {
+      "id": "E_h3kznt0",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270525_PRC",
+      "name": "Le Mans SKDN",
+      "eventType": "SKD",
+      "status": "Draft",
+      "location": "Le Castellet",
+      "startDate": "2027-05-25",
+      "endDate": "2027-05-26",
+      "notes": "SKDN Le Mans"
     }
   ],
   "leave": [
