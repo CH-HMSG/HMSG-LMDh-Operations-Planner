@@ -859,7 +859,24 @@
     {
       "id": "E_7eomn4r",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "17A",
+          "notes": "Entry car17"
+        },
+        {
+          "engine": "18A",
+          "notes": "Spare 1"
+        },
+        {
+          "engine": "19A",
+          "notes": "Entry car19"
+        },
+        {
+          "engine": "20A",
+          "notes": "Spare 2"
+        }
+      ],
       "attendance": [],
       "eventCode": "270321_QAT",
       "name": "Pro Qatar + Qatar",
@@ -873,7 +890,24 @@
     {
       "id": "E_8ypddof",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "17A",
+          "notes": ""
+        },
+        {
+          "engine": "18A",
+          "notes": ""
+        },
+        {
+          "engine": "19A",
+          "notes": ""
+        },
+        {
+          "engine": "20A",
+          "notes": ""
+        }
+      ],
       "attendance": [],
       "eventCode": "270409_IMO",
       "name": "Imola Race",
@@ -887,7 +921,24 @@
     {
       "id": "E_fivwldx",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "17A",
+          "notes": ""
+        },
+        {
+          "engine": "18A",
+          "notes": ""
+        },
+        {
+          "engine": "19A",
+          "notes": ""
+        },
+        {
+          "engine": "20A",
+          "notes": ""
+        }
+      ],
       "attendance": [],
       "eventCode": "270423_SIL",
       "name": "Silverstone",
@@ -983,20 +1034,6 @@
       "notes": ""
     },
     {
-      "id": "E_o8tybtf",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "270208_SEB",
-      "name": "Sebring",
-      "eventType": "Test",
-      "status": "Draft",
-      "location": "Sebring",
-      "startDate": "2027-02-06",
-      "endDate": "2027-02-08",
-      "notes": "2 cars"
-    },
-    {
       "id": "E_fukzsta",
       "chassisAssignments": [],
       "engineAssignments": [],
@@ -1006,22 +1043,8 @@
       "eventType": "Test",
       "status": "Draft",
       "location": "Silverstone",
-      "startDate": "2027-03-03",
+      "startDate": "2027-03-05",
       "endDate": "2027-03-05",
-      "notes": ""
-    },
-    {
-      "id": "E_cg4h2kg",
-      "chassisAssignments": [],
-      "engineAssignments": [],
-      "attendance": [],
-      "eventCode": "270402_PRC",
-      "name": "PRC 24hrs - BLCKR",
-      "eventType": "Test",
-      "status": "Draft",
-      "location": "Paul Ricard",
-      "startDate": "2027-04-05",
-      "endDate": "2027-04-06",
       "notes": ""
     },
     {
