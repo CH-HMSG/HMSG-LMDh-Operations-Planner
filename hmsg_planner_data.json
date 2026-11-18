@@ -88,7 +88,7 @@
     {
       "id": "08A",
       "status": "In-Build",
-      "notes": ""
+      "notes": "Candidate for ARA 24h test end of Feb.27"
     },
     {
       "id": "09A",
@@ -112,8 +112,8 @@
     },
     {
       "id": "14A",
-      "status": "Race",
-      "notes": ""
+      "status": "Test",
+      "notes": "Ex-Race. Spare test. High oil cons"
     },
     {
       "id": "15A",
@@ -122,8 +122,8 @@
     },
     {
       "id": "16A",
-      "status": "Race",
-      "notes": ""
+      "status": "Test",
+      "notes": "Ex-Race. Test engine for 24h PTM Test"
     },
     {
       "id": "17A",
@@ -133,7 +133,7 @@
     {
       "id": "18A",
       "status": "In-Build",
-      "notes": ""
+      "notes": "Dyno CW48"
     },
     {
       "id": "19A",
