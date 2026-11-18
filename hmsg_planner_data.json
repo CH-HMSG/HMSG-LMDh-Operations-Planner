@@ -952,7 +952,16 @@
     {
       "id": "E_kstun7d",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "19A",
+          "notes": ""
+        },
+        {
+          "engine": "20A",
+          "notes": ""
+        }
+      ],
       "attendance": [],
       "eventCode": "270513_SPA",
       "name": "Spa Race",
@@ -966,7 +975,12 @@
     {
       "id": "E_wmyi1k7",
       "chassisAssignments": [],
-      "engineAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "22A",
+          "notes": ""
+        }
+      ],
       "attendance": [],
       "eventCode": "270606_LMN",
       "name": "LeMans Race",
