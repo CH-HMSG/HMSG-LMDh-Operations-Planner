@@ -64,7 +64,8 @@
       "Bahrain",
       "LeMans",
       "Sebring",
-      "Imola"
+      "Imola",
+      "Aragon"
     ],
     "transportMethods": []
   },
@@ -1361,6 +1362,25 @@
       "startDate": "2026-10-14",
       "endDate": "2026-10-15",
       "notes": "Engines #10A ; #11A ; 01C ; # 15A"
+    },
+    {
+      "id": "E_9ggq5kp",
+      "chassisAssignments": [],
+      "engineAssignments": [
+        {
+          "engine": "08A",
+          "notes": ""
+        }
+      ],
+      "attendance": [],
+      "eventCode": "270225_ARA",
+      "name": "Aragon Endurance",
+      "eventType": "Test",
+      "status": "Draft",
+      "location": "Aragon",
+      "startDate": "2027-02-25",
+      "endDate": "2027-02-25",
+      "notes": "36h tbc"
     }
   ],
   "leave": [
