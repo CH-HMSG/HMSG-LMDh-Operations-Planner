@@ -1474,6 +1474,20 @@
       "startDate": "2027-05-05",
       "endDate": "2027-05-05",
       "notes": "Ch022 - tbc"
+    },
+    {
+      "id": "E_3lp7gsx",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270624_PRC",
+      "name": "Skdn",
+      "eventType": "SKD",
+      "status": "Draft",
+      "location": "Le Castellet",
+      "startDate": "2027-06-24",
+      "endDate": "2027-06-24",
+      "notes": "fully tbc even date - cw25 or 26 - chYY and ch15"
     }
   ],
   "leave": [
