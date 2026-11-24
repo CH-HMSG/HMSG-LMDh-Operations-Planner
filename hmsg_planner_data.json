@@ -1460,6 +1460,20 @@
       "startDate": "2027-04-28",
       "endDate": "2027-04-28",
       "notes": "New car - SKDN tbc as well date"
+    },
+    {
+      "id": "E_zc6ekqw",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270505_PRC",
+      "name": "PRC SKDN",
+      "eventType": "SKD",
+      "status": "Draft",
+      "location": "Le Castellet",
+      "startDate": "2027-05-05",
+      "endDate": "2027-05-05",
+      "notes": "Ch022 - tbc"
     }
   ],
   "leave": [
