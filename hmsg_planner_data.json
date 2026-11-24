@@ -1059,7 +1059,7 @@
       "location": "Silverstone",
       "startDate": "2027-03-05",
       "endDate": "2027-03-05",
-      "notes": ""
+      "notes": "Ch020 + ch021"
     },
     {
       "id": "E_puvnoyp",
@@ -1403,7 +1403,7 @@
       "location": "Aragon",
       "startDate": "2027-02-25",
       "endDate": "2027-02-25",
-      "notes": "36h tbc"
+      "notes": "36h tbc - ch15"
     },
     {
       "id": "E_h3kznt0",
@@ -1431,7 +1431,7 @@
       "location": "Le Castellet",
       "startDate": "2027-01-28",
       "endDate": "2027-01-28",
-      "notes": "Software Torque Structure"
+      "notes": "Software Torque Structure - ch015"
     },
     {
       "id": "E_t75yrhl",
@@ -1446,6 +1446,20 @@
       "startDate": "2027-02-17",
       "endDate": "2027-02-17",
       "notes": "015 ahead of endurance test week 08\n020 ahead of season start\n021 ahead of season start"
+    },
+    {
+      "id": "E_y44ar9u",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270428_PRC",
+      "name": "PRC Skdn",
+      "eventType": "SKD",
+      "status": "Draft",
+      "location": "Le Castellet",
+      "startDate": "2027-04-28",
+      "endDate": "2027-04-28",
+      "notes": "New car - SKDN tbc as well date"
     }
   ],
   "leave": [
