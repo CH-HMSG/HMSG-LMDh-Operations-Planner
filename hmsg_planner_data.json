@@ -1488,6 +1488,34 @@
       "startDate": "2027-06-24",
       "endDate": "2027-06-24",
       "notes": "fully tbc even date - cw25 or 26 - chYY and ch15"
+    },
+    {
+      "id": "E_3jfjt5h",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270728_AUS",
+      "name": "Austin test",
+      "eventType": "Test",
+      "status": "Draft",
+      "location": "Austin",
+      "startDate": "2027-07-28",
+      "endDate": "2027-07-30",
+      "notes": "28/07 + 30/07 (2 cars)"
+    },
+    {
+      "id": "E_l53d8rg",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270914_AUS",
+      "name": "AUS skdn",
+      "eventType": "SKD",
+      "status": "Draft",
+      "location": "Austin",
+      "startDate": "2027-09-14",
+      "endDate": "2027-09-14",
+      "notes": "Car rebuild onsite"
     }
   ],
   "leave": [
