@@ -1418,6 +1418,34 @@
       "startDate": "2027-05-25",
       "endDate": "2027-05-26",
       "notes": "SKDN Le Mans"
+    },
+    {
+      "id": "E_b3negrj",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270128_PRC",
+      "name": "PRC",
+      "eventType": "Test",
+      "status": "Draft",
+      "location": "Le Castellet",
+      "startDate": "2027-01-28",
+      "endDate": "2027-01-28",
+      "notes": "Software Torque Structure"
+    },
+    {
+      "id": "E_t75yrhl",
+      "chassisAssignments": [],
+      "engineAssignments": [],
+      "attendance": [],
+      "eventCode": "270217_PRC",
+      "name": "PRC Skdn",
+      "eventType": "SKD",
+      "status": "Draft",
+      "location": "Le Castellet",
+      "startDate": "2027-02-17",
+      "endDate": "2027-02-17",
+      "notes": "015 ahead of endurance test week 08\n020 ahead of season start\n021 ahead of season start"
     }
   ],
   "leave": [
