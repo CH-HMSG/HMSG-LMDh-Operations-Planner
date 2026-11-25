@@ -1293,12 +1293,12 @@
         }
       ],
       "eventCode": "PT Dyno",
-      "name": "PTM Sw Validation",
+      "name": "Torque Path Sw Validation",
       "eventType": "Dyno",
-      "status": "Confirmed",
+      "status": "Draft",
       "location": "Rüsselsheim",
-      "startDate": "2026-12-14",
-      "endDate": "2026-12-18",
+      "startDate": "2027-01-11",
+      "endDate": "2027-01-15",
       "notes": ""
     },
     {
@@ -1306,19 +1306,6 @@
       "chassisAssignments": [],
       "engineAssignments": [],
       "attendance": [
-        {
-          "person": "P1",
-          "department": "Powertrain",
-          "roleAtEvent": "PU Engineer",
-          "activity": "",
-          "attendanceStatus": "Planned",
-          "travelToDate": "2026-12-09",
-          "travelFromDate": "2026-12-11",
-          "travelNotes": "",
-          "accommodationNotes": "",
-          "arrivalStatus": "Not Started",
-          "departureStatus": "Not Started"
-        },
         {
           "person": "P2",
           "department": "Powertrain",
@@ -1351,9 +1338,9 @@
       "eventType": "SKD",
       "status": "Confirmed",
       "location": "Le Castellet",
-      "startDate": "2026-12-10",
+      "startDate": "2026-12-09",
       "endDate": "2026-12-10",
-      "notes": ""
+      "notes": "Fire-Up 09.Dec / skdn 10.Dec"
     },
     {
       "id": "E_3yyo8b9",
@@ -1611,8 +1598,8 @@
     },
     {
       "id": "L_xk2u63l",
-      "conflictFlag": true,
-      "conflictDetails": "Overlaps travel/attendance for 261207_PRC (2026-12-09 to 2026-12-11)",
+      "conflictFlag": false,
+      "conflictDetails": "",
       "person": "P1",
       "startDate": "2026-12-10",
       "endDate": "2026-12-14",
