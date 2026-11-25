@@ -1284,8 +1284,8 @@
           "roleAtEvent": "PU Lead",
           "activity": "",
           "attendanceStatus": "Planned",
-          "travelToDate": "2026-12-14",
-          "travelFromDate": "2026-12-18",
+          "travelToDate": "2027-01-11",
+          "travelFromDate": "2027-01-22",
           "travelNotes": "",
           "accommodationNotes": "",
           "arrivalStatus": "Not Started",
@@ -1298,7 +1298,7 @@
       "status": "Draft",
       "location": "Rüsselsheim",
       "startDate": "2027-01-11",
-      "endDate": "2027-01-15",
+      "endDate": "2027-01-22",
       "notes": ""
     },
     {
